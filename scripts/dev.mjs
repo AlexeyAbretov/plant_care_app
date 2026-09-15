@@ -32,13 +32,17 @@ const env = { ...process.env, ...parseEnvFile(resolve(root, ".env")) };
 const port = env.PORT ?? "3001";
 const healthUrl = `http://localhost:${port}/api/health`;
 
-function run(command, args) {
+function run(command, args, options = {}) {
   return new Promise((resolvePromise, reject) => {
     const child = spawn(command, args, {
       cwd: root,
       env,
-      stdio: "inherit",
-      shell: true,
+      stdio: options.stdio ?? "inherit",
+      shell: false,
+    });
+
+    child.on("error", (error) => {
+      reject(error);
     });
 
     child.on("exit", (code) => {
@@ -52,10 +56,86 @@ function run(command, args) {
   });
 }
 
+function checkDockerAvailable() {
+  return new Promise((resolvePromise) => {
+    const child = spawn("docker", ["info"], {
+      cwd: root,
+      env,
+      stdio: ["ignore", "ignore", "pipe"],
+      shell: false,
+    });
+
+    let stderr = "";
+
+    child.stderr?.on("data", (chunk) => {
+      stderr += chunk.toString();
+    });
+
+    child.on("error", (error) => {
+      resolvePromise({
+        ok: false,
+        reason: "not-found",
+        stderr: error.message,
+      });
+    });
+
+    child.on("exit", (code) => {
+      if (code === 0) {
+        resolvePromise({ ok: true, reason: null, stderr: "" });
+        return;
+      }
+
+      resolvePromise({
+        ok: false,
+        reason: "daemon-unavailable",
+        stderr,
+      });
+    });
+  });
+}
+
+function printDockerUnavailableMessage({ reason, stderr }) {
+  console.error("\nDocker недоступен — не удалось подключиться к Docker daemon.\n");
+
+  if (reason === "not-found") {
+    console.error(
+      "Команда `docker` не найдена в PATH. Установите Docker и добавьте его в PATH.\n",
+    );
+  } else if (process.platform === "win32") {
+    console.error(
+      "На Windows: запустите Docker Desktop и дождитесь статуса Ready, затем повторите команду.\n",
+    );
+  } else {
+    console.error("Убедитесь, что Docker daemon запущен (например, `docker info`).\n");
+  }
+
+  console.error("Альтернатива без Docker:");
+  console.error("  1. Запустите MongoDB отдельно (локально или удалённо).");
+  console.error("  2. Проверьте MONGODB_URI в .env.");
+  console.error("  3. Выполните: npm run dev:apps\n");
+  console.error("Подробнее: README.md (раздел «Запуск (dev)») и AGENTS.md.\n");
+
+  const details = stderr.trim();
+  if (details) {
+    console.error("Детали Docker CLI:");
+    console.error(details);
+    console.error("");
+  }
+}
+
+async function ensureDockerAvailable() {
+  const result = await checkDockerAvailable();
+  if (!result.ok) {
+    printDockerUnavailableMessage(result);
+    process.exit(1);
+  }
+}
+
 const mode = process.argv[2] ?? "full";
 
 try {
   if (mode === "mongo") {
+    await ensureDockerAvailable();
     await run("docker", ["compose", "up", "-d"]);
   } else if (mode === "apps") {
     await run("npx", [
@@ -68,6 +148,7 @@ try {
       "npm run dev -w @plant-care/web",
     ]);
   } else {
+    await ensureDockerAvailable();
     await run("docker", ["compose", "up", "-d"]);
     await run("npx", [
       "concurrently",

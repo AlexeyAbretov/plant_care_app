@@ -3,7 +3,7 @@
 ## Требования
 
 - **Node.js** ≥ 22
-- **Docker** — для MongoDB в dev (`docker compose`)
+- **Docker** — для MongoDB в dev (`docker compose`); на Windows Docker Desktop должен быть **запущен** до `npm run dev`
 - **Ollama** — локально, модель: `ollama pull qwen3-vl:8b`
 - **@llm/linting** — workspace-пакет в `packages/linting` (см. [README](packages/linting/README.md))
 
@@ -17,9 +17,9 @@ npm install
 
 | Команда | Описание |
 |---------|----------|
-| `npm run dev` | Docker MongoDB + backend (`:3001`) + frontend (`:5173`) |
+| `npm run dev` | Docker MongoDB + backend (`:3001`) + frontend (`:5173`); требует доступный Docker daemon |
 | `npm run dev:mongo` | Только MongoDB через Docker Compose |
-| `npm run dev:apps` | Backend + frontend без Docker (MongoDB должна быть уже запущена) |
+| `npm run dev:apps` | Backend + frontend без Docker (MongoDB должна быть уже запущена); обходной путь, если Docker недоступен |
 | `npm run lint` | ESLint во всех workspaces |
 | `npm run build` | Сборка web + api |
 
