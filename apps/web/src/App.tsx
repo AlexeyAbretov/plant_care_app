@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import { AppLayout } from './components/AppLayout';
 import { AddPage } from './pages/AddPage';
 import { CatalogPage } from './pages/CatalogPage';
+import { EditPlantPage } from './pages/EditPlantPage';
 
 dayjs.locale('ru');
 
@@ -16,6 +17,7 @@ export function App(): React.JSX.Element {
         <Routes>
           <Route path="/" element={<CatalogPage />} />
           <Route path="/add" element={<AddPage />} />
+          <Route path="/plants/:id/edit" element={<EditPlantPage />} />
         </Routes>
       </AppLayout>
     </ConfigProvider>

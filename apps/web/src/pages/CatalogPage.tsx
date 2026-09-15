@@ -18,6 +18,7 @@ export function CatalogPage(): React.JSX.Element {
     reload,
     waterPlant,
     fertilizePlant,
+    deletePlant,
   } = usePlantsCatalog();
 
   return (
@@ -68,6 +69,7 @@ export function CatalogPage(): React.JSX.Element {
           {plants.map((plant) => (
             <Col key={plant.id} lg={6} md={8} sm={12} xs={24}>
               <PlantCard
+                onDelete={deletePlant}
                 onFertilize={fertilizePlant}
                 onWater={waterPlant}
                 plant={plant}

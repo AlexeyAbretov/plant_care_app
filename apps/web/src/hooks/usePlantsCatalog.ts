@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { ApiError } from '../api/client.js';
 import {
+  deletePlant as deletePlantApi,
   fertilizePlant,
   listPlants,
   waterPlant,
@@ -104,6 +105,24 @@ export function usePlantsCatalog() {
     [refreshPlants],
   );
 
+  const handleDelete = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        await deletePlantApi(id);
+        await refreshPlants();
+        message.success('Растение удалено');
+      } catch (actionError: unknown) {
+        const errorMessage =
+          actionError instanceof ApiError
+            ? actionError.message
+            : 'Не удалось удалить растение';
+
+        message.error(errorMessage);
+      }
+    },
+    [refreshPlants],
+  );
+
   return {
     sort,
     setSort,
@@ -116,5 +135,6 @@ export function usePlantsCatalog() {
     reload: loadPlants,
     waterPlant: handleWater,
     fertilizePlant: handleFertilize,
+    deletePlant: handleDelete,
   };
 }
