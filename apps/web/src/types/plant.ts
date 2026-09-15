@@ -42,3 +42,5 @@ export interface CreatePlantPayload {
   lastWateredAt: string;
   lastFertilizedAt: string;
 }
+
+export type UpdatePlantPayload = CreatePlantPayload;

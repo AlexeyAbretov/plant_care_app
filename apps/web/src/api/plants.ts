@@ -1,9 +1,15 @@
-import { ApiError, getApiUrl, parseApiError } from './client.js';
+import {
+  ApiError,
+  fetchJson,
+  getApiUrl,
+  parseApiError,
+} from './client.js';
 
 import type {
   CreatePlantPayload,
   Plant,
   PlantRecognizeResult,
+  UpdatePlantPayload,
 } from '../types/plant.js';
 
 function appendPlantFields(
@@ -64,4 +70,52 @@ export async function createPlant(
   }
 
   return (await response.json()) as Plant;
+}
+
+export async function listPlants(): Promise<Plant[]> {
+  return fetchJson<Plant[]>('/api/plants');
+}
+
+export async function getPlant(id: string): Promise<Plant> {
+  return fetchJson<Plant>(`/api/plants/${id}`);
+}
+
+export async function updatePlant(
+  id: string,
+  payload: UpdatePlantPayload,
+  imageFile?: File,
+): Promise<Plant> {
+  if (imageFile !== undefined) {
+    const formData = new FormData();
+
+    appendPlantFields(formData, payload);
+    formData.append('image', imageFile);
+
+    const response = await fetch(getApiUrl(`/api/plants/${id}`), {
+      method: 'PATCH',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new ApiError(await parseApiError(response), response.status);
+    }
+
+    return (await response.json()) as Plant;
+  }
+
+  return fetchJson<Plant>(`/api/plants/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function deletePlant(id: string): Promise<void> {
+  const response = await fetch(getApiUrl(`/api/plants/${id}`), {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new ApiError(await parseApiError(response), response.status);
+  }
 }

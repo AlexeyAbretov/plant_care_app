@@ -1,5 +1,5 @@
 import { Alert, Button, Form, message, Space, Spin, Typography } from 'antd';
-import dayjs, { type Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,10 +10,8 @@ import {
   PlantForm,
   type PlantFormValues,
 } from '../components/plant/PlantForm.js';
-import type {
-  CreatePlantPayload,
-  PlantRecognizeResult,
-} from '../types/plant.js';
+import type { PlantRecognizeResult } from '../types/plant.js';
+import { mapFormValuesToPayload } from '../utils/plantFormUtils.js';
 
 type AddStep = 'upload' | 'recognizing' | 'form' | 'saving';
 
@@ -42,26 +40,6 @@ function mapRecognizeToFormValues(
     ...result,
     lastWateredAt: today,
     lastFertilizedAt: today,
-  };
-}
-
-function formatDateForApi(value: Dayjs): string {
-  return value.startOf('day').format('YYYY-MM-DD');
-}
-
-function mapFormValuesToPayload(values: PlantFormValues): CreatePlantPayload {
-  return {
-    name: values.name.trim(),
-    description: values.description ?? '',
-    category: values.category ?? '',
-    lightPreference: values.lightPreference ?? '',
-    sizeInfo: values.sizeInfo ?? '',
-    wateringIntervalDays: values.wateringIntervalDays!,
-    fertilizingIntervalDays: values.fertilizingIntervalDays!,
-    wateringNotes: values.wateringNotes ?? '',
-    fertilizingNotes: values.fertilizingNotes ?? '',
-    lastWateredAt: formatDateForApi(values.lastWateredAt),
-    lastFertilizedAt: formatDateForApi(values.lastFertilizedAt),
   };
 }
 
