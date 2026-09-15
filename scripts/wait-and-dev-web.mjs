@@ -3,6 +3,8 @@ import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { resolvePackageBin } from "./resolve-package-bin.mjs";
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
 
@@ -38,9 +40,17 @@ try {
   process.exit(1);
 }
 
-const npm = process.platform === "win32" ? "npm.cmd" : "npm";
-const child = spawn(npm, ["run", "dev", "-w", "@plant-care/web"], {
-  cwd: root,
+let viteBin;
+
+try {
+  viteBin = resolvePackageBin("vite");
+} catch (error) {
+  console.error(error instanceof Error ? error.message : error);
+  process.exit(1);
+}
+
+const child = spawn(process.execPath, [viteBin], {
+  cwd: resolve(root, "apps/web"),
   stdio: "inherit",
   env: process.env,
   shell: false,
