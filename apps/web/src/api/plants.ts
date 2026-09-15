@@ -1,7 +1,10 @@
 import { ApiError, getApiUrl, parseApiError } from './client.js';
 
+import { fetchJson } from './client.js';
+
 import type {
   CreatePlantPayload,
+  ListPlantsParams,
   Plant,
   PlantRecognizeResult,
 } from '../types/plant.js';
@@ -64,4 +67,32 @@ export async function createPlant(
   }
 
   return (await response.json()) as Plant;
+}
+
+function buildPlantsQuery(params?: ListPlantsParams): string {
+  const searchParams = new URLSearchParams();
+
+  if (params?.sort !== undefined) {
+    searchParams.set('sort', params.sort);
+  }
+
+  if (params?.category !== undefined && params.category !== '') {
+    searchParams.set('category', params.category);
+  }
+
+  const query = searchParams.toString();
+
+  return query === '' ? '/api/plants' : `/api/plants?${query}`;
+}
+
+export async function listPlants(params?: ListPlantsParams): Promise<Plant[]> {
+  return fetchJson<Plant[]>(buildPlantsQuery(params));
+}
+
+export async function waterPlant(id: string): Promise<Plant> {
+  return fetchJson<Plant>(`/api/plants/${id}/water`, { method: 'PATCH' });
+}
+
+export async function fertilizePlant(id: string): Promise<Plant> {
+  return fetchJson<Plant>(`/api/plants/${id}/fertilize`, { method: 'PATCH' });
 }
