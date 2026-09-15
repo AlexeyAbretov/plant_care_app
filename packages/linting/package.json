@@ -1,0 +1,31 @@
+{
+  "name": "@llm/linting",
+  "version": "1.0.0",
+  "description": "Shared ESLint 9 + Prettier rules (function style, Elvis, import groups, 80 cols)",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./prettier": "./prettier.json"
+  },
+  "files": [
+    "index.js",
+    "prettier.json",
+    "cursor"
+  ],
+  "peerDependencies": {
+    "eslint": "^9",
+    "prettier": "^3",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.70.0",
+    "@typescript-eslint/parser": "^8.70.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-simple-import-sort": "^14.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -7,7 +7,7 @@
 - [x] Monorepo (`apps/web`, `apps/api`), Docker Compose для MongoDB
 - [x] Frontend: Vite + React + TypeScript + Ant Design (`ru_RU`), layout и роутинг
 - [x] Backend: Express skeleton, `GET /api/health`, подключение MongoDB
-- [x] ESLint через `@llm/linting`, скрипты `dev` / `lint` / `build`
+- [x] ESLint через `@llm/linting` (in-repo, `packages/linting`), скрипты `dev` / `lint` / `build`
 - [x] Базовая документация (`CONSTITUTION`, `AGENTS`, `README`)
 
 ## Этап 1 — Модель Plant, GridFS, CRUD API

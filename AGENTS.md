@@ -5,12 +5,11 @@
 - **Node.js** ≥ 22
 - **Docker** — для MongoDB в dev (`docker compose`)
 - **Ollama** — локально, модель: `ollama pull qwen3-vl:8b`
-- **@llm/linting** — соседний каталог `../linting` (см. [архив linting](https://github.com/user-attachments/files/32196662/linting.zip))
+- **@llm/linting** — workspace-пакет в `packages/linting` (см. [README](packages/linting/README.md))
 
 ## Установка
 
 ```bash
-# Распаковать linting.zip в каталог ../linting относительно корня репозитория
 npm install
 ```
 
@@ -43,9 +42,10 @@ cp apps/web/.env.example apps/web/.env
 ## Структура
 
 ```
-apps/web/   — Vite + React + Ant Design
-apps/api/   — Express + MongoDB
-docs/       — CONSTITUTION, MVP_PLAN, AGENT_PIPELINE
+apps/web/        — Vite + React + Ant Design
+apps/api/        — Express + MongoDB
+packages/linting — @llm/linting (ESLint + Prettier)
+docs/            — CONSTITUTION, MVP_PLAN, AGENT_PIPELINE
 ```
 
 ## Документация
