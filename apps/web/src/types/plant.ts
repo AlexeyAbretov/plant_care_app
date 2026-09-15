@@ -1,3 +1,10 @@
+export type PlantSort = 'watering' | 'fertilizing';
+
+export interface ListPlantsParams {
+  sort?: PlantSort;
+  category?: string;
+}
+
 export interface Plant {
   id: string;
   name: string;
