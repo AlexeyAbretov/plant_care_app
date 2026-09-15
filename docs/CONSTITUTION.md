@@ -48,19 +48,28 @@ MongoDB (+ GridFS)    Ollama (локально)
 
 ## Переменные окружения
 
+Dev-окружение настраивается **одним** файлом `.env` в корне репозитория (шаблон — `.env.example`).
+
 ### Backend (`apps/api`)
 
 | Переменная | По умолчанию | Описание |
 |------------|--------------|----------|
+| `PORT` | `3001` | Порт HTTP API |
 | `MONGODB_URI` | `mongodb://localhost:27017/plant_care` | Строка подключения MongoDB |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Базовый URL Ollama |
-| `PORT` | `3001` | Порт HTTP API |
 
 ### Frontend (`apps/web`)
 
 | Переменная | По умолчанию | Описание |
 |------------|--------------|----------|
+| `WEB_PORT` | `5173` | Порт Vite dev server |
 | `VITE_API_BASE_URL` | `http://localhost:3001` | Базовый URL backend API |
+
+### Docker (MongoDB)
+
+| Переменная | По умолчанию | Описание |
+|------------|--------------|----------|
+| `MONGO_PORT` | `27017` | Host-порт MongoDB в `docker-compose.yml` |
 
 ## Прогресс-бар ухода
 

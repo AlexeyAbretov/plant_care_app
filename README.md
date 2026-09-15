@@ -35,9 +35,9 @@ npm run dev
 
 Команда поднимает:
 
-1. MongoDB (`docker compose up -d`, порт `27017`)
-2. Backend API (`http://localhost:3001`)
-3. Frontend (`http://localhost:5173`)
+1. MongoDB (`docker compose up -d`, порт `MONGO_PORT`, по умолчанию `27017`)
+2. Backend API (порт `PORT`, по умолчанию `http://localhost:3001`)
+3. Frontend (порт `WEB_PORT`, по умолчанию `http://localhost:5173`)
 
 Если Docker недоступен — запустите MongoDB отдельно и используйте:
 
@@ -54,17 +54,22 @@ curl http://localhost:3001/api/health
 
 ## Переменные окружения
 
+Единый файл в корне репозитория:
+
 ```bash
-cp .env.example apps/api/.env
-cp apps/web/.env.example apps/web/.env
+cp .env.example .env
 ```
 
 | Переменная | Сервис | По умолчанию |
 |------------|--------|--------------|
+| `PORT` | API | `3001` |
+| `WEB_PORT` | Web (Vite dev) | `5173` |
+| `MONGO_PORT` | Docker MongoDB | `27017` |
 | `MONGODB_URI` | API | `mongodb://localhost:27017/plant_care` |
 | `OLLAMA_BASE_URL` | API | `http://localhost:11434` |
-| `PORT` | API | `3001` |
 | `VITE_API_BASE_URL` | Web | `http://localhost:3001` |
+
+При смене `MONGO_PORT` обновите также порт в `MONGODB_URI`.
 
 ## Lint и сборка
 

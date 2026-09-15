@@ -25,20 +25,23 @@ npm install
 
 ## Переменные окружения
 
-Скопировать примеры:
+Единый файл в корне репозитория:
 
 ```bash
-cp .env.example apps/api/.env
-cp apps/web/.env.example apps/web/.env
+cp .env.example .env
 ```
 
 | Сервис | Переменная | Default |
 |--------|------------|---------|
+| API | `PORT` | `3001` |
 | API | `MONGODB_URI` | `mongodb://localhost:27017/plant_care` |
 | API | `OLLAMA_BASE_URL` | `http://localhost:11434` |
 | API | `OLLAMA_TIMEOUT_MS` | `120000` |
-| API | `PORT` | `3001` |
+| Web | `WEB_PORT` | `5173` |
 | Web | `VITE_API_BASE_URL` | `http://localhost:3001` |
+| Docker | `MONGO_PORT` | `27017` |
+
+При смене `MONGO_PORT` обновите также порт в `MONGODB_URI`. Локальные `apps/*/.env` по-прежнему поддерживаются как override поверх корневого `.env`.
 
 ## Структура
 
