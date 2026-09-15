@@ -8,13 +8,13 @@ import { z } from 'zod';
 
 import { handleUploadError, uploadPlantImage } from '../middleware/upload.js';
 import {
-  OllamaTimeoutError,
-  OllamaUnavailableError,
-} from '../services/ollama.client.js';
-import {
   type ImageMimeType,
   ImageNotFoundError,
 } from '../services/imageStorage.js';
+import {
+  OllamaTimeoutError,
+  OllamaUnavailableError,
+} from '../services/ollama.client.js';
 import {
   InvalidImageFormatError,
   PlantRecognitionError,

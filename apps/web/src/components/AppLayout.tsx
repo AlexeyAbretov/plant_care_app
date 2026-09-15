@@ -12,9 +12,7 @@ type AppLayoutProps = {
 export function AppLayout({ children }: AppLayoutProps): React.JSX.Element {
   const location = useLocation();
 
-  const selectedKey = location.pathname.startsWith('/add')
-    ? 'add'
-    : 'catalog';
+  const selectedKey = location.pathname.startsWith('/add') ? 'add' : 'catalog';
 
   return (
     <Layout style={{ minHeight: '100vh' }}>

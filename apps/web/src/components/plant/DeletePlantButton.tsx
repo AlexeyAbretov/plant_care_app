@@ -27,7 +27,10 @@ export function DeletePlantButton({
   return (
     <Popconfirm
       cancelText="Отмена"
-      description={`Растение «${plantName}» и все его изображения будут удалены безвозвратно.`}
+      description={
+        `Растение «${plantName}» и все его изображения ` +
+        'будут удалены безвозвратно.'
+      }
       disabled={disabled || loading}
       okButtonProps={{ danger: true, loading }}
       okText="Удалить"

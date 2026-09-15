@@ -1,14 +1,15 @@
+import { chatWithImage } from './ollama.client.js';
+
 import {
   PLANT_RECOGNITION_RETRY_PROMPT,
   PLANT_RECOGNITION_SYSTEM_PROMPT,
   PLANT_RECOGNITION_USER_PROMPT,
 } from '../prompts/plant-recognition.prompt.js';
 import {
-  plantRecognitionSchema,
   type PlantRecognitionResult,
+  plantRecognitionSchema,
 } from '../schemas/plant-recognition.schema.js';
 import { extractJson } from '../utils/extract-json.js';
-import { chatWithImage } from './ollama.client.js';
 
 export class PlantRecognitionError extends Error {
   constructor(message = 'Не удалось распознать растение') {
@@ -24,11 +25,7 @@ export class InvalidImageFormatError extends Error {
   }
 }
 
-const ALLOWED_MIME_TYPES = new Set([
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-]);
+const ALLOWED_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 export function validateImageMime(mimeType: string): boolean {
   return ALLOWED_MIME_TYPES.has(mimeType);
@@ -73,9 +70,14 @@ export async function recognizePlantFromImage(
   try {
     return parseRecognitionContent(firstResponse);
   } catch {
+    const retryUserPrompt = [
+      PLANT_RECOGNITION_USER_PROMPT,
+      PLANT_RECOGNITION_RETRY_PROMPT,
+    ].join('\n\n');
+
     const retryResponse = await chatWithImage({
       systemPrompt: PLANT_RECOGNITION_SYSTEM_PROMPT,
-      userPrompt: `${PLANT_RECOGNITION_USER_PROMPT}\n\n${PLANT_RECOGNITION_RETRY_PROMPT}`,
+      userPrompt: retryUserPrompt,
       imageBase64,
     });
 

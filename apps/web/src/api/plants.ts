@@ -1,9 +1,4 @@
-import {
-  ApiError,
-  fetchJson,
-  getApiUrl,
-  parseApiError,
-} from './client.js';
+import { ApiError, fetchJson, getApiUrl, parseApiError } from './client.js';
 
 import type {
   CreatePlantPayload,

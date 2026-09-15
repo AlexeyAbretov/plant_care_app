@@ -2,10 +2,11 @@ import { Button, Card, Space, Typography } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getApiUrl } from '../../api/client.js';
-import { DeletePlantButton } from '../plant/DeletePlantButton.js';
-import type { Plant } from '../../types/plant.js';
 import { CareProgressBar } from './CareProgressBar.js';
+
+import { getApiUrl } from '../../api/client.js';
+import type { Plant } from '../../types/plant.js';
+import { DeletePlantButton } from '../plant/DeletePlantButton.js';
 
 type PlantCardProps = {
   plant: Plant;
@@ -45,7 +46,12 @@ export function PlantCard({
 
   return (
     <Card>
-      <Space align="start" direction="vertical" size="middle" style={{ width: '100%' }}>
+      <Space
+        align="start"
+        direction="vertical"
+        size="middle"
+        style={{ width: '100%' }}
+      >
         <img
           alt={plant.name}
           height={128}

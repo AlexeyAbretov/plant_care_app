@@ -1,4 +1,4 @@
-import { Select, Segmented, Space } from 'antd';
+import { Segmented, Select, Space } from 'antd';
 
 import type { PlantSort } from '../../types/plant.js';
 

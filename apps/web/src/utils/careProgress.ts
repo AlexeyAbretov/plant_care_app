@@ -14,13 +14,19 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-function calendarDaysSince(lastActionDate: string, today = dayjs().startOf('day')): number {
+function calendarDaysSince(
+  lastActionDate: string,
+  today = dayjs().startOf('day'),
+): number {
   const lastAction = dayjs(lastActionDate).startOf('day');
 
   return today.diff(lastAction, 'day');
 }
 
-export function getCareProgressColor(progress: number, overdue: boolean): CareProgressColor {
+export function getCareProgressColor(
+  progress: number,
+  overdue: boolean,
+): CareProgressColor {
   if (overdue || progress < 0.2) {
     return 'red';
   }

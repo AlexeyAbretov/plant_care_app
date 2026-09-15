@@ -37,9 +37,7 @@ export function usePlantsCatalog() {
     try {
       const [filteredPlants, allPlants] = await Promise.all([
         listPlants({ sort, category }),
-        category === undefined
-          ? Promise.resolve(null)
-          : listPlants({ sort }),
+        category === undefined ? Promise.resolve(null) : listPlants({ sort }),
       ]);
 
       setPlants(filteredPlants);

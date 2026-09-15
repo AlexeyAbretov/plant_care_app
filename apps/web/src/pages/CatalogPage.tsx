@@ -56,10 +56,7 @@ export function CatalogPage(): React.JSX.Element {
       ) : null}
 
       {!loading && error === null && plants.length === 0 ? (
-        <Empty
-          description="Растений пока нет"
-          style={{ marginTop: 48 }}
-        >
+        <Empty description="Растений пока нет" style={{ marginTop: 48 }}>
           <Link to="/add">Добавить растение</Link>
         </Empty>
       ) : null}
