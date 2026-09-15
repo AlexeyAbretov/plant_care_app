@@ -12,7 +12,7 @@ Monorepo для учёта домашних растений: загрузка �
 ## Требования
 
 - Node.js ≥ 22
-- Docker (MongoDB в dev)
+- Docker (MongoDB в dev); на **Windows** перед `npm run dev` запустите **Docker Desktop** и дождитесь статуса Ready
 - Ollama с моделью vision:
 
 ```bash
@@ -39,11 +39,13 @@ npm run dev
 2. Backend API (порт `PORT`, по умолчанию `http://localhost:3001`)
 3. Frontend (порт `WEB_PORT`, по умолчанию `http://localhost:5173`)
 
-Если Docker недоступен — запустите MongoDB отдельно и используйте:
+Если Docker недоступен (не установлен, daemon не запущен или Docker Desktop на Windows выключен) — запустите MongoDB отдельно и используйте:
 
 ```bash
 npm run dev:apps
 ```
+
+Команда `npm run dev` при недоступном Docker завершится с понятным сообщением и подсказкой про `dev:apps`.
 
 ### Health check
 
