@@ -1,7 +1,9 @@
+import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
+
+import { resolvePackageBin } from "./resolve-package-bin.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -132,32 +134,33 @@ async function ensureDockerAvailable() {
 }
 
 const mode = process.argv[2] ?? "full";
+const concurrentlyBin = resolvePackageBin("concurrently");
+
+const concurrentlyArgs = [
+  "-n",
+  "api,web",
+  "-c",
+  "blue,green",
+  "npm run dev -w @plant-care/api",
+];
 
 try {
   if (mode === "mongo") {
     await ensureDockerAvailable();
     await run("docker", ["compose", "up", "-d"]);
   } else if (mode === "apps") {
-    await run("npx", [
-      "concurrently",
-      "-n",
-      "api,web",
-      "-c",
-      "blue,green",
-      "npm run dev -w @plant-care/api",
+    await run(process.execPath, [
+      concurrentlyBin,
+      ...concurrentlyArgs,
       "npm run dev -w @plant-care/web",
     ]);
   } else {
     await ensureDockerAvailable();
     await run("docker", ["compose", "up", "-d"]);
-    await run("npx", [
-      "concurrently",
-      "-n",
-      "api,web",
-      "-c",
-      "blue,green",
-      "npm run dev -w @plant-care/api",
-      `wait-on ${healthUrl} -t 60000 && npm run dev -w @plant-care/web`,
+    await run(process.execPath, [
+      concurrentlyBin,
+      ...concurrentlyArgs,
+      `node scripts/wait-and-dev-web.mjs ${healthUrl} 60000`,
     ]);
   }
 } catch (error) {
