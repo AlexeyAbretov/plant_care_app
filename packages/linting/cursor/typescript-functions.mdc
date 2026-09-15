@@ -1,0 +1,63 @@
+---
+description: Стиль TypeScript-функций (declaration, 1tbs, padding, Elvis, геттеры, импорты)
+globs: "**/*.ts"
+alwaysApply: false
+---
+
+# Стиль функций
+
+Именованные и экспортируемые функции — `function`, не стрелки. Скобка `{` на той же строке (1tbs). У `if` / `for` / `while` всегда `{}`. Пустая строка между логическими блоками (объявления, ветвление, `return`). Не вставляй пустые строки в начало и конец блока. Отступ 2 пробела. Строка ≤ 80 символов (`@stylistic/max-len`).
+
+Геттеры — существительные (`ownerRepo`), не глаголы (`parseOwnerRepo`). Обращение без скобок.
+
+Вложенные поля и «нет значения → дефолт» — через Elvis: `?.` и `??`. Не через `"x" in obj`, цепочки `&&` и тернарники. Пустую строку / `0` как «нет значения» по-прежнему обрабатывай через `||`.
+
+Импорты — группы через пустую строку, сверху вниз: `node:` → npm (включая scoped `@org/pkg`) → локальные алиасы `tsconfig` → `./` → `../`. Алиасы — отдельная группа **после** внешних, не смешивать с пакетами.
+
+Линтер: `npm run lint` (правка: `npm run lint:fix`). `--fix` сортирует импорты (`simple-import-sort`) и переносит строки через Prettier (`printWidth: 80`). Неразбиваемые строки (длинный литерал без пробелов) — вручную. Elvis: `@typescript-eslint/prefer-optional-chain`, `prefer-nullish-coalescing`.
+
+```typescript
+// ❌ BAD
+export const parseOwnerRepo = (repo: string) => {
+  const [owner, name] = repo.split("/");
+  if (!owner || !name) return null;
+  return { owner, repo: name };
+};
+
+get parseOwnerRepo(): OwnerRepo { /* глагол — не имя геттера */ }
+
+const stdout =
+  err && typeof err === "object" && "stdout" in err
+    ? String((err as { stdout: unknown }).stdout)
+    : "";
+
+// ✅ GOOD
+get ownerRepo(): OwnerRepo {
+  const [owner, name] = this.GITHUB_REPO.split("/");
+
+  if (!owner || !name || this.GITHUB_REPO.split("/").length !== 2) {
+    return null;
+  }
+
+  return { owner, repo: name };
+}
+
+const stdout = String((err as { stdout?: unknown })?.stdout ?? "");
+
+// ❌ BAD — алиас в одной группе с npm
+import type { Config } from "@config";
+import Fastify from "fastify";
+import { Agent } from "@cursor/sdk";
+
+import { GitHubClient } from "@providers";
+
+// ✅ GOOD — npm, затем локальные алиасы, затем относительные
+import Fastify from "fastify";
+import { Agent } from "@cursor/sdk";
+
+import type { Config } from "@config";
+import { GitHubClient } from "@providers";
+import type { Role } from "@types";
+
+import { JobStore } from "./jobs";
+```

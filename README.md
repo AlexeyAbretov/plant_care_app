@@ -19,12 +19,9 @@ Monorepo для учёта домашних растений: загрузка �
 ollama pull qwen3-vl:8b
 ```
 
-- Пакет ESLint `@llm/linting` в соседнем каталоге `../linting` ([скачать архив](https://github.com/user-attachments/files/32196662/linting.zip))
-
 ## Установка
 
 ```bash
-# Распаковать linting.zip → ../linting (относительно корня репозитория)
 git clone <repo-url>
 cd plant_care_app
 npm install
@@ -83,6 +80,8 @@ plant_care_app/
 ├── apps/
 │   ├── web/          # Frontend (Vite + React)
 │   └── api/          # Backend (Express)
+├── packages/
+│   └── linting/      # @llm/linting (ESLint + Prettier)
 ├── docs/
 │   ├── CONSTITUTION.md
 │   ├── MVP_PLAN.md

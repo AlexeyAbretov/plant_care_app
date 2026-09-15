@@ -9,7 +9,7 @@
 | База данных | MongoDB (dev — Docker Compose) |
 | Файлы изображений | MongoDB GridFS |
 | LLM | Ollama, модель `qwen3-vl:8b` (server-side, без выбора модели в UI) |
-| Lint | ESLint 9 + Prettier через `@llm/linting` (`file:../linting`) |
+| Lint | ESLint 9 + Prettier через `@llm/linting` (in-repo, `packages/linting`) |
 
 ## Архитектура
 
