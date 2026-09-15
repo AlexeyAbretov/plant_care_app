@@ -9,8 +9,8 @@ export type PlantFormValues = {
   category: string;
   lightPreference: string;
   sizeInfo: string;
-  wateringIntervalDays: number;
-  fertilizingIntervalDays: number;
+  wateringIntervalDays?: number;
+  fertilizingIntervalDays?: number;
   wateringNotes: string;
   fertilizingNotes: string;
   lastWateredAt: Dayjs;
