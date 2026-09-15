@@ -19,9 +19,9 @@
 
 ## Этап 2 — Распознавание Ollama
 
-- [ ] `POST /api/plants/recognize` — vision через `qwen3-vl:8b`
-- [ ] Structured JSON: название, описание, уход, интервалы, категория
-- [ ] Обработка ошибок и таймаутов Ollama
+- [x] `POST /api/plants/recognize` — vision через `qwen3-vl:8b`
+- [x] Structured JSON: название, описание, уход, интервалы, категория
+- [x] Обработка ошибок и таймаутов Ollama
 
 ## Этап 3 — Добавление растения (frontend)
 

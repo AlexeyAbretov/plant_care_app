@@ -8,9 +8,18 @@ import { z } from 'zod';
 
 import { handleUploadError, uploadPlantImage } from '../middleware/upload.js';
 import {
+  OllamaTimeoutError,
+  OllamaUnavailableError,
+} from '../services/ollama.client.js';
+import {
   type ImageMimeType,
   ImageNotFoundError,
 } from '../services/imageStorage.js';
+import {
+  InvalidImageFormatError,
+  PlantRecognitionError,
+  recognizePlantFromImage,
+} from '../services/plant-recognition.service.js';
 import {
   createPlant,
   deletePlant,
@@ -85,6 +94,61 @@ function withUpload(handler: (req: Request, res: Response) => Promise<void>) {
     });
   };
 }
+
+plantsRouter.post('/recognize', (req, res, next) => {
+  uploadPlantImage(req, res, (error) => {
+    if (error) {
+      handleUploadError(error, req, res, next);
+
+      return;
+    }
+
+    void (async () => {
+      const file = req.file;
+
+      if (!file) {
+        res.status(400).json({ error: 'Файл изображения не передан' });
+
+        return;
+      }
+
+      try {
+        const result = await recognizePlantFromImage(
+          file.buffer,
+          file.mimetype,
+        );
+
+        res.json(result);
+      } catch (recognizeError: unknown) {
+        if (recognizeError instanceof InvalidImageFormatError) {
+          res.status(400).json({ error: recognizeError.message });
+
+          return;
+        }
+
+        if (recognizeError instanceof PlantRecognitionError) {
+          res.status(502).json({ error: recognizeError.message });
+
+          return;
+        }
+
+        if (recognizeError instanceof OllamaUnavailableError) {
+          res.status(503).json({ error: recognizeError.message });
+
+          return;
+        }
+
+        if (recognizeError instanceof OllamaTimeoutError) {
+          res.status(504).json({ error: recognizeError.message });
+
+          return;
+        }
+
+        next(recognizeError);
+      }
+    })().catch(next);
+  });
+});
 
 plantsRouter.post(
   '/',
