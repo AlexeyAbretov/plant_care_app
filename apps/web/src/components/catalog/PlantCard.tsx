@@ -51,6 +51,7 @@ export function PlantCard({
         direction="vertical"
         size="middle"
         style={{ width: '100%' }}
+        styles={{ item: { alignSelf: 'stretch', width: '100%' } }}
       >
         <img
           alt={plant.name}
@@ -65,7 +66,6 @@ export function PlantCard({
         <div
           style={{
             alignItems: 'center',
-            alignSelf: 'stretch',
             columnGap: 8,
             display: 'grid',
             gridTemplateColumns: 'max-content 1fr',
