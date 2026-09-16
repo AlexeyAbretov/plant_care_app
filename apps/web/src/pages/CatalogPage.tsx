@@ -10,10 +10,10 @@ export function CatalogPage(): React.JSX.Element {
   const {
     sort,
     setSort,
-    category,
-    setCategory,
-    plants,
     categories,
+    setCategories,
+    plants,
+    categoryOptions,
     loading,
     error,
     reload,
@@ -30,9 +30,9 @@ export function CatalogPage(): React.JSX.Element {
 
       <CatalogToolbar
         categories={categories}
-        category={category}
+        categoryOptions={categoryOptions}
         disabled={loading}
-        onCategoryChange={setCategory}
+        onCategoriesChange={setCategories}
         onSortChange={setSort}
         sort={sort}
       />

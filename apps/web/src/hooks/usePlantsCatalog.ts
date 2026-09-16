@@ -38,9 +38,9 @@ function replacePlantInPlace(plants: Plant[], updatedPlant: Plant): Plant[] {
 
 export function usePlantsCatalog() {
   const [sort, setSort] = useState<PlantSort>('watering');
-  const [category, setCategory] = useState<string | undefined>(undefined);
-  const [plants, setPlants] = useState<Plant[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [plants, setPlants] = useState<Plant[]>([]);
+  const [categoryOptions, setCategoryOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,16 +49,20 @@ export function usePlantsCatalog() {
     setError(null);
 
     try {
+      const hasCategoryFilter = categories.length > 0;
       const [filteredPlants, allPlants] = await Promise.all([
-        listPlants({ sort, category }),
-        category === undefined ? Promise.resolve(null) : listPlants({ sort }),
+        listPlants({
+          sort,
+          categories: hasCategoryFilter ? categories : undefined,
+        }),
+        hasCategoryFilter ? listPlants({ sort }) : Promise.resolve(null),
       ]);
 
       setPlants(filteredPlants);
 
       const categorySource = allPlants ?? filteredPlants;
 
-      setCategories(collectCategories(categorySource));
+      setCategoryOptions(collectCategories(categorySource));
     } catch (loadError: unknown) {
       const errorMessage =
         loadError instanceof ApiError
@@ -69,17 +73,20 @@ export function usePlantsCatalog() {
     } finally {
       setLoading(false);
     }
-  }, [category, sort]);
+  }, [categories, sort]);
 
   useEffect(() => {
     void loadPlants();
   }, [loadPlants]);
 
   const refreshPlants = useCallback(async (): Promise<void> => {
-    const nextPlants = await listPlants({ sort, category });
+    const nextPlants = await listPlants({
+      sort,
+      categories: categories.length > 0 ? categories : undefined,
+    });
 
     setPlants(nextPlants);
-  }, [category, sort]);
+  }, [categories, sort]);
 
   const handleWater = useCallback(async (id: string): Promise<void> => {
     try {
@@ -138,10 +145,10 @@ export function usePlantsCatalog() {
   return {
     sort,
     setSort,
-    category,
-    setCategory,
-    plants,
     categories,
+    setCategories,
+    plants,
+    categoryOptions,
     loading,
     error,
     reload: loadPlants,

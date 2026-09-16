@@ -103,8 +103,12 @@ function buildPlantsQuery(params?: ListPlantsParams): string {
     searchParams.set('sort', params.sort);
   }
 
-  if (params?.category !== undefined && params.category !== '') {
-    searchParams.set('category', params.category);
+  if (params?.categories !== undefined) {
+    for (const item of params.categories) {
+      if (item !== '') {
+        searchParams.append('category', item);
+      }
+    }
   }
 
   const query = searchParams.toString();

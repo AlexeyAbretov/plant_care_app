@@ -94,9 +94,12 @@ export async function createPlant(
 
 export async function listPlants(options: {
   sort: PlantSort;
-  category?: string;
+  categories?: string[];
 }) {
-  const filter = options.category ? { category: options.category } : {};
+  const filter =
+    options.categories !== undefined && options.categories.length > 0
+      ? { category: { $in: options.categories } }
+      : {};
   const dateField = sortField(options.sort);
   const daysField = intervalField(options.sort);
   const msPerDay = 86_400_000;
