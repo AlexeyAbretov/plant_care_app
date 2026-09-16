@@ -2,7 +2,7 @@ export type PlantSort = 'watering' | 'fertilizing';
 
 export interface ListPlantsParams {
   sort?: PlantSort;
-  category?: string;
+  categories?: string[];
 }
 
 export interface Plant {

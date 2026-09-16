@@ -4,20 +4,20 @@ import type { PlantSort } from '../../types/plant.js';
 
 type CatalogToolbarProps = {
   sort: PlantSort;
-  category: string | undefined;
   categories: string[];
+  categoryOptions: string[];
   disabled?: boolean;
   onSortChange: (sort: PlantSort) => void;
-  onCategoryChange: (category: string | undefined) => void;
+  onCategoriesChange: (categories: string[]) => void;
 };
 
 export function CatalogToolbar({
   sort,
-  category,
   categories,
+  categoryOptions,
   disabled = false,
   onSortChange,
-  onCategoryChange,
+  onCategoriesChange,
 }: CatalogToolbarProps): React.JSX.Element {
   return (
     <Space wrap>
@@ -35,16 +35,18 @@ export function CatalogToolbar({
       <Select
         allowClear
         disabled={disabled}
+        maxTagCount="responsive"
+        mode="multiple"
         onChange={(value) => {
-          onCategoryChange(value === '' ? undefined : value);
+          onCategoriesChange(value);
         }}
-        options={[
-          { label: 'Все категории', value: '' },
-          ...categories.map((item) => ({ label: item, value: item })),
-        ]}
-        placeholder="Категория"
+        options={categoryOptions.map((item) => ({
+          label: item,
+          value: item,
+        }))}
+        placeholder="Категории"
         style={{ minWidth: 200 }}
-        value={category ?? ''}
+        value={categories}
       />
     </Space>
   );

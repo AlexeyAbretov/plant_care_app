@@ -22,9 +22,22 @@ export const createPlantSchema = plantFieldsSchema;
 
 export const updatePlantSchema = plantFieldsSchema.partial();
 
+const categoryQuerySchema = z
+  .union([z.string(), z.array(z.string())])
+  .optional()
+  .transform((value) => {
+    if (value === undefined) {
+      return undefined;
+    }
+
+    const items = Array.isArray(value) ? value : [value];
+
+    return items.map((item) => item.trim()).filter((item) => item !== '');
+  });
+
 export const listPlantsQuerySchema = z.object({
   sort: z.enum(['watering', 'fertilizing']).default('watering'),
-  category: z.string().optional(),
+  category: categoryQuerySchema,
 });
 
 export function parseCreatePlantBody(
@@ -41,15 +54,15 @@ export function parseUpdatePlantBody(
 
 export function parseListPlantsQuery(query: Record<string, unknown>): {
   sort: PlantSort;
-  category?: string;
+  categories?: string[];
 } {
   const parsed = listPlantsQuerySchema.parse(query);
 
-  if (parsed.category === undefined || parsed.category === '') {
+  if (parsed.category === undefined || parsed.category.length === 0) {
     return { sort: parsed.sort };
   }
 
-  return { sort: parsed.sort, category: parsed.category };
+  return { sort: parsed.sort, categories: parsed.category };
 }
 
 export function formatZodError(error: z.ZodError): string {
