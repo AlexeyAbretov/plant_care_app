@@ -1,6 +1,6 @@
 import { config } from '../config.js';
 
-export const OLLAMA_MODEL = 'qwen3-vl:8b';
+export const OLLAMA_MODEL = 'qwen2.5vl:7b';
 
 export class OllamaUnavailableError extends Error {
   constructor(message = 'Ollama недоступен') {
