@@ -21,12 +21,15 @@ export function CareProgressTrack({
   const strokeColor = getCareProgressColorHex(color);
 
   return (
-    <Progress
-      percent={percent}
-      showInfo={false}
-      size="small"
-      strokeColor={strokeColor}
-      trailColor={percent === 0 ? strokeColor : undefined}
-    />
+    <div style={{ minWidth: 0, width: '100%' }}>
+      <Progress
+        percent={percent}
+        showInfo={false}
+        size="small"
+        strokeColor={strokeColor}
+        style={{ width: '100%' }}
+        trailColor={percent === 0 ? strokeColor : undefined}
+      />
+    </div>
   );
 }
