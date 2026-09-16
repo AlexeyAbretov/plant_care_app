@@ -7,6 +7,7 @@ import { CareProgressTrack } from './CareProgressBar.js';
 import { getApiUrl } from '../../api/client.js';
 import type { Plant } from '../../types/plant.js';
 import { DeletePlantButton } from '../plant/DeletePlantButton.js';
+import { PlantImagePreview } from '../plant/PlantImagePreview.js';
 
 type PlantCardProps = {
   plant: Plant;
@@ -53,9 +54,10 @@ export function PlantCard({
         style={{ width: '100%' }}
         styles={{ item: { alignSelf: 'stretch', width: '100%' } }}
       >
-        <img
+        <PlantImagePreview
           alt={plant.name}
           height={128}
+          previewSrc={getApiUrl(plant.imageUrl)}
           src={getApiUrl(plant.thumbnailUrl)}
           style={{ borderRadius: 8, objectFit: 'cover' }}
           width={128}
