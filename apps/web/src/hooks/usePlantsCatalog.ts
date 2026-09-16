@@ -22,6 +22,20 @@ function collectCategories(plants: Plant[]): string[] {
   return [...categories].sort((left, right) => left.localeCompare(right, 'ru'));
 }
 
+function replacePlantInPlace(plants: Plant[], updatedPlant: Plant): Plant[] {
+  const index = plants.findIndex((plant) => plant.id === updatedPlant.id);
+
+  if (index === -1) {
+    return plants;
+  }
+
+  const nextPlants = [...plants];
+
+  nextPlants[index] = updatedPlant;
+
+  return nextPlants;
+}
+
 export function usePlantsCatalog() {
   const [sort, setSort] = useState<PlantSort>('watering');
   const [category, setCategory] = useState<string | undefined>(undefined);
@@ -67,41 +81,41 @@ export function usePlantsCatalog() {
     setPlants(nextPlants);
   }, [category, sort]);
 
-  const handleWater = useCallback(
-    async (id: string): Promise<void> => {
-      try {
-        await waterPlant(id);
-        await refreshPlants();
-        message.success('Полив отмечен');
-      } catch (actionError: unknown) {
-        const errorMessage =
-          actionError instanceof ApiError
-            ? actionError.message
-            : 'Не удалось отметить полив';
+  const handleWater = useCallback(async (id: string): Promise<void> => {
+    try {
+      const updatedPlant = await waterPlant(id);
 
-        message.error(errorMessage);
-      }
-    },
-    [refreshPlants],
-  );
+      setPlants((currentPlants) =>
+        replacePlantInPlace(currentPlants, updatedPlant),
+      );
+      message.success('Полив отмечен');
+    } catch (actionError: unknown) {
+      const errorMessage =
+        actionError instanceof ApiError
+          ? actionError.message
+          : 'Не удалось отметить полив';
 
-  const handleFertilize = useCallback(
-    async (id: string): Promise<void> => {
-      try {
-        await fertilizePlant(id);
-        await refreshPlants();
-        message.success('Подкормка отмечена');
-      } catch (actionError: unknown) {
-        const errorMessage =
-          actionError instanceof ApiError
-            ? actionError.message
-            : 'Не удалось отметить подкормку';
+      message.error(errorMessage);
+    }
+  }, []);
 
-        message.error(errorMessage);
-      }
-    },
-    [refreshPlants],
-  );
+  const handleFertilize = useCallback(async (id: string): Promise<void> => {
+    try {
+      const updatedPlant = await fertilizePlant(id);
+
+      setPlants((currentPlants) =>
+        replacePlantInPlace(currentPlants, updatedPlant),
+      );
+      message.success('Подкормка отмечена');
+    } catch (actionError: unknown) {
+      const errorMessage =
+        actionError instanceof ApiError
+          ? actionError.message
+          : 'Не удалось отметить подкормку';
+
+      message.error(errorMessage);
+    }
+  }, []);
 
   const handleDelete = useCallback(
     async (id: string): Promise<void> => {
