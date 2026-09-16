@@ -146,6 +146,7 @@ export function AddPage(): React.JSX.Element {
           disabled={isBusy || step === 'form'}
           file={imageFile}
           onFileSelect={setImageFile}
+          previewOriginalUrl={previewUrl}
           previewUrl={previewUrl}
         />
 

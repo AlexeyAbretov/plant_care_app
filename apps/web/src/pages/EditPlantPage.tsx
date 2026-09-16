@@ -186,6 +186,13 @@ export function EditPlantPage(): React.JSX.Element {
             disabled={isBusy}
             file={imageFile}
             onFileSelect={setImageFile}
+            previewOriginalUrl={
+              imageFile !== null
+                ? previewUrl
+                : plant !== null
+                  ? getApiUrl(plant.imageUrl)
+                  : null
+            }
             previewUrl={previewUrl}
           />
           <PlantConditionButton

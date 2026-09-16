@@ -3,6 +3,8 @@ import type { UploadFile } from 'antd/es/upload/interface';
 
 import { InboxOutlined } from '@ant-design/icons';
 
+import { PlantImagePreview } from './PlantImagePreview.js';
+
 const { Dragger } = Upload;
 
 export const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
@@ -16,6 +18,7 @@ export const ALLOWED_IMAGE_TYPES = [
 type ImageUploadProps = {
   file: File | null;
   previewUrl: string | null;
+  previewOriginalUrl?: string | null;
   onFileSelect: (file: File | null) => void;
   disabled?: boolean;
 };
@@ -39,6 +42,7 @@ function validateImageFile(file: File): string | null {
 export function ImageUpload({
   file,
   previewUrl,
+  previewOriginalUrl,
   onFileSelect,
   disabled = false,
 }: ImageUploadProps): React.JSX.Element {
@@ -84,15 +88,15 @@ export function ImageUpload({
         <p className="ant-upload-hint">JPEG, PNG или WebP, до 5 МБ</p>
       </Dragger>
       {previewUrl !== null ? (
-        <img
+        <PlantImagePreview
           alt="Предпросмотр"
+          previewSrc={previewOriginalUrl ?? previewUrl}
           src={previewUrl}
           style={{
             display: 'block',
             marginTop: 16,
             maxHeight: 240,
             maxWidth: '100%',
-            objectFit: 'contain',
           }}
         />
       ) : null}
