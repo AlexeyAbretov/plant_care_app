@@ -1,35 +1,30 @@
-import { Progress, Typography } from 'antd';
+import { Progress } from 'antd';
 
 import {
   calculateCareProgress,
   getCareProgressColorHex,
 } from '../../utils/careProgress.js';
 
-type CareProgressBarProps = {
-  label: string;
+type CareProgressTrackProps = {
   lastActionDate: string;
   intervalDays: number;
 };
 
-export function CareProgressBar({
-  label,
+export function CareProgressTrack({
   lastActionDate,
   intervalDays,
-}: CareProgressBarProps): React.JSX.Element {
+}: CareProgressTrackProps): React.JSX.Element {
   const { percent, color } = calculateCareProgress(
     lastActionDate,
     intervalDays,
   );
 
   return (
-    <div>
-      <Typography.Text type="secondary">{label}</Typography.Text>
-      <Progress
-        percent={percent}
-        showInfo={false}
-        size="small"
-        strokeColor={getCareProgressColorHex(color)}
-      />
-    </div>
+    <Progress
+      percent={percent}
+      showInfo={false}
+      size="small"
+      strokeColor={getCareProgressColorHex(color)}
+    />
   );
 }
