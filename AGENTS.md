@@ -67,6 +67,17 @@ curl -X POST http://localhost:3001/api/plants/recognize \
   -F "image=@/path/to/plant.jpg"
 ```
 
+Оценка состояния растения по фото:
+
+```bash
+# загруженный файл (форма добавления / новое фото при редактировании)
+curl -X POST http://localhost:3001/api/plants/assess-condition \
+  -F "image=@/path/to/plant.jpg"
+
+# сохранённое растение — оригинал из GridFS
+curl -X POST http://localhost:3001/api/plants/<plant-id>/assess-condition
+```
+
 ## Документация
 
 - `docs/CONSTITUTION.md` — стек, архитектура, формулы, лимиты

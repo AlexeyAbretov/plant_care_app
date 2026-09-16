@@ -16,6 +16,11 @@ import {
   OllamaUnavailableError,
 } from '../services/ollama.client.js';
 import {
+  assessPlantConditionByPlantId,
+  assessPlantConditionFromImage,
+  PlantConditionError,
+} from '../services/plant-condition.service.js';
+import {
   InvalidImageFormatError,
   PlantRecognitionError,
   recognizePlantFromImage,
@@ -79,6 +84,38 @@ function handleRouteError(
   next(error);
 }
 
+function handleConditionError(
+  error: unknown,
+  res: Response,
+  next: NextFunction,
+): void {
+  if (error instanceof InvalidImageFormatError) {
+    res.status(400).json({ error: error.message });
+
+    return;
+  }
+
+  if (error instanceof PlantConditionError) {
+    res.status(502).json({ error: error.message });
+
+    return;
+  }
+
+  if (error instanceof OllamaUnavailableError) {
+    res.status(503).json({ error: error.message });
+
+    return;
+  }
+
+  if (error instanceof OllamaTimeoutError) {
+    res.status(504).json({ error: error.message });
+
+    return;
+  }
+
+  next(error);
+}
+
 function withUpload(handler: (req: Request, res: Response) => Promise<void>) {
   return (req: Request, res: Response, next: NextFunction): void => {
     uploadPlantImage(req, res, (error) => {
@@ -94,6 +131,37 @@ function withUpload(handler: (req: Request, res: Response) => Promise<void>) {
     });
   };
 }
+
+plantsRouter.post('/assess-condition', (req, res, next) => {
+  uploadPlantImage(req, res, (error) => {
+    if (error) {
+      handleUploadError(error, req, res, next);
+
+      return;
+    }
+
+    void (async () => {
+      const file = req.file;
+
+      if (!file) {
+        res.status(400).json({ error: 'Файл изображения не передан' });
+
+        return;
+      }
+
+      try {
+        const result = await assessPlantConditionFromImage(
+          file.buffer,
+          file.mimetype,
+        );
+
+        res.json(result);
+      } catch (conditionError: unknown) {
+        handleConditionError(conditionError, res, next);
+      }
+    })().catch(next);
+  });
+});
 
 plantsRouter.post('/recognize', (req, res, next) => {
   uploadPlantImage(req, res, (error) => {
@@ -178,6 +246,33 @@ plantsRouter.get(
       res.json(plants);
     } catch (error) {
       handleRouteError(error, res, next);
+    }
+  },
+);
+
+plantsRouter.post(
+  '/:id/assess-condition',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = getRouteParam(req, 'id');
+
+      if (!parseObjectId(id)) {
+        res.status(404).json({ error: 'Растение не найдено' });
+
+        return;
+      }
+
+      const result = await assessPlantConditionByPlantId(id);
+
+      res.json(result);
+    } catch (error) {
+      if (error instanceof PlantNotFoundError) {
+        res.status(404).json({ error: error.message });
+
+        return;
+      }
+
+      handleConditionError(error, res, next);
     }
   },
 );
