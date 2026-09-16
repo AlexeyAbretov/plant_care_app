@@ -2,7 +2,7 @@ import { Button, Card, Space, Typography } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { CareProgressBar } from './CareProgressBar.js';
+import { CareProgressTrack } from './CareProgressBar.js';
 
 import { getApiUrl } from '../../api/client.js';
 import type { Plant } from '../../types/plant.js';
@@ -62,16 +62,27 @@ export function PlantCard({
         <Typography.Title level={5} style={{ margin: 0 }}>
           {plant.name}
         </Typography.Title>
-        <CareProgressBar
-          intervalDays={plant.wateringIntervalDays}
-          label="Полив"
-          lastActionDate={plant.lastWateredAt}
-        />
-        <CareProgressBar
-          intervalDays={plant.fertilizingIntervalDays}
-          label="Подкормка"
-          lastActionDate={plant.lastFertilizedAt}
-        />
+        <div
+          style={{
+            alignItems: 'center',
+            columnGap: 8,
+            display: 'grid',
+            gridTemplateColumns: 'max-content 1fr',
+            rowGap: 4,
+            width: '100%',
+          }}
+        >
+          <Typography.Text type="secondary">Полив</Typography.Text>
+          <CareProgressTrack
+            intervalDays={plant.wateringIntervalDays}
+            lastActionDate={plant.lastWateredAt}
+          />
+          <Typography.Text type="secondary">Подкормка</Typography.Text>
+          <CareProgressTrack
+            intervalDays={plant.fertilizingIntervalDays}
+            lastActionDate={plant.lastFertilizedAt}
+          />
+        </div>
         <Space wrap>
           <Button loading={waterLoading} onClick={() => void handleWater()}>
             Полил сегодня
