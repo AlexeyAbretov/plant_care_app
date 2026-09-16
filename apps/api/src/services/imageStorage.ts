@@ -48,6 +48,25 @@ export async function uploadImage(
   });
 }
 
+async function streamToBuffer(stream: Readable): Promise<Buffer> {
+  const chunks: Buffer[] = [];
+
+  for await (const chunk of stream) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  }
+
+  return Buffer.concat(chunks);
+}
+
+export async function getImageBuffer(
+  fileId: ObjectId,
+): Promise<{ buffer: Buffer; contentType: string }> {
+  const { stream, contentType } = await getImageStream(fileId);
+  const buffer = await streamToBuffer(stream);
+
+  return { buffer, contentType };
+}
+
 export async function getImageStream(
   fileId: ObjectId,
 ): Promise<{ stream: Readable; contentType: string }> {

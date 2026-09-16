@@ -24,6 +24,14 @@ export interface Plant {
   updatedAt: string;
 }
 
+export type PlantHealthLevel = 'good' | 'fair' | 'poor';
+
+export interface PlantConditionResult {
+  assessment: string;
+  healthLevel: PlantHealthLevel;
+  recommendations: string[];
+}
+
 export interface PlantRecognizeResult {
   name: string;
   description: string;

@@ -4,6 +4,7 @@ import type {
   CreatePlantPayload,
   ListPlantsParams,
   Plant,
+  PlantConditionResult,
   PlantRecognizeResult,
   UpdatePlantPayload,
 } from '../types/plant.js';
@@ -26,6 +27,33 @@ function appendPlantFields(
   formData.append('fertilizingNotes', payload.fertilizingNotes);
   formData.append('lastWateredAt', payload.lastWateredAt);
   formData.append('lastFertilizedAt', payload.lastFertilizedAt);
+}
+
+export async function assessPlantCondition(
+  file: File,
+): Promise<PlantConditionResult> {
+  const formData = new FormData();
+
+  formData.append('image', file);
+
+  const response = await fetch(getApiUrl('/api/plants/assess-condition'), {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new ApiError(await parseApiError(response), response.status);
+  }
+
+  return (await response.json()) as PlantConditionResult;
+}
+
+export async function assessPlantConditionById(
+  id: string,
+): Promise<PlantConditionResult> {
+  return fetchJson<PlantConditionResult>(`/api/plants/${id}/assess-condition`, {
+    method: 'POST',
+  });
 }
 
 export async function recognizePlant(
