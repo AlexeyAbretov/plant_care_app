@@ -1,5 +1,6 @@
 import { Segmented, Select, Space } from 'antd';
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
+import type { DisplayValueType } from 'rc-select/lib/interface';
 
 import { CloseOutlined } from '@ant-design/icons';
 
@@ -73,9 +74,11 @@ function renderCategoryTag({
 }
 
 function renderOmittedCategories(
-  omittedValues: { label: React.ReactNode }[],
-): React.JSX.Element {
-  const labels = omittedValues.map((item) => String(item.label ?? ''));
+  omittedValues: DisplayValueType[],
+): React.ReactNode {
+  const labels = omittedValues.map((item) =>
+    String(item.label ?? item.value ?? ''),
+  );
   const first = labels[0] ?? '';
   const extra = labels.length > 1 ? ` (+${labels.length - 1})` : '';
 
