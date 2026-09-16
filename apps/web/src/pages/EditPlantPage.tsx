@@ -10,6 +10,7 @@ import {
   PlantForm,
   type PlantFormValues,
 } from '../components/plant/PlantForm.js';
+import { RetryAlert } from '../components/RetryAlert.js';
 import type { Plant } from '../types/plant.js';
 import {
   mapFormValuesToPayload,
@@ -181,23 +182,16 @@ export function EditPlantPage(): React.JSX.Element {
         />
 
         {saveError !== null ? (
-          <Alert
-            action={
-              <Button
-                loading={isBusy}
-                onClick={() => {
-                  form.submit();
-                }}
-                size="small"
-              >
-                Повторить
-              </Button>
-            }
+          <RetryAlert
             closable
             message={saveError}
             onClose={() => {
               setSaveError(null);
             }}
+            onRetry={() => {
+              form.submit();
+            }}
+            retryLoading={isBusy}
             showIcon
             type="error"
           />

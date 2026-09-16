@@ -1,4 +1,4 @@
-import { Alert, Button, Form, message, Space, Spin, Typography } from 'antd';
+import { Button, Form, message, Space, Spin, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ import {
   PlantForm,
   type PlantFormValues,
 } from '../components/plant/PlantForm.js';
+import { RetryAlert } from '../components/RetryAlert.js';
 import type { PlantRecognizeResult } from '../types/plant.js';
 import { mapFormValuesToPayload } from '../utils/plantFormUtils.js';
 
@@ -163,18 +164,7 @@ export function AddPage(): React.JSX.Element {
         {step === 'form' || step === 'saving' ? (
           <>
             {recognizeError !== null ? (
-              <Alert
-                action={
-                  <Button
-                    disabled={step === 'saving'}
-                    onClick={() => {
-                      void handleRecognize();
-                    }}
-                    size="small"
-                  >
-                    Повторить
-                  </Button>
-                }
+              <RetryAlert
                 closable
                 description={
                   'Повторите распознавание или заполните поля вручную.'
@@ -183,29 +173,26 @@ export function AddPage(): React.JSX.Element {
                 onClose={() => {
                   setRecognizeError(null);
                 }}
+                onRetry={() => {
+                  void handleRecognize();
+                }}
+                retryDisabled={step === 'saving'}
                 showIcon
                 type="warning"
               />
             ) : null}
 
             {saveError !== null ? (
-              <Alert
-                action={
-                  <Button
-                    loading={step === 'saving'}
-                    onClick={() => {
-                      form.submit();
-                    }}
-                    size="small"
-                  >
-                    Повторить
-                  </Button>
-                }
+              <RetryAlert
                 closable
                 message={saveError}
                 onClose={() => {
                   setSaveError(null);
                 }}
+                onRetry={() => {
+                  form.submit();
+                }}
+                retryLoading={step === 'saving'}
                 showIcon
                 type="error"
               />

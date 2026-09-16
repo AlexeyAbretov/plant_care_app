@@ -1,8 +1,9 @@
-import { Alert, Button, Col, Empty, Row, Spin, Typography } from 'antd';
+import { Col, Empty, Row, Spin, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 
 import { CatalogToolbar } from '../components/catalog/CatalogToolbar.js';
 import { PlantCard } from '../components/catalog/PlantCard.js';
+import { RetryAlert } from '../components/RetryAlert.js';
 import { usePlantsCatalog } from '../hooks/usePlantsCatalog.js';
 
 export function CatalogPage(): React.JSX.Element {
@@ -37,18 +38,11 @@ export function CatalogPage(): React.JSX.Element {
       />
 
       {error !== null ? (
-        <Alert
-          action={
-            <Button
-              onClick={() => {
-                void reload();
-              }}
-              size="small"
-            >
-              Повторить
-            </Button>
-          }
+        <RetryAlert
           message={error}
+          onRetry={() => {
+            void reload();
+          }}
           showIcon
           style={{ marginTop: 16 }}
           type="error"
