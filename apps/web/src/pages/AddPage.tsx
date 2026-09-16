@@ -4,7 +4,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ApiError } from '../api/client.js';
-import { createPlant, recognizePlant } from '../api/plants.js';
+import {
+  assessPlantCondition,
+  createPlant,
+  recognizePlant,
+} from '../api/plants.js';
+import { PlantConditionButton } from '../components/plant/ConditionButton.js';
 import { ImageUpload } from '../components/plant/ImageUpload.js';
 import {
   PlantForm,
@@ -217,6 +222,11 @@ export function AddPage(): React.JSX.Element {
                 >
                   Сохранить
                 </Button>
+                <PlantConditionButton
+                  assess={() => assessPlantCondition(imageFile!)}
+                  disabled={imageFile === null}
+                  disabledTooltip="Сначала загрузите фото"
+                />
                 <Button
                   disabled={step === 'saving'}
                   onClick={() => {

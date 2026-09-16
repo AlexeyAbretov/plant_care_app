@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom';
 import { CareProgressTrack } from './CareProgressBar.js';
 
 import { getApiUrl } from '../../api/client.js';
+import { assessPlantConditionById } from '../../api/plants.js';
 import type { Plant } from '../../types/plant.js';
+import { PlantConditionButton } from '../plant/ConditionButton.js';
 import { DeletePlantButton } from '../plant/DeletePlantButton.js';
 import { PlantImagePreview } from '../plant/PlantImagePreview.js';
 
@@ -96,6 +98,9 @@ export function PlantCard({
           >
             Подкормил сегодня
           </Button>
+          <PlantConditionButton
+            assess={() => assessPlantConditionById(plant.id)}
+          />
           <Link to={`/plants/${plant.id}/edit`}>
             <Button>Редактировать</Button>
           </Link>

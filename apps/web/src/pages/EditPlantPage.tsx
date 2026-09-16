@@ -3,7 +3,14 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { ApiError, getApiUrl } from '../api/client.js';
-import { deletePlant, getPlant, updatePlant } from '../api/plants.js';
+import {
+  assessPlantCondition,
+  assessPlantConditionById,
+  deletePlant,
+  getPlant,
+  updatePlant,
+} from '../api/plants.js';
+import { PlantConditionButton } from '../components/plant/ConditionButton.js';
 import { DeletePlantButton } from '../components/plant/DeletePlantButton.js';
 import { ImageUpload } from '../components/plant/ImageUpload.js';
 import {
@@ -174,19 +181,28 @@ export function EditPlantPage(): React.JSX.Element {
       </Typography.Title>
 
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <ImageUpload
-          disabled={isBusy}
-          file={imageFile}
-          onFileSelect={setImageFile}
-          previewOriginalUrl={
-            imageFile !== null
-              ? previewUrl
-              : plant !== null
-                ? getApiUrl(plant.imageUrl)
-                : null
-          }
-          previewUrl={previewUrl}
-        />
+        <Space align="start" wrap>
+          <ImageUpload
+            disabled={isBusy}
+            file={imageFile}
+            onFileSelect={setImageFile}
+            previewOriginalUrl={
+              imageFile !== null
+                ? previewUrl
+                : plant !== null
+                  ? getApiUrl(plant.imageUrl)
+                  : null
+            }
+            previewUrl={previewUrl}
+          />
+          <PlantConditionButton
+            assess={() =>
+              imageFile !== null
+                ? assessPlantCondition(imageFile)
+                : assessPlantConditionById(id!)
+            }
+          />
+        </Space>
 
         {saveError !== null ? (
           <RetryAlert
