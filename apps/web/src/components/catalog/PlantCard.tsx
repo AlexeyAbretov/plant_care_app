@@ -51,6 +51,7 @@ export function PlantCard({
         direction="vertical"
         size="middle"
         style={{ width: '100%' }}
+        styles={{ item: { alignSelf: 'stretch', width: '100%' } }}
       >
         <img
           alt={plant.name}
