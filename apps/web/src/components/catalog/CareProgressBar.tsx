@@ -18,13 +18,15 @@ export function CareProgressTrack({
     lastActionDate,
     intervalDays,
   );
+  const strokeColor = getCareProgressColorHex(color);
 
   return (
     <Progress
       percent={percent}
       showInfo={false}
       size="small"
-      strokeColor={getCareProgressColorHex(color)}
+      strokeColor={strokeColor}
+      trailColor={percent === 0 ? strokeColor : undefined}
     />
   );
 }
