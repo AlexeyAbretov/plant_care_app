@@ -50,6 +50,7 @@ export function AddPage(): React.JSX.Element {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [recognizeError, setRecognizeError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (imageFile === null) {
@@ -69,6 +70,7 @@ export function AddPage(): React.JSX.Element {
 
   function openManualForm(): void {
     setRecognizeError(null);
+    setSaveError(null);
     form.setFieldsValue(getDefaultFormValues());
     setStep('form');
   }
@@ -107,6 +109,7 @@ export function AddPage(): React.JSX.Element {
       return;
     }
 
+    setSaveError(null);
     setStep('saving');
 
     try {
@@ -119,7 +122,7 @@ export function AddPage(): React.JSX.Element {
           ? error.message
           : 'Не удалось сохранить растение';
 
-      message.error(errorMessage);
+      setSaveError(errorMessage);
       setStep('form');
     }
   }
@@ -161,14 +164,50 @@ export function AddPage(): React.JSX.Element {
           <>
             {recognizeError !== null ? (
               <Alert
+                action={
+                  <Button
+                    disabled={step === 'saving'}
+                    onClick={() => {
+                      void handleRecognize();
+                    }}
+                    size="small"
+                  >
+                    Повторить
+                  </Button>
+                }
                 closable
-                description="Заполните поля вручную или попробуйте другое фото."
+                description={
+                  'Повторите распознавание или заполните поля вручную.'
+                }
                 message={recognizeError}
                 onClose={() => {
                   setRecognizeError(null);
                 }}
                 showIcon
                 type="warning"
+              />
+            ) : null}
+
+            {saveError !== null ? (
+              <Alert
+                action={
+                  <Button
+                    loading={step === 'saving'}
+                    onClick={() => {
+                      form.submit();
+                    }}
+                    size="small"
+                  >
+                    Повторить
+                  </Button>
+                }
+                closable
+                message={saveError}
+                onClose={() => {
+                  setSaveError(null);
+                }}
+                showIcon
+                type="error"
               />
             ) : null}
 
@@ -195,6 +234,7 @@ export function AddPage(): React.JSX.Element {
                   onClick={() => {
                     setStep('upload');
                     setRecognizeError(null);
+                    setSaveError(null);
                   }}
                 >
                   Выбрать другое фото
