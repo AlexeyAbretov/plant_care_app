@@ -5,6 +5,8 @@ import { PlusOutlined, UnorderedListOutlined } from '@ant-design/icons';
 
 const { Header, Content } = Layout;
 
+const HEADER_HEIGHT = 64;
+
 type AppLayoutProps = {
   children: React.ReactNode;
 };
@@ -16,7 +18,17 @@ export function AppLayout({ children }: AppLayoutProps): React.JSX.Element {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+      <Header
+        style={{
+          position: 'fixed',
+          top: 0,
+          zIndex: 100,
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 24,
+        }}
+      >
         <Typography.Title level={4} style={{ color: '#fff', margin: 0 }}>
           Уход за растениями
         </Typography.Title>
@@ -39,7 +51,14 @@ export function AppLayout({ children }: AppLayoutProps): React.JSX.Element {
           style={{ flex: 1, minWidth: 0 }}
         />
       </Header>
-      <Content style={{ padding: 24 }}>{children}</Content>
+      <Content
+        style={{
+          padding: 24,
+          paddingTop: HEADER_HEIGHT + 24,
+        }}
+      >
+        {children}
+      </Content>
     </Layout>
   );
 }
