@@ -27,6 +27,7 @@ export function EditPlantPage(): React.JSX.Element {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id === undefined) {
@@ -98,6 +99,7 @@ export function EditPlantPage(): React.JSX.Element {
       return;
     }
 
+    setSaveError(null);
     setStep('saving');
 
     try {
@@ -114,7 +116,7 @@ export function EditPlantPage(): React.JSX.Element {
           ? error.message
           : 'Не удалось обновить растение';
 
-      message.error(errorMessage);
+      setSaveError(errorMessage);
       setStep('form');
     }
   }
@@ -177,6 +179,29 @@ export function EditPlantPage(): React.JSX.Element {
           onFileSelect={setImageFile}
           previewUrl={previewUrl}
         />
+
+        {saveError !== null ? (
+          <Alert
+            action={
+              <Button
+                loading={isBusy}
+                onClick={() => {
+                  form.submit();
+                }}
+                size="small"
+              >
+                Повторить
+              </Button>
+            }
+            closable
+            message={saveError}
+            onClose={() => {
+              setSaveError(null);
+            }}
+            showIcon
+            type="error"
+          />
+        ) : null}
 
         <Form
           disabled={isBusy}
