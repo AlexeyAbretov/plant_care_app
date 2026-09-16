@@ -65,6 +65,7 @@ export function PlantCard({
         <div
           style={{
             alignItems: 'center',
+            alignSelf: 'stretch',
             columnGap: 8,
             display: 'grid',
             gridTemplateColumns: 'max-content 1fr',
