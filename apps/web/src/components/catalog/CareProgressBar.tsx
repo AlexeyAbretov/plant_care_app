@@ -20,6 +20,7 @@ export function CareProgressBar({
     lastActionDate,
     intervalDays,
   );
+  const strokeColor = getCareProgressColorHex(color);
 
   return (
     <div>
@@ -28,7 +29,8 @@ export function CareProgressBar({
         percent={percent}
         showInfo={false}
         size="small"
-        strokeColor={getCareProgressColorHex(color)}
+        strokeColor={strokeColor}
+        trailColor={percent === 0 ? strokeColor : undefined}
       />
     </div>
   );
