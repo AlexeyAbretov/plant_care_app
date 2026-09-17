@@ -1,6 +1,5 @@
 import { Segmented, Select, Space } from 'antd';
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
-import type { DisplayValueType } from 'rc-select/lib/interface';
 
 import { CloseOutlined } from '@ant-design/icons';
 
@@ -15,22 +14,12 @@ type CatalogToolbarProps = {
   onCategoriesChange: (categories: string[]) => void;
 };
 
-const CATEGORY_SELECT_MIN_WIDTH = 300;
-const CATEGORY_LABEL_PREVIEW_LENGTH = 28;
-
-function formatCategoryPreview(text: string): string {
-  if (text.length <= CATEGORY_LABEL_PREVIEW_LENGTH) {
-    return text;
-  }
-
-  return `${text.slice(0, CATEGORY_LABEL_PREVIEW_LENGTH)}…`;
-}
+const CATEGORY_SELECT_WIDTH = 400;
 
 function renderCategoryTag({
   label,
   closable,
   onClose,
-  isMaxTag,
 }: CustomTagProps): React.JSX.Element {
   const text =
     typeof label === 'string' || typeof label === 'number'
@@ -46,17 +35,14 @@ function renderCategoryTag({
       <span
         className="ant-select-selection-item-content"
         style={{
-          display: 'inline-block',
-          maxWidth: '100%',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          verticalAlign: 'bottom',
-          whiteSpace: 'nowrap',
+          overflowWrap: 'anywhere',
+          whiteSpace: 'normal',
+          wordBreak: 'break-word',
         }}
       >
         {text}
       </span>
-      {closable && !isMaxTag ? (
+      {closable ? (
         <span
           className="ant-select-selection-item-remove"
           onClick={onClose}
@@ -69,22 +55,6 @@ function renderCategoryTag({
           <CloseOutlined />
         </span>
       ) : null}
-    </span>
-  );
-}
-
-function renderOmittedCategories(
-  omittedValues: DisplayValueType[],
-): React.ReactNode {
-  const labels = omittedValues.map((item) =>
-    String(item.label ?? item.value ?? ''),
-  );
-  const first = labels[0] ?? '';
-  const extra = labels.length > 1 ? ` (+${labels.length - 1})` : '';
-
-  return (
-    <span title={labels.join(', ')}>
-      {`${formatCategoryPreview(first)}${extra}`}
     </span>
   );
 }
@@ -113,9 +83,7 @@ export function CatalogToolbar({
       <Select
         allowClear
         disabled={disabled}
-        dropdownStyle={{ minWidth: CATEGORY_SELECT_MIN_WIDTH }}
-        maxTagCount="responsive"
-        maxTagPlaceholder={renderOmittedCategories}
+        dropdownStyle={{ minWidth: CATEGORY_SELECT_WIDTH }}
         mode="multiple"
         onChange={(value) => {
           onCategoriesChange(value);
@@ -127,9 +95,15 @@ export function CatalogToolbar({
         placeholder="Категории"
         popupMatchSelectWidth={false}
         style={{
-          flex: '1 1 300px',
-          maxWidth: 360,
-          minWidth: CATEGORY_SELECT_MIN_WIDTH,
+          flex: `1 1 ${CATEGORY_SELECT_WIDTH}px`,
+          maxWidth: '100%',
+          minWidth: CATEGORY_SELECT_WIDTH,
+          width: CATEGORY_SELECT_WIDTH,
+        }}
+        styles={{
+          root: {
+            height: 'auto',
+          },
         }}
         tagRender={renderCategoryTag}
         value={categories}
