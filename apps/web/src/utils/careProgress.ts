@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-export type CareProgressColor = 'green' | 'yellow' | 'red';
+export type CareProgressColor = 'green' | 'yellow' | 'orange' | 'red';
 
 export interface CareProgressResult {
   progress: number;
@@ -27,11 +27,19 @@ export function getCareProgressColor(
   progress: number,
   overdue: boolean,
 ): CareProgressColor {
-  if (overdue || progress < 0.2) {
+  if (overdue) {
+    return 'red';
+  }
+
+  if (progress <= 0.25) {
     return 'red';
   }
 
   if (progress <= 0.5) {
+    return 'orange';
+  }
+
+  if (progress <= 0.75) {
     return 'yellow';
   }
 
@@ -44,6 +52,8 @@ export function getCareProgressColorHex(color: CareProgressColor): string {
       return '#52c41a';
     case 'yellow':
       return '#faad14';
+    case 'orange':
+      return '#fa8c16';
     case 'red':
       return '#ff4d4f';
   }
