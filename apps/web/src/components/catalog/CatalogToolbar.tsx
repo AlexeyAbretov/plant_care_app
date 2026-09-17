@@ -1,4 +1,4 @@
-import { Segmented, Select, Space } from 'antd';
+import { Flex, Segmented, Select } from 'antd';
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 
 import { CloseOutlined } from '@ant-design/icons';
@@ -14,7 +14,8 @@ type CatalogToolbarProps = {
   onCategoriesChange: (categories: string[]) => void;
 };
 
-const CATEGORY_SELECT_WIDTH = 400;
+const CATEGORY_DROPDOWN_MIN_WIDTH = 300;
+const CATEGORY_SELECT_MAX_WIDTH = 360;
 
 function renderCategoryTag({
   label,
@@ -68,7 +69,7 @@ export function CatalogToolbar({
   onCategoriesChange,
 }: CatalogToolbarProps): React.JSX.Element {
   return (
-    <Space wrap>
+    <Flex gap="middle" style={{ minWidth: 0, width: '100%' }} wrap="wrap">
       <Segmented
         disabled={disabled}
         onChange={(value) => {
@@ -80,34 +81,38 @@ export function CatalogToolbar({
         ]}
         value={sort}
       />
-      <Select
-        allowClear
-        disabled={disabled}
-        dropdownStyle={{ minWidth: CATEGORY_SELECT_WIDTH }}
-        mode="multiple"
-        onChange={(value) => {
-          onCategoriesChange(value);
-        }}
-        options={categoryOptions.map((item) => ({
-          label: item,
-          value: item,
-        }))}
-        placeholder="Категории"
-        popupMatchSelectWidth={false}
+      <div
         style={{
-          flex: `1 1 ${CATEGORY_SELECT_WIDTH}px`,
-          maxWidth: '100%',
-          minWidth: CATEGORY_SELECT_WIDTH,
-          width: CATEGORY_SELECT_WIDTH,
+          flex: '1 1 12rem',
+          maxWidth: `min(100%, ${CATEGORY_SELECT_MAX_WIDTH}px)`,
+          minWidth: 0,
+          width: '100%',
         }}
-        styles={{
-          root: {
-            height: 'auto',
-          },
-        }}
-        tagRender={renderCategoryTag}
-        value={categories}
-      />
-    </Space>
+      >
+        <Select
+          allowClear
+          disabled={disabled}
+          dropdownStyle={{ minWidth: CATEGORY_DROPDOWN_MIN_WIDTH }}
+          mode="multiple"
+          onChange={(value) => {
+            onCategoriesChange(value);
+          }}
+          options={categoryOptions.map((item) => ({
+            label: item,
+            value: item,
+          }))}
+          placeholder="Категории"
+          popupMatchSelectWidth={false}
+          style={{ width: '100%' }}
+          styles={{
+            root: {
+              height: 'auto',
+            },
+          }}
+          tagRender={renderCategoryTag}
+          value={categories}
+        />
+      </div>
+    </Flex>
   );
 }
