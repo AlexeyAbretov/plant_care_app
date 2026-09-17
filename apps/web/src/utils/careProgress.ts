@@ -51,7 +51,7 @@ export function getCareProgressColorHex(color: CareProgressColor): string {
     case 'green':
       return '#52c41a';
     case 'yellow':
-      return '#faad14';
+      return '#bae637';
     case 'orange':
       return '#fa8c16';
     case 'red':
