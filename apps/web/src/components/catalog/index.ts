@@ -1,3 +1,3 @@
-export { CareProgressTrack } from './CareProgressBar.js';
-export { CatalogToolbar } from './CatalogToolbar.js';
-export { PlantCard } from './PlantCard.js';
+export { CareProgressTrack } from './CareProgressBar';
+export { CatalogToolbar } from './CatalogToolbar';
+export { PlantCard } from './PlantCard';

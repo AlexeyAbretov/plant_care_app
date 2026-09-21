@@ -1,2 +1,2 @@
-export { AppLayout } from './AppLayout.js';
-export { RetryAlert } from './RetryAlert.js';
+export { AppLayout } from './AppLayout';
+export { RetryAlert } from './RetryAlert';

@@ -1,7 +1,7 @@
 import { DatePicker, Form, Input, InputNumber } from 'antd';
 import type { Dayjs } from 'dayjs';
 
-import { plantFormRules } from './plantFormRules.js';
+import { plantFormRules } from './plantFormRules';
 
 export type PlantFormValues = {
   name: string;

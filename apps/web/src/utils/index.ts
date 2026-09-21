@@ -4,9 +4,9 @@ export {
   type CareProgressResult,
   getCareProgressColor,
   getCareProgressColorHex,
-} from './careProgress.js';
+} from './careProgress';
 export {
   formatDateForApi,
   mapFormValuesToPayload,
   mapPlantToFormValues,
-} from './plantFormUtils.js';
+} from './plantFormUtils';

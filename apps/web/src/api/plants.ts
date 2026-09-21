@@ -1,4 +1,4 @@
-import { ApiError, fetchJson, getApiUrl, parseApiError } from './client.js';
+import { ApiError, fetchJson, getApiUrl, parseApiError } from './client';
 
 import type {
   CreatePlantPayload,
@@ -7,7 +7,7 @@ import type {
   PlantConditionResult,
   PlantRecognizeResult,
   UpdatePlantPayload,
-} from '../types/index.js';
+} from '../types/index';
 
 function appendPlantFields(
   formData: FormData,

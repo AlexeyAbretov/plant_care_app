@@ -7,4 +7,4 @@ export type {
   PlantRecognizeResult,
   PlantSort,
   UpdatePlantPayload,
-} from './plant.js';
+} from './plant';
