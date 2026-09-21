@@ -3,12 +3,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  ApiError,
-  assessPlantCondition,
-  createPlant,
-  recognizePlant,
-} from '@api';
+import { ApiError, plantsApi } from '@api';
 import {
   ImageUpload,
   mapFormValuesToPayload,
@@ -92,7 +87,7 @@ export function AddPage(): React.JSX.Element {
     setStep('recognizing');
 
     try {
-      const result = await recognizePlant(imageFile);
+      const result = await plantsApi.recognize(imageFile);
 
       form.setFieldsValue(mapRecognizeToFormValues(result));
       setStep('form');
@@ -119,7 +114,7 @@ export function AddPage(): React.JSX.Element {
     setStep('saving');
 
     try {
-      await createPlant(mapFormValuesToPayload(values), imageFile);
+      await plantsApi.create(mapFormValuesToPayload(values), imageFile);
       message.success('Растение сохранено');
       navigate('/');
     } catch (error: unknown) {
@@ -223,7 +218,7 @@ export function AddPage(): React.JSX.Element {
                   Сохранить
                 </Button>
                 <PlantConditionButton
-                  assess={() => assessPlantCondition(imageFile!)}
+                  assess={() => plantsApi.assessCondition(imageFile!)}
                   disabled={imageFile === null}
                   disabledTooltip="Сначала загрузите фото"
                 />

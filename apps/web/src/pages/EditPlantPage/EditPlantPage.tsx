@@ -2,15 +2,7 @@ import { Alert, Button, Form, message, Space, Spin, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import {
-  ApiError,
-  assessPlantCondition,
-  assessPlantConditionById,
-  deletePlant,
-  getApiUrl,
-  getPlant,
-  updatePlant,
-} from '@api';
+import { apiClient, ApiError, plantsApi } from '@api';
 import {
   DeletePlantButton,
   ImageUpload,
@@ -49,7 +41,7 @@ export function EditPlantPage(): React.JSX.Element {
       setStep('loading');
 
       try {
-        const loadedPlant = await getPlant(id!);
+        const loadedPlant = await plantsApi.get(id!);
 
         if (cancelled) {
           return;
@@ -87,7 +79,7 @@ export function EditPlantPage(): React.JSX.Element {
 
   useEffect(() => {
     if (imageFile === null) {
-      setPreviewUrl(plant !== null ? getApiUrl(plant.thumbnailUrl) : null);
+      setPreviewUrl(plant !== null ? apiClient.url(plant.thumbnailUrl) : null);
 
       return;
     }
@@ -110,7 +102,7 @@ export function EditPlantPage(): React.JSX.Element {
     setStep('saving');
 
     try {
-      await updatePlant(
+      await plantsApi.update(
         id,
         mapFormValuesToPayload(values),
         imageFile ?? undefined,
@@ -134,7 +126,7 @@ export function EditPlantPage(): React.JSX.Element {
     }
 
     try {
-      await deletePlant(id);
+      await plantsApi.delete(id);
       message.success('Растение удалено');
       navigate('/');
     } catch (error: unknown) {
@@ -189,7 +181,7 @@ export function EditPlantPage(): React.JSX.Element {
               imageFile !== null
                 ? previewUrl
                 : plant !== null
-                  ? getApiUrl(plant.imageUrl)
+                  ? apiClient.url(plant.imageUrl)
                   : null
             }
             previewUrl={previewUrl}
@@ -197,8 +189,8 @@ export function EditPlantPage(): React.JSX.Element {
           <PlantConditionButton
             assess={() =>
               imageFile !== null
-                ? assessPlantCondition(imageFile)
-                : assessPlantConditionById(id!)
+                ? plantsApi.assessCondition(imageFile)
+                : plantsApi.assessConditionById(id!)
             }
           />
         </Space>

@@ -2,7 +2,7 @@ import { Button, Card, Space, Typography } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { assessPlantConditionById, getApiUrl } from '@api';
+import { apiClient, plantsApi } from '@api';
 import type { Plant } from '@types';
 
 import {
@@ -60,8 +60,8 @@ export function PlantCard({
         <PlantImagePreview
           alt={plant.name}
           height={128}
-          previewSrc={getApiUrl(plant.imageUrl)}
-          src={getApiUrl(plant.thumbnailUrl)}
+          previewSrc={apiClient.url(plant.imageUrl)}
+          src={apiClient.url(plant.thumbnailUrl)}
           style={{ borderRadius: 8, objectFit: 'cover' }}
           width={128}
         />
@@ -100,7 +100,7 @@ export function PlantCard({
             Подкормил сегодня
           </Button>
           <PlantConditionButton
-            assess={() => assessPlantConditionById(plant.id)}
+            assess={() => plantsApi.assessConditionById(plant.id)}
           />
           <Link to={`/plants/${plant.id}/edit`}>
             <Button>Редактировать</Button>

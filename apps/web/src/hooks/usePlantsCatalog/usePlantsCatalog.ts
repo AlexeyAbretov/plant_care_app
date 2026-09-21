@@ -1,13 +1,7 @@
 import { message } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
-import {
-  ApiError,
-  deletePlant as deletePlantApi,
-  fertilizePlant,
-  listPlants,
-  waterPlant,
-} from '@api';
+import { ApiError, plantsApi } from '@api';
 import type { Plant, PlantSort } from '@types';
 
 function collectCategories(plants: Plant[]): string[] {
@@ -51,11 +45,11 @@ export function usePlantsCatalog() {
     try {
       const hasCategoryFilter = categories.length > 0;
       const [filteredPlants, allPlants] = await Promise.all([
-        listPlants({
+        plantsApi.list({
           sort,
           categories: hasCategoryFilter ? categories : undefined,
         }),
-        hasCategoryFilter ? listPlants({ sort }) : Promise.resolve(null),
+        hasCategoryFilter ? plantsApi.list({ sort }) : Promise.resolve(null),
       ]);
 
       setPlants(filteredPlants);
@@ -80,7 +74,7 @@ export function usePlantsCatalog() {
   }, [loadPlants]);
 
   const refreshPlants = useCallback(async (): Promise<void> => {
-    const nextPlants = await listPlants({
+    const nextPlants = await plantsApi.list({
       sort,
       categories: categories.length > 0 ? categories : undefined,
     });
@@ -90,7 +84,7 @@ export function usePlantsCatalog() {
 
   const handleWater = useCallback(async (id: string): Promise<void> => {
     try {
-      const updatedPlant = await waterPlant(id);
+      const updatedPlant = await plantsApi.water(id);
 
       setPlants((currentPlants) =>
         replacePlantInPlace(currentPlants, updatedPlant),
@@ -108,7 +102,7 @@ export function usePlantsCatalog() {
 
   const handleFertilize = useCallback(async (id: string): Promise<void> => {
     try {
-      const updatedPlant = await fertilizePlant(id);
+      const updatedPlant = await plantsApi.fertilize(id);
 
       setPlants((currentPlants) =>
         replacePlantInPlace(currentPlants, updatedPlant),
@@ -127,7 +121,7 @@ export function usePlantsCatalog() {
   const handleDelete = useCallback(
     async (id: string): Promise<void> => {
       try {
-        await deletePlantApi(id);
+        await plantsApi.delete(id);
         await refreshPlants();
         message.success('Растение удалено');
       } catch (actionError: unknown) {
