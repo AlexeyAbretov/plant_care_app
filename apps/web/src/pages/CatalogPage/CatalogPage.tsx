@@ -88,7 +88,14 @@ export const CatalogPage = (): React.JSX.Element => {
           {!loading && error === null && plants.length > 0 ? (
             <Row gutter={[16, 16]}>
               {plants.map((plant) => (
-                <Col key={plant.id} lg={6} md={8} sm={12} xs={24}>
+                <Col
+                  key={plant.id}
+                  lg={6}
+                  md={8}
+                  sm={12}
+                  style={{ minWidth: 0 }}
+                  xs={24}
+                >
                   <PlantCard
                     onDelete={deletePlant}
                     onFertilize={fertilizePlant}

@@ -1,4 +1,4 @@
-import { Button, Card, Space, Typography } from 'antd';
+import { Button, Card, Flex, Space, Typography } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -17,6 +17,14 @@ type PlantCardProps = {
   onWater: (id: string) => Promise<void>;
   onFertilize: (id: string) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
+};
+
+const actionButtonStyle: React.CSSProperties = {
+  height: 'auto',
+  maxWidth: '100%',
+  minHeight: 32,
+  minWidth: 0,
+  whiteSpace: 'normal',
 };
 
 export const PlantCard = ({
@@ -49,13 +57,13 @@ export const PlantCard = ({
   };
 
   return (
-    <Card>
+    <Card style={{ minWidth: 0, width: '100%' }}>
       <Space
         align="start"
         direction="vertical"
         size="middle"
-        style={{ width: '100%' }}
-        styles={{ item: { alignSelf: 'stretch', width: '100%' } }}
+        style={{ minWidth: 0, width: '100%' }}
+        styles={{ item: { alignSelf: 'stretch', minWidth: 0, width: '100%' } }}
       >
         <PlantImagePreview
           alt={plant.name}
@@ -89,27 +97,35 @@ export const PlantCard = ({
             lastActionDate={plant.lastFertilizedAt}
           />
         </div>
-        <Space wrap>
-          <Button loading={waterLoading} onClick={() => void handleWater()}>
+        <Flex gap={8} wrap="wrap" style={{ minWidth: 0, width: '100%' }}>
+          <Button
+            loading={waterLoading}
+            onClick={() => void handleWater()}
+            style={actionButtonStyle}
+          >
             Полил сегодня
           </Button>
           <Button
             loading={fertilizeLoading}
             onClick={() => void handleFertilize()}
+            style={actionButtonStyle}
           >
             Подкормил сегодня
           </Button>
           <PlantConditionButton
             assess={() => plantsApi.assessConditionById(plant.id)}
           />
-          <Link to={`/plants/${plant.id}/edit`}>
-            <Button>Редактировать</Button>
+          <Link
+            to={`/plants/${plant.id}/edit`}
+            style={{ maxWidth: '100%', minWidth: 0 }}
+          >
+            <Button style={actionButtonStyle}>Редактировать</Button>
           </Link>
           <DeletePlantButton
             onConfirm={() => onDelete(plant.id)}
             plantName={plant.name}
           />
-        </Space>
+        </Flex>
       </Space>
     </Card>
   );
