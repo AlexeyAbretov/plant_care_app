@@ -3,7 +3,7 @@ import type { UploadFile } from 'antd/es/upload/interface';
 
 import { InboxOutlined } from '@ant-design/icons';
 
-import { PlantImagePreview } from './PlantImagePreview';
+import { PlantImagePreview } from '../PlantImagePreview/index.js';
 
 const { Dragger } = Upload;
 
