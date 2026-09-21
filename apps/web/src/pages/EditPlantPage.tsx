@@ -2,27 +2,28 @@ import { Alert, Button, Form, message, Space, Spin, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { ApiError, getApiUrl } from '../api/client.js';
 import {
+  ApiError,
   assessPlantCondition,
   assessPlantConditionById,
   deletePlant,
+  getApiUrl,
   getPlant,
   updatePlant,
-} from '../api/plants.js';
-import { PlantConditionButton } from '../components/plant/ConditionButton.js';
-import { DeletePlantButton } from '../components/plant/DeletePlantButton.js';
-import { ImageUpload } from '../components/plant/ImageUpload.js';
+} from '../api/index.js';
+import { RetryAlert } from '../components/index.js';
 import {
+  DeletePlantButton,
+  ImageUpload,
+  PlantConditionButton,
   PlantForm,
   type PlantFormValues,
-} from '../components/plant/PlantForm.js';
-import { RetryAlert } from '../components/RetryAlert.js';
-import type { Plant } from '../types/plant.js';
+} from '../components/plant/index.js';
+import type { Plant } from '../types/index.js';
 import {
   mapFormValuesToPayload,
   mapPlantToFormValues,
-} from '../utils/plantFormUtils.js';
+} from '../utils/index.js';
 
 type EditStep = 'loading' | 'form' | 'saving' | 'notFound' | 'error';
 

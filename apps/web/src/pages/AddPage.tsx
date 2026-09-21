@@ -3,21 +3,21 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ApiError } from '../api/client.js';
 import {
+  ApiError,
   assessPlantCondition,
   createPlant,
   recognizePlant,
-} from '../api/plants.js';
-import { PlantConditionButton } from '../components/plant/ConditionButton.js';
-import { ImageUpload } from '../components/plant/ImageUpload.js';
+} from '../api/index.js';
+import { RetryAlert } from '../components/index.js';
 import {
+  ImageUpload,
+  PlantConditionButton,
   PlantForm,
   type PlantFormValues,
-} from '../components/plant/PlantForm.js';
-import { RetryAlert } from '../components/RetryAlert.js';
-import type { PlantRecognizeResult } from '../types/plant.js';
-import { mapFormValuesToPayload } from '../utils/plantFormUtils.js';
+} from '../components/plant/index.js';
+import type { PlantRecognizeResult } from '../types/index.js';
+import { mapFormValuesToPayload } from '../utils/index.js';
 
 type AddStep = 'upload' | 'recognizing' | 'form' | 'saving';
 

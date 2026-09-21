@@ -3,10 +3,8 @@ import ruRU from 'antd/locale/ru_RU';
 import dayjs from 'dayjs';
 import { Route, Routes } from 'react-router-dom';
 
-import { AppLayout } from './components/AppLayout';
-import { AddPage } from './pages/AddPage';
-import { CatalogPage } from './pages/CatalogPage';
-import { EditPlantPage } from './pages/EditPlantPage';
+import { AppLayout } from './components/index.js';
+import { AddPage, CatalogPage, EditPlantPage } from './pages/index.js';
 
 dayjs.locale('ru');
 
