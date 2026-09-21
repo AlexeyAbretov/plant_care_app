@@ -7,8 +7,8 @@ import {
   fertilizePlant,
   listPlants,
   waterPlant,
-} from '../../api';
-import type { Plant, PlantSort } from '../../types';
+} from '@api';
+import type { Plant, PlantSort } from '@types';
 
 function collectCategories(plants: Plant[]): string[] {
   const categories = new Set<string>();

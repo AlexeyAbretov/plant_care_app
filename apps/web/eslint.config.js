@@ -1,5 +1,9 @@
 import createConfig from "@llm/linting";
 
+const aliasImportMessage =
+  "Use path aliases (@api, @components, @hooks, @pages, @types, @utils, " +
+  "@config) instead of relative paths to src root folders.";
+
 export default [
   ...createConfig({
     files: ["src/**/*.ts", "src/**/*.tsx"],
@@ -17,6 +21,23 @@ export default [
               importNamePattern: "^.+\\.js$",
               message:
                 "Relative imports must not include the .js file extension.",
+            },
+            {
+              regex:
+                "^(\\.\\./)+(api|components|hooks|pages|types|utils)(/|$)",
+              message: aliasImportMessage,
+            },
+            {
+              regex: "^(\\.\\./)+config$",
+              message: "Use @config instead of a relative path.",
+            },
+            {
+              regex: "^\\./(api|components|hooks|pages|types|utils)(/|$)",
+              message: aliasImportMessage,
+            },
+            {
+              regex: "^\\./config$",
+              message: "Use @config instead of ./config.",
             },
           ],
         },
@@ -42,8 +63,7 @@ export default [
                 "**/components/catalog/*",
               ],
               message:
-                "Import from the components barrel (../components) " +
-                "instead of plant/catalog subpaths.",
+                "Import from @components instead of plant/catalog subpaths.",
             },
           ],
         },

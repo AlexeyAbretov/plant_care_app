@@ -2,8 +2,9 @@ import { Button, Card, Space, Typography } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { assessPlantConditionById, getApiUrl } from '../../../api';
-import type { Plant } from '../../../types';
+import { assessPlantConditionById, getApiUrl } from '@api';
+import type { Plant } from '@types';
+
 import {
   DeletePlantButton,
   PlantConditionButton,

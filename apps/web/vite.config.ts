@@ -3,10 +3,9 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig, loadEnv } from "vite";
 
-const rootDir = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../..",
-);
+const webDir = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(webDir, "../..");
+const srcDir = path.resolve(webDir, "src");
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, rootDir, "");
@@ -15,6 +14,17 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     envDir: rootDir,
+    resolve: {
+      alias: {
+        "@api": path.resolve(srcDir, "api"),
+        "@components": path.resolve(srcDir, "components"),
+        "@config": path.resolve(srcDir, "config.ts"),
+        "@hooks": path.resolve(srcDir, "hooks"),
+        "@pages": path.resolve(srcDir, "pages"),
+        "@types": path.resolve(srcDir, "types"),
+        "@utils": path.resolve(srcDir, "utils"),
+      },
+    },
     server: {
       port: webPort,
     },

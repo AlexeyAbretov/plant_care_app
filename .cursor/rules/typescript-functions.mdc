@@ -16,7 +16,7 @@ alwaysApply: false
 
 Линтер: `npm run lint` (правка: `npm run lint:fix`). `--fix` сортирует импорты (`simple-import-sort`) и переносит строки через Prettier (`printWidth: 80`). Неразбиваемые строки (длинный литерал без пробелов) — вручную. Elvis: `@typescript-eslint/prefer-optional-chain`, `prefer-nullish-coalescing`.
 
-В потребителях monorepo (например `apps/web`) поверх `@llm/linting` могут быть локальные `no-restricted-imports`: без `.js` в относительных путях; импорт подмодулей `components/plant` и `components/catalog` только через баррель `components` — см. `apps/web/eslint.config.js` и раздел Frontend в `docs/CONSTITUTION.md`.
+В потребителях monorepo (например `apps/web`) поверх `@llm/linting` могут быть локальные `no-restricted-imports`: без `.js` в относительных путях; импорт между корневыми каталогами `src` — через алиасы (`@api`, `@components`, …); подмодули `components/plant` и `components/catalog` снаружи — только через `@components` — см. `apps/web/eslint.config.js` и раздел Frontend в `docs/CONSTITUTION.md`.
 
 ```typescript
 // ❌ BAD

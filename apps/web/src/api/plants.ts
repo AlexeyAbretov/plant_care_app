@@ -1,5 +1,3 @@
-import { ApiError, fetchJson, getApiUrl, parseApiError } from './client';
-
 import type {
   CreatePlantPayload,
   ListPlantsParams,
@@ -7,7 +5,9 @@ import type {
   PlantConditionResult,
   PlantRecognizeResult,
   UpdatePlantPayload,
-} from '../types';
+} from '@types';
+
+import { ApiError, fetchJson, getApiUrl, parseApiError } from './client';
 
 function appendPlantFields(
   formData: FormData,
