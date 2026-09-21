@@ -56,11 +56,12 @@ docs/            — CONSTITUTION, MVP_PLAN, AGENT_PIPELINE
 
 ```
 pages/       — CatalogPage, AddPage, EditPlantPage (+ index.ts)
-components/  — AppLayout, RetryAlert, catalog/*, plant/* (+ index.ts); утилиты одного компонента — `ComponentName.utils.ts` рядом с ним
+components/  — AppLayout, RetryAlert, WeatherWidget, catalog/*, plant/* (+ index.ts); утилиты — `ComponentName.utils.ts`, стили — `ComponentName.css` рядом с компонентом
+containers/  — WeatherWidgetContainer (+ index.ts); алиас `@containers`
 api/         — ApiClient, PlantsApi
-hooks/       — usePlantsCatalog
-types/       — модель растения
-App.tsx      — маршруты /, /add, /plants/:id/edit
+hooks/       — usePlantsCatalog, useWeather
+types/       — модель растения, погода
+App.tsx      — маршруты /, /add, /plants/:id/edit; `headerExtra` в AppLayout
 ```
 
 ## API (этап 2)

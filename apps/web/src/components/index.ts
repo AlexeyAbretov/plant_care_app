@@ -18,3 +18,4 @@ export {
 } from './PlantForm';
 export { PlantImagePreview } from './PlantImagePreview';
 export { RetryAlert } from './RetryAlert';
+export { WeatherWidget } from './WeatherWidget';

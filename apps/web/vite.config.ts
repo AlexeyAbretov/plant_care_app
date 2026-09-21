@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => {
         "@api": path.resolve(srcDir, "api"),
         "@components": path.resolve(srcDir, "components"),
         "@config": path.resolve(srcDir, "config.ts"),
+        "@containers": path.resolve(srcDir, "containers"),
         "@hooks": path.resolve(srcDir, "hooks"),
         "@pages": path.resolve(srcDir, "pages"),
         "@types": path.resolve(srcDir, "types"),

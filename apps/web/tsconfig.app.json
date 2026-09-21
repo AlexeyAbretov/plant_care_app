@@ -8,6 +8,8 @@
       "@components": ["src/components"],
       "@components/*": ["src/components/*"],
       "@config": ["src/config.ts"],
+      "@containers": ["src/containers"],
+      "@containers/*": ["src/containers/*"],
       "@hooks": ["src/hooks"],
       "@hooks/*": ["src/hooks/*"],
       "@pages": ["src/pages"],

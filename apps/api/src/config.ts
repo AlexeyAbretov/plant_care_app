@@ -15,4 +15,5 @@ export const config = {
   mongodbUri: process.env.MONGODB_URI ?? 'mongodb://localhost:27017/plant_care',
   ollamaBaseUrl: process.env.OLLAMA_BASE_URL ?? 'http://localhost:11434',
   ollamaTimeoutMs: Number(process.env.OLLAMA_TIMEOUT_MS ?? 120_000),
+  weatherDefaultCity: process.env.WEATHER_DEFAULT_CITY ?? 'Москва',
 };

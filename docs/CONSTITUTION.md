@@ -33,6 +33,7 @@ MongoDB (+ GridFS)    Ollama (локально)
 |---------|------------|
 | `pages/` | Экраны маршрутов: каталог, добавление, редактирование |
 | `components/` | Переиспользуемый UI (`AppLayout`, `RetryAlert`, домены `catalog/`, `plant/`) |
+| `containers/` | Контейнеры: данные и хуки, без собственной вёрстки (`WeatherWidgetContainer`) |
 | `api/` | HTTP-клиент (`ApiClient.ts`) и REST (`PlantsApi.ts`) |
 | `hooks/` | React-хуки (например, `usePlantsCatalog`) |
 | `types/` | Общие TypeScript-типы (модель растения и т. п.) |
@@ -48,8 +49,12 @@ apps/web/src/
 │   ├── index.ts          # публичный баррель UI
 │   ├── AppLayout/
 │   ├── RetryAlert/
+│   ├── WeatherWidget/
 │   ├── catalog/          # PlantCard, CatalogToolbar, CareProgressBar
 │   └── plant/            # PlantForm, ImageUpload, ConditionButton, …
+├── containers/
+│   ├── index.ts          # публичный баррель контейнеров
+│   └── WeatherWidgetContainer/
 ├── hooks/
 ├── pages/
 │   ├── index.ts
@@ -75,13 +80,20 @@ apps/web/src/
 
 **Импорты:**
 
-Алиасы (`tsconfig.app.json`, `vite.config.ts`): `@api`, `@components`, `@config`, `@hooks`, `@pages`, `@types` → соответствующие каталоги (или `config.ts`) в `src/`.
+Алиасы (`tsconfig.app.json`, `vite.config.ts`): `@api`, `@components`, `@config`, `@containers`, `@hooks`, `@pages`, `@types` → соответствующие каталоги (или `config.ts`) в `src/`.
 
 - Между корневыми каталогами `src` — только алиасы, не `../../api` и не `./components`.
 - Внутри одной папки/фичи — относительные `./` и `../` (соседи в `plant/`, `catalog/` и т. п.).
 - Страницы и код вне `components/plant/**` и `components/catalog/**` импортируют UI только из барреля `@components`, а не из подпутей `plant/` и `catalog/` (ESLint `no-restricted-imports` в `apps/web/eslint.config.js`).
-- Реэкспорт доменов — через `components/index.ts`; страницы маршрутов — баррель `@pages`.
+- Контейнеры — из барреля `@containers`, не из подпутей `containers/`.
+- Реэкспорт доменов — через `components/index.ts`; контейнеры — `containers/index.ts`; страницы маршрутов — баррель `@pages`.
 - Относительные импорты **без** суффикса `.js` (отдельное ограничение ESLint для web).
+
+**Контейнеры:**
+
+Папка и баррель — как у компонентов: `containers/Name/Name.tsx` + `index.ts`, публичный реэкспорт через `containers/index.ts`.
+
+Контейнер подключает хуки и передаёт пропсы в UI-компонент. `AppLayout` не знает про конкретные контейнеры: слот хеадера — проп `headerExtra` (см. `App.tsx`).
 
 **Колокация утилит компонента:**
 
@@ -89,6 +101,8 @@ apps/web/src/
 
 - Если их вызывает только сам компонент — относительный импорт (`./ComponentName.utils`), в баррель не реэкспортируют. Пример: `CareProgressBar.utils.ts`.
 - Если их вызывают страницы — реэкспорт через баррель компонента и `@components` (страницы не импортируют `plant/` / `catalog/` напрямую). Пример: `PlantForm.utils.ts` (`mapFormValuesToPayload`, `mapPlantToFormValues`).
+
+Стили одного компонента — `ComponentName.css` рядом с ним (пример: `WeatherWidget.css`). Глобальный `index.css` — только сброс страницы (`body`, `#root`).
 
 Каталог `src/utils/` заводят, когда появится код с несколькими независимыми потребителями вне одного компонента.
 

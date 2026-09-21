@@ -1,0 +1,37 @@
+.weather-forecast-row {
+  align-items: center;
+  column-gap: 8px;
+  display: grid;
+  grid-template-columns: 7.25em minmax(0, 1fr) 6.75em;
+}
+
+.weather-forecast-date {
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.weather-forecast-condition {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+
+.weather-forecast-emoji {
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  width: 1.25em;
+}
+
+.weather-forecast-temp {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .weather-widget-condition {
+    display: none;
+  }
+}

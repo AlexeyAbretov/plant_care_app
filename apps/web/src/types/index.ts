@@ -8,3 +8,11 @@ export type {
   PlantSort,
   UpdatePlantPayload,
 } from './plant';
+export type {
+  WeatherConditionKind,
+  WeatherCurrent,
+  WeatherDay,
+  WeatherQuery,
+  WeatherSnapshot,
+  WeatherSource,
+} from './weather';

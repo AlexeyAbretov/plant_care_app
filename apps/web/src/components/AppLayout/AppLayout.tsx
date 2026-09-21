@@ -9,24 +9,30 @@ const HEADER_HEIGHT = 64;
 
 type AppLayoutProps = {
   children: React.ReactNode;
+  headerExtra?: React.ReactNode;
 };
 
-export const AppLayout = ({ children }: AppLayoutProps): React.JSX.Element => {
+export const AppLayout = ({
+  children,
+  headerExtra,
+}: AppLayoutProps): React.JSX.Element => {
   const location = useLocation();
 
   const selectedKey = location.pathname.startsWith('/add') ? 'add' : 'catalog';
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', overflowX: 'hidden' }}>
       <Header
         style={{
+          alignItems: 'center',
+          display: 'flex',
+          gap: 24,
+          insetInline: 0,
+          overflow: 'hidden',
+          paddingInline: 24,
           position: 'fixed',
           top: 0,
           zIndex: 100,
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 24,
         }}
       >
         <Typography.Title level={4} style={{ color: '#fff', margin: 0 }}>
@@ -50,6 +56,9 @@ export const AppLayout = ({ children }: AppLayoutProps): React.JSX.Element => {
           ]}
           style={{ flex: 1, minWidth: 0 }}
         />
+        {headerExtra !== undefined && headerExtra !== null ? (
+          <div style={{ flexShrink: 0 }}>{headerExtra}</div>
+        ) : null}
       </Header>
       <Content
         style={{
