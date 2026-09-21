@@ -2,6 +2,8 @@
 
 Monorepo для учёта домашних растений: загрузка фото, распознавание через Ollama, каталог с индикаторами полива и подкормки.
 
+**MVP закрыт** (этапы 0–6). План и чеклист — [docs/MVP_PLAN.md](docs/MVP_PLAN.md).
+
 ## Стек
 
 - **Frontend:** React, TypeScript, Vite, Ant Design (`ru_RU`)

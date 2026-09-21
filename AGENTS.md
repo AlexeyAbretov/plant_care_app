@@ -93,5 +93,5 @@ curl -X POST http://localhost:3001/api/plants/<plant-id>/assess-condition
 ## Документация
 
 - `docs/CONSTITUTION.md` — стек, архитектура, структура frontend, формулы, лимиты
-- `docs/MVP_PLAN.md` — чеклист этапов 0–5
+- `docs/MVP_PLAN.md` — чеклист этапов 0–6 (**MVP закрыт**)
 - `docs/AGENT_PIPELINE.md` — контракт пайплайна агентов
