@@ -2,15 +2,15 @@ import { Button, Card, Space, Typography } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { CareProgressTrack } from './CareProgressBar.js';
+import { CareProgressTrack } from './CareProgressBar';
 
-import { assessPlantConditionById, getApiUrl } from '../../api/index.js';
-import type { Plant } from '../../types/index.js';
+import { assessPlantConditionById, getApiUrl } from '../../api/index';
+import type { Plant } from '../../types/index';
 import {
   DeletePlantButton,
   PlantConditionButton,
   PlantImagePreview,
-} from '../plant/index.js';
+} from '../plant/index';
 
 type PlantCardProps = {
   plant: Plant;

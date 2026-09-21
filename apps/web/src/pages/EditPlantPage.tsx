@@ -10,20 +10,17 @@ import {
   getApiUrl,
   getPlant,
   updatePlant,
-} from '../api/index.js';
-import { RetryAlert } from '../components/index.js';
+} from '../api/index';
+import { RetryAlert } from '../components/index';
 import {
   DeletePlantButton,
   ImageUpload,
   PlantConditionButton,
   PlantForm,
   type PlantFormValues,
-} from '../components/plant/index.js';
-import type { Plant } from '../types/index.js';
-import {
-  mapFormValuesToPayload,
-  mapPlantToFormValues,
-} from '../utils/index.js';
+} from '../components/plant/index';
+import type { Plant } from '../types/index';
+import { mapFormValuesToPayload, mapPlantToFormValues } from '../utils/index';
 
 type EditStep = 'loading' | 'form' | 'saving' | 'notFound' | 'error';
 

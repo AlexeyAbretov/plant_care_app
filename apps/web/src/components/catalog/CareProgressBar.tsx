@@ -3,7 +3,7 @@ import { Progress } from 'antd';
 import {
   calculateCareProgress,
   getCareProgressColorHex,
-} from '../../utils/index.js';
+} from '../../utils/index';
 
 type CareProgressTrackProps = {
   lastActionDate: string;

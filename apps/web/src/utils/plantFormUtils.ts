@@ -1,7 +1,7 @@
 import dayjs, { type Dayjs } from 'dayjs';
 
-import type { PlantFormValues } from '../components/plant/index.js';
-import type { CreatePlantPayload, Plant } from '../types/index.js';
+import type { PlantFormValues } from '../components/plant/index';
+import type { CreatePlantPayload, Plant } from '../types/index';
 
 export function formatDateForApi(value: Dayjs): string {
   return value.startOf('day').format('YYYY-MM-DD');

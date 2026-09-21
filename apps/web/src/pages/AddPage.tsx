@@ -8,16 +8,16 @@ import {
   assessPlantCondition,
   createPlant,
   recognizePlant,
-} from '../api/index.js';
-import { RetryAlert } from '../components/index.js';
+} from '../api/index';
+import { RetryAlert } from '../components/index';
 import {
   ImageUpload,
   PlantConditionButton,
   PlantForm,
   type PlantFormValues,
-} from '../components/plant/index.js';
-import type { PlantRecognizeResult } from '../types/index.js';
-import { mapFormValuesToPayload } from '../utils/index.js';
+} from '../components/plant/index';
+import type { PlantRecognizeResult } from '../types/index';
+import { mapFormValuesToPayload } from '../utils/index';
 
 type AddStep = 'upload' | 'recognizing' | 'form' | 'saving';
 

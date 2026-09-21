@@ -1,4 +1,4 @@
-export { ApiError, fetchJson, getApiUrl, parseApiError } from './client.js';
+export { ApiError, fetchJson, getApiUrl, parseApiError } from './client';
 export {
   assessPlantCondition,
   assessPlantConditionById,
@@ -10,4 +10,4 @@ export {
   recognizePlant,
   updatePlant,
   waterPlant,
-} from './plants.js';
+} from './plants';
