@@ -1,1 +1,1 @@
-export { AddPage } from './AddPage.js';
+export { AddPage } from './AddPage';

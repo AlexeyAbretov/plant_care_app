@@ -1,1 +1,1 @@
-export { EditPlantPage } from './EditPlantPage.js';
+export { EditPlantPage } from './EditPlantPage';

@@ -1,1 +1,1 @@
-export { PlantImagePreview } from './PlantImagePreview.js';
+export { PlantImagePreview } from './PlantImagePreview';

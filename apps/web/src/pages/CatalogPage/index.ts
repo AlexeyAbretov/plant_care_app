@@ -1,1 +1,1 @@
-export { CatalogPage } from './CatalogPage.js';
+export { CatalogPage } from './CatalogPage';

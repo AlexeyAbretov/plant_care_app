@@ -1,1 +1,1 @@
-export { CareProgressTrack } from './CareProgressBar.js';
+export { CareProgressTrack } from './CareProgressBar';

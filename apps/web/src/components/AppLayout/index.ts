@@ -1,1 +1,1 @@
-export { AppLayout } from './AppLayout.js';
+export { AppLayout } from './AppLayout';

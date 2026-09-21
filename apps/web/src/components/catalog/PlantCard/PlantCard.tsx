@@ -9,7 +9,7 @@ import {
   PlantConditionButton,
   PlantImagePreview,
 } from '../../plant';
-import { CareProgressTrack } from '../CareProgressBar/index.js';
+import { CareProgressTrack } from '../CareProgressBar';
 
 type PlantCardProps = {
   plant: Plant;

@@ -1,1 +1,1 @@
-export { DeletePlantButton } from './DeletePlantButton.js';
+export { DeletePlantButton } from './DeletePlantButton';

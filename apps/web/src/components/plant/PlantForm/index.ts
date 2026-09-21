@@ -1,1 +1,1 @@
-export { PlantForm, type PlantFormValues } from './PlantForm.js';
+export { PlantForm, type PlantFormValues } from './PlantForm';

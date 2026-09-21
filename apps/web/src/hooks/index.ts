@@ -1,1 +1,1 @@
-export { usePlantsCatalog } from './usePlantsCatalog/index.js';
+export { usePlantsCatalog } from './usePlantsCatalog';

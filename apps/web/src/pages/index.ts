@@ -1,3 +1,3 @@
-export { AddPage } from './AddPage/index.js';
-export { CatalogPage } from './CatalogPage/index.js';
-export { EditPlantPage } from './EditPlantPage/index.js';
+export { AddPage } from './AddPage';
+export { CatalogPage } from './CatalogPage';
+export { EditPlantPage } from './EditPlantPage';

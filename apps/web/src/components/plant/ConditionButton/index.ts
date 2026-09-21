@@ -1,1 +1,1 @@
-export { PlantConditionButton } from './ConditionButton.js';
+export { PlantConditionButton } from './ConditionButton';

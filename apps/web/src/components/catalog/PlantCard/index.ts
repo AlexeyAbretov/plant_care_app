@@ -1,1 +1,1 @@
-export { PlantCard } from './PlantCard.js';
+export { PlantCard } from './PlantCard';

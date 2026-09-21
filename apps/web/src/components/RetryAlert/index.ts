@@ -1,1 +1,1 @@
-export { RetryAlert } from './RetryAlert.js';
+export { RetryAlert } from './RetryAlert';

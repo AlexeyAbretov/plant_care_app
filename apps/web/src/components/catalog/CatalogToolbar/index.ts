@@ -1,1 +1,1 @@
-export { CatalogToolbar } from './CatalogToolbar.js';
+export { CatalogToolbar } from './CatalogToolbar';
