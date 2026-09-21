@@ -34,6 +34,27 @@ export default createConfig({
 
 Нужен `tsconfig.json` в корне проекта: type-aware правила (`prefer-optional-chain`, `prefer-nullish-coalescing`) читают его через `projectService`.
 
+### Monorepo: локальные правила (`apps/web`)
+
+В workspace-приложениях базовый конфиг из `@llm/linting` можно **расширить** своими блоками `rules`, не дублируя общий стиль. Пример — `apps/web/eslint.config.js`: spread `createConfig(...)`, затем `no-restricted-imports` (запрет `.js` в относительных путях; импорт `plant`/`catalog` только через баррель `components`). Такие правила остаются в потребителе; вынос в `@llm/linting` — только по отдельному решению.
+
+```js
+import createConfig from "@llm/linting";
+
+export default [
+  ...createConfig({
+    files: ["src/**/*.ts", "src/**/*.tsx"],
+    tsconfigRootDir: import.meta.dirname,
+  }),
+  {
+    files: ["src/**/*.ts", "src/**/*.tsx"],
+    rules: {
+      /* локальные no-restricted-imports — см. apps/web/eslint.config.js */
+    },
+  },
+];
+```
+
 ### Prettier
 
 В `package.json`:
@@ -63,4 +84,4 @@ export default createConfig({
 
 ### Правило для Cursor
 
-Скопировать [`cursor/typescript-functions.mdc`](cursor/typescript-functions.mdc) в `.cursor/rules/` целевого репозитория. При необходимости поменять `globs` (по умолчанию `**/*.ts`).
+Скопировать [`cursor/typescript-functions.mdc`](cursor/typescript-functions.mdc) в `.cursor/rules/` целевого репозитория. В этом monorepo файл уже в `.cursor/rules/`; при обновлении пакета синхронизируйте с `packages/linting/cursor/`. `globs` по умолчанию: `**/*.{ts,tsx}` (React в `apps/web`).
