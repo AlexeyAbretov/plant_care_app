@@ -6,11 +6,7 @@ import { CareProgressTrack } from './CareProgressBar';
 
 import { assessPlantConditionById, getApiUrl } from '../../api';
 import type { Plant } from '../../types';
-import {
-  DeletePlantButton,
-  PlantConditionButton,
-  PlantImagePreview,
-} from '../plant';
+import { DeletePlantButton, PlantConditionButton, PlantImagePreview } from '..';
 
 type PlantCardProps = {
   plant: Plant;

@@ -1,8 +1,7 @@
 import { Col, Empty, Row, Spin, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 
-import { RetryAlert } from '../components';
-import { CatalogToolbar, PlantCard } from '../components/catalog';
+import { CatalogToolbar, PlantCard, RetryAlert } from '../components';
 import { usePlantsCatalog } from '../hooks';
 
 export function CatalogPage(): React.JSX.Element {

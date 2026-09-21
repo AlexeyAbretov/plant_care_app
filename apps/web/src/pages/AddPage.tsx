@@ -9,13 +9,13 @@ import {
   createPlant,
   recognizePlant,
 } from '../api';
-import { RetryAlert } from '../components';
 import {
   ImageUpload,
   PlantConditionButton,
   PlantForm,
   type PlantFormValues,
-} from '../components/plant';
+  RetryAlert,
+} from '../components';
 import type { PlantRecognizeResult } from '../types';
 import { mapFormValuesToPayload } from '../utils';
 

@@ -11,14 +11,14 @@ import {
   getPlant,
   updatePlant,
 } from '../api';
-import { RetryAlert } from '../components';
 import {
   DeletePlantButton,
   ImageUpload,
   PlantConditionButton,
   PlantForm,
   type PlantFormValues,
-} from '../components/plant';
+  RetryAlert,
+} from '../components';
 import type { Plant } from '../types';
 import { mapFormValuesToPayload, mapPlantToFormValues } from '../utils';
 

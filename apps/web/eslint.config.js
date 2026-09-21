@@ -23,4 +23,31 @@ export default [
       ],
     },
   },
+  {
+    files: ["src/**/*.ts", "src/**/*.tsx"],
+    ignores: [
+      "src/components/plant/**",
+      "src/components/catalog/**",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: [
+                "**/components/plant",
+                "**/components/plant/*",
+                "**/components/catalog",
+                "**/components/catalog/*",
+              ],
+              message:
+                "Import from the components barrel (../components) " +
+                "instead of plant/catalog subpaths.",
+            },
+          ],
+        },
+      ],
+    },
+  },
 ];
