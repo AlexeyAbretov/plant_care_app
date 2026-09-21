@@ -1,4 +1,5 @@
-export { PlantForm, type PlantFormValues } from './PlantForm';
+export { PlantForm } from './PlantForm';
+export type { PlantFormValues } from './PlantForm.types';
 export {
   mapFormValuesToPayload,
   mapPlantToFormValues,

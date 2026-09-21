@@ -1,15 +1,13 @@
 import { Drawer, Flex, Tag, Typography } from 'antd';
 
+import type {
+  CategoryCloudContentProps,
+  CategoryCloudDrawerProps,
+} from './CategoryCloudDrawer.types';
+
 const { CheckableTag } = Tag;
 
 const PANEL_WIDTH = 280;
-
-type CategoryCloudContentProps = {
-  categories: string[];
-  categoryOptions: string[];
-  disabled?: boolean;
-  onCategoriesChange: (categories: string[]) => void;
-};
 
 const CategoryCloudContent = ({
   categories,
@@ -60,16 +58,6 @@ const CategoryCloudContent = ({
       ))}
     </Flex>
   );
-};
-
-type CategoryCloudDrawerProps = {
-  categories: string[];
-  categoryOptions: string[];
-  disabled?: boolean;
-  embedded: boolean;
-  onCategoriesChange: (categories: string[]) => void;
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
 };
 
 export const CategoryCloudDrawer = ({

@@ -1,0 +1,39 @@
+---
+description: Колокация типов UI — ComponentName.types.ts / PageName.types.ts
+globs: "apps/web/src/{components,pages,containers}/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Типы компонентов и страниц
+
+Пропсы и локальные типы компонента, страницы или контейнера лежат рядом
+с ним файлом `Name.types.ts` (как `Name.utils.ts` и `Name.css`).
+
+- Имя файла совпадает с папкой / основным модулем: `WeatherWidget.types.ts`,
+  `AddPage.types.ts`, не общий `types.ts` внутри папки.
+- Внутри папки — относительный импорт (`./Name.types`). В баррель и
+  `@components` реэкспортируют только типы, которые нужны снаружи
+  (пример: `PlantFormValues`). Пропсы в баррель не выносят.
+- Общие доменные модели (`Plant`, `WeatherSnapshot`) остаются в
+  `src/types/` (`@types`). Не дублировать их в `Name.types.ts`.
+- Пустой `.types.ts` не заводят: если своих типов нет, файла нет.
+- Вложенные компоненты той же папки делят файл типов родителя
+  (`WeatherTriggerProps` в `WeatherWidget.types.ts`).
+
+```typescript
+// ❌ BAD — пропсы в том же файле, что разметка
+type PlantCardProps = {
+  plant: Plant;
+};
+
+export const PlantCard = ({ plant }: PlantCardProps) => {
+  return <div>{plant.name}</div>;
+};
+
+// ✅ GOOD
+import type { PlantCardProps } from './PlantCard.types';
+
+export const PlantCard = ({ plant }: PlantCardProps) => {
+  return <div>{plant.name}</div>;
+};
+```

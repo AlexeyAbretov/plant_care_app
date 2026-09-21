@@ -3,6 +3,8 @@ import type { UploadFile } from 'antd/es/upload/interface';
 
 import { InboxOutlined } from '@ant-design/icons';
 
+import type { ImageUploadProps } from './ImageUpload.types';
+
 import { PlantImagePreview } from '../PlantImagePreview';
 
 const { Dragger } = Upload;
@@ -14,14 +16,6 @@ export const ALLOWED_IMAGE_TYPES = [
   'image/png',
   'image/webp',
 ] as const;
-
-type ImageUploadProps = {
-  file: File | null;
-  previewUrl: string | null;
-  previewOriginalUrl?: string | null;
-  onFileSelect: (file: File | null) => void;
-  disabled?: boolean;
-};
 
 const validateImageFile = (file: File): string | null => {
   if (

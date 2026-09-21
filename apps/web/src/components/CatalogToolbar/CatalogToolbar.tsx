@@ -3,13 +3,7 @@ import { Button, Flex, Segmented } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 import type { PlantSort } from '@types';
 
-type CatalogToolbarProps = {
-  categoriesDrawerOpen: boolean;
-  disabled?: boolean;
-  onCategoriesDrawerOpenChange: (open: boolean) => void;
-  onSortChange: (sort: PlantSort) => void;
-  sort: PlantSort;
-};
+import type { CatalogToolbarProps } from './CatalogToolbar.types';
 
 export const CatalogToolbar = ({
   categoriesDrawerOpen,

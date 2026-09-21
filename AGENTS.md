@@ -55,8 +55,8 @@ docs/            — CONSTITUTION, MVP_PLAN, AGENT_PIPELINE
 `apps/web/src` (соглашения: стрелочные функции, импорты — [Frontend в CONSTITUTION](docs/CONSTITUTION.md#frontend-структура-и-соглашения)):
 
 ```
-pages/       — CatalogPage, AddPage, EditPlantPage (+ index.ts)
-components/  — AppLayout, RetryAlert, WeatherWidget, catalog/*, plant/* (+ index.ts); утилиты — `ComponentName.utils.ts`, стили — `ComponentName.css` рядом с компонентом
+pages/       — CatalogPage, AddPage, EditPlantPage (+ index.ts); типы — `PageName.types.ts`
+components/  — AppLayout, RetryAlert, WeatherWidget, catalog/*, plant/* (+ index.ts); утилиты — `ComponentName.utils.ts`, типы — `ComponentName.types.ts`, стили — `ComponentName.css` рядом с компонентом
 containers/  — WeatherWidgetContainer (+ index.ts); алиас `@containers`
 api/         — ApiClient, PlantsApi
 hooks/       — usePlantsCatalog, useWeather

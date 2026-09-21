@@ -1,14 +1,9 @@
 import dayjs from 'dayjs';
 
-export type CareProgressColor = 'green' | 'yellow' | 'orange' | 'red';
-
-export interface CareProgressResult {
-  progress: number;
-  percent: number;
-  daysSince: number;
-  color: CareProgressColor;
-  overdue: boolean;
-}
+import type {
+  CareProgressColor,
+  CareProgressResult,
+} from './CareProgressBar.types';
 
 const clamp = (value: number, min: number, max: number): number => {
   return Math.min(Math.max(value, min), max);

@@ -13,13 +13,12 @@ import { useState } from 'react';
 import { ApiError } from '@api';
 import type { PlantConditionResult, PlantHealthLevel } from '@types';
 
-import { RetryAlert } from '../RetryAlert';
+import type {
+  ConditionResultViewProps,
+  PlantConditionButtonProps,
+} from './ConditionButton.types';
 
-type PlantConditionButtonProps = {
-  assess: () => Promise<PlantConditionResult>;
-  disabled?: boolean;
-  disabledTooltip?: string;
-};
+import { RetryAlert } from '../RetryAlert';
 
 const HEALTH_LEVEL_LABELS: Record<PlantHealthLevel, string> = {
   good: 'Хорошее',
@@ -35,9 +34,7 @@ const HEALTH_LEVEL_COLORS: Record<PlantHealthLevel, string> = {
 
 const ConditionResultView = ({
   result,
-}: {
-  result: PlantConditionResult;
-}): React.JSX.Element => {
+}: ConditionResultViewProps): React.JSX.Element => {
   return (
     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
       <Tag color={HEALTH_LEVEL_COLORS[result.healthLevel]}>

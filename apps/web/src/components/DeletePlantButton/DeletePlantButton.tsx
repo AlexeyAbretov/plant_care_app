@@ -1,11 +1,7 @@
 import { Button, Popconfirm } from 'antd';
 import { useState } from 'react';
 
-type DeletePlantButtonProps = {
-  plantName: string;
-  onConfirm: () => Promise<void>;
-  disabled?: boolean;
-};
+import type { DeletePlantButtonProps } from './DeletePlantButton.types';
 
 export const DeletePlantButton = ({
   plantName,

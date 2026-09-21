@@ -1,20 +1,9 @@
-import type { AlertProps } from 'antd';
 import { Alert, Button } from 'antd';
 
-type RetryAlertProps = Pick<
-  AlertProps,
-  | 'type'
-  | 'message'
-  | 'description'
-  | 'closable'
-  | 'onClose'
-  | 'showIcon'
-  | 'style'
-> & {
-  onRetry: () => void;
-  retryLoading?: boolean;
-  retryDisabled?: boolean;
-};
+import type {
+  RetryAlertDescriptionProps,
+  RetryAlertProps,
+} from './RetryAlert.types';
 
 const RetryAlertDescription = ({
   description,
@@ -22,10 +11,7 @@ const RetryAlertDescription = ({
   onRetry,
   retryLoading,
   retryDisabled,
-}: Pick<
-  RetryAlertProps,
-  'description' | 'type' | 'onRetry' | 'retryLoading' | 'retryDisabled'
->): React.JSX.Element => {
+}: RetryAlertDescriptionProps): React.JSX.Element => {
   const hasDescription =
     description !== null &&
     description !== undefined &&

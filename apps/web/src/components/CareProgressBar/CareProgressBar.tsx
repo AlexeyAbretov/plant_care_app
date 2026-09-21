@@ -1,14 +1,10 @@
 import { Progress } from 'antd';
 
+import type { CareProgressTrackProps } from './CareProgressBar.types';
 import {
   calculateCareProgress,
   getCareProgressColorHex,
 } from './CareProgressBar.utils';
-
-type CareProgressTrackProps = {
-  lastActionDate: string;
-  intervalDays: number;
-};
 
 export const CareProgressTrack = ({
   lastActionDate,

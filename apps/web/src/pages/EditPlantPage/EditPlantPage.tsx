@@ -15,7 +15,7 @@ import {
 } from '@components';
 import type { Plant } from '@types';
 
-type EditStep = 'loading' | 'form' | 'saving' | 'notFound' | 'error';
+import type { EditStep } from './EditPlantPage.types';
 
 export const EditPlantPage = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>();

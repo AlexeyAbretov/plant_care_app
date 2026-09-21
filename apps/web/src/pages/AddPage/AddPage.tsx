@@ -14,7 +14,7 @@ import {
 } from '@components';
 import type { PlantRecognizeResult } from '@types';
 
-type AddStep = 'upload' | 'recognizing' | 'form' | 'saving';
+import type { AddStep } from './AddPage.types';
 
 const getDefaultFormValues = (): PlantFormValues => {
   const today = dayjs().startOf('day');

@@ -3,14 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { PlusOutlined, UnorderedListOutlined } from '@ant-design/icons';
 
+import type { AppLayoutProps } from './AppLayout.types';
+
 const { Header, Content } = Layout;
 
 const HEADER_HEIGHT = 64;
-
-type AppLayoutProps = {
-  children: React.ReactNode;
-  headerExtra?: React.ReactNode;
-};
 
 export const AppLayout = ({
   children,

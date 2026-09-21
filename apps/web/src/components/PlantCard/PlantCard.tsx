@@ -3,19 +3,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { apiClient, plantsApi } from '@api';
-import type { Plant } from '@types';
+
+import type { PlantCardProps } from './PlantCard.types';
 
 import { CareProgressTrack } from '../CareProgressBar';
 import { PlantConditionButton } from '../ConditionButton';
 import { DeletePlantButton } from '../DeletePlantButton';
 import { PlantImagePreview } from '../PlantImagePreview';
-
-type PlantCardProps = {
-  plant: Plant;
-  onWater: (id: string) => Promise<void>;
-  onFertilize: (id: string) => Promise<void>;
-  onDelete: (id: string) => Promise<void>;
-};
 
 const actionButtonStyle: React.CSSProperties = {
   height: 'auto',

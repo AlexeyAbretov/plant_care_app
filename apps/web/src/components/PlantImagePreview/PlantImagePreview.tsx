@@ -1,14 +1,6 @@
 import { Image } from 'antd';
-import type { CSSProperties } from 'react';
 
-type PlantImagePreviewProps = {
-  alt: string;
-  src: string;
-  previewSrc?: string;
-  height?: number;
-  width?: number;
-  style?: CSSProperties;
-};
+import type { PlantImagePreviewProps } from './PlantImagePreview.types';
 
 export const PlantImagePreview = ({
   alt,
