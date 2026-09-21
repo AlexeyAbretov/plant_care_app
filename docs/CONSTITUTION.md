@@ -25,6 +25,63 @@ MongoDB (+ GridFS)    Ollama (локально)
 - Распознавание изображений выполняется на backend через Ollama.
 - Изображения растений хранятся в GridFS; метаданные — в коллекциях MongoDB.
 
+## Frontend: структура и соглашения
+
+Исходники SPA — `apps/web/src`. Слои и назначение:
+
+| Каталог | Назначение |
+|---------|------------|
+| `pages/` | Экраны маршрутов: каталог, добавление, редактирование |
+| `components/` | Переиспользуемый UI (`AppLayout`, `RetryAlert`, домены `catalog/`, `plant/`) |
+| `api/` | HTTP-клиент (`client.ts`) и вызовы REST (`plants.ts`) |
+| `hooks/` | React-хуки (например, `usePlantsCatalog`) |
+| `utils/` | Чистые функции (`careProgress`, утилиты формы) |
+| `types/` | Общие TypeScript-типы (модель растения и т. п.) |
+| `config.ts` | Конфигурация из `import.meta.env` |
+
+Дерево (баррели — `index.ts` в папках компонентов и страниц):
+
+```
+apps/web/src/
+├── App.tsx, main.tsx
+├── api/
+├── components/
+│   ├── index.ts          # публичный баррель UI
+│   ├── AppLayout/
+│   ├── RetryAlert/
+│   ├── catalog/          # PlantCard, CatalogToolbar, CareProgressBar
+│   └── plant/            # PlantForm, ImageUpload, ConditionButton, …
+├── hooks/
+├── pages/
+│   ├── index.ts
+│   ├── CatalogPage/
+│   ├── AddPage/
+│   └── EditPlantPage/
+├── types/
+└── utils/
+    └── careProgress.ts   # формула прогресс-бара (см. ниже)
+```
+
+**Маршруты** (`App.tsx`, React Router):
+
+| Путь | Страница |
+|------|----------|
+| `/` | `CatalogPage` |
+| `/add` | `AddPage` |
+| `/plants/:id/edit` | `EditPlantPage` |
+
+Оболочка — `AppLayout`; локаль Ant Design — `ru_RU`.
+
+**Импорты:**
+
+- Страницы и код вне `components/plant/**` и `components/catalog/**` импортируют UI только из барреля `components` (`../components` или `./components`), а не из подпутей `plant/` и `catalog/` (правило ESLint `no-restricted-imports` в `apps/web/eslint.config.js`).
+- Внутри `plant/` и `catalog/` — относительные импорты внутри домена; реэкспорт — через `components/index.ts`.
+- Страницы — из барреля `pages`.
+- Относительные импорты **без** суффикса `.js` (отдельное ограничение ESLint для web).
+- API — из `api/` (`fetchJson`, методы в `plants.ts`); типы — из `types/`.
+
+Прогресс полива/подкормки в UI считается в `utils/careProgress.ts` по тем же правилам, что в разделе «Прогресс-бар ухода» ниже.
+
 ## Границы MVP
 
 **В scope:**

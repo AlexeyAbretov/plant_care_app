@@ -97,4 +97,4 @@ plant_care_app/
 └── AGENTS.md
 ```
 
-Подробнее — в [docs/CONSTITUTION.md](docs/CONSTITUTION.md).
+Подробнее — в [docs/CONSTITUTION.md](docs/CONSTITUTION.md) (в т. ч. [структура frontend](docs/CONSTITUTION.md#frontend-структура-и-соглашения)).
