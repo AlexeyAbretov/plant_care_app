@@ -5,12 +5,10 @@ import { Link } from 'react-router-dom';
 import { apiClient, plantsApi } from '@api';
 import type { Plant } from '@types';
 
-import {
-  DeletePlantButton,
-  PlantConditionButton,
-  PlantImagePreview,
-} from '../../plant';
 import { CareProgressTrack } from '../CareProgressBar';
+import { PlantConditionButton } from '../ConditionButton';
+import { DeletePlantButton } from '../DeletePlantButton';
+import { PlantImagePreview } from '../PlantImagePreview';
 
 type PlantCardProps = {
   plant: Plant;

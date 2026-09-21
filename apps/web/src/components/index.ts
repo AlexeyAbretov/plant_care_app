@@ -1,20 +1,20 @@
 export { AppLayout } from './AppLayout';
-export {
-  CareProgressTrack,
-  CatalogToolbar,
-  CategoryCloudDrawer,
-  PlantCard,
-} from './catalog';
+export { CareProgressTrack } from './CareProgressBar';
+export { CatalogToolbar } from './CatalogToolbar';
+export { CategoryCloudDrawer } from './CategoryCloudDrawer';
+export { PlantConditionButton } from './ConditionButton';
+export { DeletePlantButton } from './DeletePlantButton';
 export {
   ALLOWED_IMAGE_TYPES,
-  DeletePlantButton,
   ImageUpload,
+  MAX_IMAGE_SIZE_BYTES,
+} from './ImageUpload';
+export { PlantCard } from './PlantCard';
+export {
   mapFormValuesToPayload,
   mapPlantToFormValues,
-  MAX_IMAGE_SIZE_BYTES,
-  PlantConditionButton,
   PlantForm,
   type PlantFormValues,
-  PlantImagePreview,
-} from './plant';
+} from './PlantForm';
+export { PlantImagePreview } from './PlantImagePreview';
 export { RetryAlert } from './RetryAlert';
