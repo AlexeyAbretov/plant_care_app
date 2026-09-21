@@ -1,10 +1,32 @@
-import { Col, Empty, Row, Spin, Typography } from 'antd';
+import { Col, Empty, Flex, Grid, Row, Spin, Typography } from 'antd';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { CatalogToolbar, PlantCard, RetryAlert } from '@components';
+import {
+  CatalogToolbar,
+  CategoryCloudDrawer,
+  PlantCard,
+  RetryAlert,
+} from '@components';
 import { usePlantsCatalog } from '@hooks';
 
+const { useBreakpoint } = Grid;
+
+function readInitialCategoriesDrawerOpen(): boolean {
+  if (typeof window === 'undefined') {
+    return true;
+  }
+
+  return window.matchMedia('(min-width: 768px)').matches;
+}
+
 export function CatalogPage(): React.JSX.Element {
+  const screens = useBreakpoint();
+  const isWide = Boolean(screens.md);
+  const [categoriesDrawerOpen, setCategoriesDrawerOpen] = useState(
+    readInitialCategoriesDrawerOpen,
+  );
+
   const {
     sort,
     setSort,
@@ -27,46 +49,58 @@ export function CatalogPage(): React.JSX.Element {
       </Typography.Title>
 
       <CatalogToolbar
-        categories={categories}
-        categoryOptions={categoryOptions}
+        categoriesDrawerOpen={categoriesDrawerOpen}
         disabled={loading}
-        onCategoriesChange={setCategories}
+        onCategoriesDrawerOpenChange={setCategoriesDrawerOpen}
         onSortChange={setSort}
         sort={sort}
       />
 
-      {error !== null ? (
-        <RetryAlert
-          message={error}
-          onRetry={() => {
-            void reload();
-          }}
-          showIcon
-          style={{ marginTop: 16 }}
-          type="error"
+      <Flex align="flex-start" gap={16} style={{ marginTop: 16 }}>
+        <CategoryCloudDrawer
+          categories={categories}
+          categoryOptions={categoryOptions}
+          disabled={loading}
+          embedded={isWide}
+          onCategoriesChange={setCategories}
+          onOpenChange={setCategoriesDrawerOpen}
+          open={categoriesDrawerOpen}
         />
-      ) : null}
 
-      {!loading && error === null && plants.length === 0 ? (
-        <Empty description="Растений пока нет" style={{ marginTop: 48 }}>
-          <Link to="/add">Добавить растение</Link>
-        </Empty>
-      ) : null}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {error !== null ? (
+            <RetryAlert
+              message={error}
+              onRetry={() => {
+                void reload();
+              }}
+              showIcon
+              type="error"
+            />
+          ) : null}
 
-      {!loading && error === null && plants.length > 0 ? (
-        <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-          {plants.map((plant) => (
-            <Col key={plant.id} lg={6} md={8} sm={12} xs={24}>
-              <PlantCard
-                onDelete={deletePlant}
-                onFertilize={fertilizePlant}
-                onWater={waterPlant}
-                plant={plant}
-              />
-            </Col>
-          ))}
-        </Row>
-      ) : null}
+          {!loading && error === null && plants.length === 0 ? (
+            <Empty description="Растений пока нет" style={{ marginTop: 48 }}>
+              <Link to="/add">Добавить растение</Link>
+            </Empty>
+          ) : null}
+
+          {!loading && error === null && plants.length > 0 ? (
+            <Row gutter={[16, 16]}>
+              {plants.map((plant) => (
+                <Col key={plant.id} lg={6} md={8} sm={12} xs={24}>
+                  <PlantCard
+                    onDelete={deletePlant}
+                    onFertilize={fertilizePlant}
+                    onWater={waterPlant}
+                    plant={plant}
+                  />
+                </Col>
+              ))}
+            </Row>
+          ) : null}
+        </div>
+      </Flex>
     </Spin>
   );
 }

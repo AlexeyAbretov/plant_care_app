@@ -1,5 +1,10 @@
 export { AppLayout } from './AppLayout';
-export { CareProgressTrack, CatalogToolbar, PlantCard } from './catalog';
+export {
+  CareProgressTrack,
+  CatalogToolbar,
+  CategoryCloudDrawer,
+  PlantCard,
+} from './catalog';
 export {
   ALLOWED_IMAGE_TYPES,
   DeletePlantButton,
