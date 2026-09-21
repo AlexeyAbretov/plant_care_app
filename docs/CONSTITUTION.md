@@ -74,11 +74,13 @@ apps/web/src/
 
 **Импорты:**
 
-- Страницы и код вне `components/plant/**` и `components/catalog/**` импортируют UI только из барреля `components` (`../components` или `./components`), а не из подпутей `plant/` и `catalog/` (правило ESLint `no-restricted-imports` в `apps/web/eslint.config.js`).
-- Внутри `plant/` и `catalog/` — относительные импорты внутри домена; реэкспорт — через `components/index.ts`.
-- Страницы — из барреля `pages`.
+Алиасы (`tsconfig.app.json`, `vite.config.ts`): `@api`, `@components`, `@config`, `@hooks`, `@pages`, `@types`, `@utils` → соответствующие каталоги (или `config.ts`) в `src/`.
+
+- Между корневыми каталогами `src` — только алиасы, не `../../api` и не `./components`.
+- Внутри одной папки/фичи — относительные `./` и `../` (соседи в `plant/`, `catalog/` и т. п.).
+- Страницы и код вне `components/plant/**` и `components/catalog/**` импортируют UI только из барреля `@components`, а не из подпутей `plant/` и `catalog/` (ESLint `no-restricted-imports` в `apps/web/eslint.config.js`).
+- Реэкспорт доменов — через `components/index.ts`; страницы маршрутов — баррель `@pages`.
 - Относительные импорты **без** суффикса `.js` (отдельное ограничение ESLint для web).
-- API — из `api/` (`fetchJson`, методы в `plants.ts`); типы — из `types/`.
 
 Прогресс полива/подкормки в UI считается в `utils/careProgress.ts` по тем же правилам, что в разделе «Прогресс-бар ухода» ниже.
 

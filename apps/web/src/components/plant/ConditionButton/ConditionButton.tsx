@@ -10,8 +10,9 @@ import {
 } from 'antd';
 import { useState } from 'react';
 
-import { ApiError } from '../../../api';
-import type { PlantConditionResult, PlantHealthLevel } from '../../../types';
+import { ApiError } from '@api';
+import type { PlantConditionResult, PlantHealthLevel } from '@types';
+
 import { RetryAlert } from '../../RetryAlert';
 
 type PlantConditionButtonProps = {
