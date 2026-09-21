@@ -1,5 +1,8 @@
 export { AppLayout } from './AppLayout';
-export { CareProgressTrack } from './CareProgressBar';
+export {
+  CareProgressTrack,
+  comparePlantsByWateringDue,
+} from './CareProgressBar';
 export { CatalogToolbar } from './CatalogToolbar';
 export { CategoryCloudDrawer } from './CategoryCloudDrawer';
 export { PlantConditionButton } from './ConditionButton';

@@ -6,7 +6,11 @@ import { apiClient, plantsApi } from '@api';
 
 import type { PlantCardProps } from './PlantCard.types';
 
-import { CareProgressTrack } from '../CareProgressBar';
+import {
+  CareProgressTrack,
+  getEffectiveWateringInterval,
+  getWateringDueCaption,
+} from '../CareProgressBar';
 import { PlantConditionButton } from '../ConditionButton';
 import { DeletePlantButton } from '../DeletePlantButton';
 import { PlantImagePreview } from '../PlantImagePreview';
@@ -21,6 +25,7 @@ const actionButtonStyle: React.CSSProperties = {
 
 export const PlantCard = ({
   plant,
+  wateringClimate,
   onWater,
   onFertilize,
   onDelete,
@@ -47,6 +52,17 @@ export const PlantCard = ({
       setFertilizeLoading(false);
     }
   };
+
+  const watering = getEffectiveWateringInterval(
+    plant.wateringIntervalDays,
+    plant.locationKind,
+    wateringClimate,
+  );
+  const wateringCaption = getWateringDueCaption(
+    plant.lastWateredAt,
+    watering.intervalDays,
+    watering.reasons,
+  );
 
   return (
     <Card style={{ minWidth: 0, width: '100%' }}>
@@ -80,9 +96,15 @@ export const PlantCard = ({
         >
           <Typography.Text type="secondary">Полив</Typography.Text>
           <CareProgressTrack
-            intervalDays={plant.wateringIntervalDays}
+            intervalDays={watering.intervalDays}
             lastActionDate={plant.lastWateredAt}
           />
+          <Typography.Text
+            style={{ fontSize: 12, gridColumn: '1 / -1' }}
+            type="secondary"
+          >
+            {wateringCaption}
+          </Typography.Text>
           <Typography.Text type="secondary">Подкормка</Typography.Text>
           <CareProgressTrack
             intervalDays={plant.fertilizingIntervalDays}

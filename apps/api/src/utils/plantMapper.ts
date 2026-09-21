@@ -11,6 +11,7 @@ export function toPlantDto(plant: PlantDocument): PlantDto {
     category: plant.category,
     lightPreference: plant.lightPreference,
     sizeInfo: plant.sizeInfo,
+    locationKind: plant.locationKind ?? 'indoor',
     wateringIntervalDays: plant.wateringIntervalDays,
     fertilizingIntervalDays: plant.fertilizingIntervalDays,
     wateringNotes: plant.wateringNotes,

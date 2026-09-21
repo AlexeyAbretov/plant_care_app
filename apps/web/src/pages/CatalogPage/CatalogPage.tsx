@@ -1,14 +1,15 @@
 import { Col, Empty, Flex, Grid, Row, Spin, Typography } from 'antd';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
   CatalogToolbar,
   CategoryCloudDrawer,
+  comparePlantsByWateringDue,
   PlantCard,
   RetryAlert,
 } from '@components';
-import { usePlantsCatalog } from '@hooks';
+import { usePlantsCatalog, useWeather } from '@hooks';
 
 const { useBreakpoint } = Grid;
 
@@ -41,6 +42,18 @@ export const CatalogPage = (): React.JSX.Element => {
     fertilizePlant,
     deletePlant,
   } = usePlantsCatalog();
+
+  const { weather } = useWeather();
+  const wateringClimate = weather?.wateringClimate ?? null;
+  const catalogPlants = useMemo(() => {
+    if (sort !== 'watering') {
+      return plants;
+    }
+
+    return [...plants].sort((left, right) => {
+      return comparePlantsByWateringDue(left, right, wateringClimate);
+    });
+  }, [plants, sort, wateringClimate]);
 
   return (
     <Spin spinning={loading}>
@@ -85,9 +98,9 @@ export const CatalogPage = (): React.JSX.Element => {
             </Empty>
           ) : null}
 
-          {!loading && error === null && plants.length > 0 ? (
+          {!loading && error === null && catalogPlants.length > 0 ? (
             <Row gutter={[16, 16]}>
-              {plants.map((plant) => (
+              {catalogPlants.map((plant) => (
                 <Col
                   key={plant.id}
                   lg={6}
@@ -101,6 +114,7 @@ export const CatalogPage = (): React.JSX.Element => {
                     onFertilize={fertilizePlant}
                     onWater={waterPlant}
                     plant={plant}
+                    wateringClimate={wateringClimate}
                   />
                 </Col>
               ))}

@@ -61,7 +61,7 @@ containers/  — WeatherWidgetContainer (+ index.ts); алиас `@containers`
 api/         — ApiClient, PlantsApi
 hooks/       — usePlantsCatalog, useWeather
 types/       — модель растения, погода
-App.tsx      — маршруты /, /add, /plants/:id/edit; `headerExtra` в AppLayout
+App.tsx      — маршруты /, /add, /plants/:id/edit; WeatherProvider; `headerExtra` в AppLayout
 ```
 
 ## API (этап 2)

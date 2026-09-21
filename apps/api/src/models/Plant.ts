@@ -1,11 +1,14 @@
 import mongoose, { type Document, Schema, type Types } from 'mongoose';
 
+import type { PlantLocationKind } from '../types/plant.js';
+
 export interface PlantDocument extends Document {
   name: string;
   description: string;
   category: string;
   lightPreference: string;
   sizeInfo: string;
+  locationKind: PlantLocationKind;
   wateringIntervalDays: number;
   fertilizingIntervalDays: number;
   wateringNotes: string;
@@ -25,6 +28,11 @@ const plantSchema = new Schema<PlantDocument>(
     category: { type: String, default: '' },
     lightPreference: { type: String, default: '' },
     sizeInfo: { type: String, default: '' },
+    locationKind: {
+      type: String,
+      enum: ['indoor', 'outdoor'],
+      default: 'indoor',
+    },
     wateringIntervalDays: { type: Number, required: true, min: 1 },
     fertilizingIntervalDays: { type: Number, required: true, min: 1 },
     wateringNotes: { type: String, default: '' },

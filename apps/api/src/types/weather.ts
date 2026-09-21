@@ -25,12 +25,20 @@ export interface WeatherDay {
   precipitationProbability: number;
 }
 
+export interface WateringClimate {
+  heatingSeason: boolean;
+  heat: boolean;
+  overcast: boolean;
+  precipitationLikely: boolean;
+}
+
 export interface WeatherSnapshot {
   locationLabel: string;
   latitude: number;
   longitude: number;
   current: WeatherCurrent;
   daily: WeatherDay[];
+  wateringClimate: WateringClimate;
 }
 
 export interface WeatherQuery {

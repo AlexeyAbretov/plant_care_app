@@ -25,6 +25,7 @@ const getDefaultFormValues = (): PlantFormValues => {
     category: '',
     lightPreference: '',
     sizeInfo: '',
+    locationKind: 'indoor',
     wateringNotes: '',
     fertilizingNotes: '',
     lastWateredAt: today,
@@ -39,6 +40,7 @@ const mapRecognizeToFormValues = (
 
   return {
     ...result,
+    locationKind: 'indoor',
     lastWateredAt: today,
     lastFertilizedAt: today,
   };

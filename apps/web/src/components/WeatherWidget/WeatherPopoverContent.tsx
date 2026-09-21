@@ -4,6 +4,7 @@ import { AimOutlined } from '@ant-design/icons';
 
 import { ForecastDayRow } from './ForecastDayRow';
 import type { WeatherPopoverContentProps } from './WeatherWidget.types';
+import { wateringClimateNotes } from './WeatherWidget.utils';
 
 export const WeatherPopoverContent = ({
   cityInput,
@@ -46,6 +47,11 @@ export const WeatherPopoverContent = ({
       ) : null}
       {weather !== null ? (
         <Flex vertical gap={6}>
+          {wateringClimateNotes(weather.wateringClimate).map((note) => (
+            <Typography.Text key={note} type="secondary">
+              {note}
+            </Typography.Text>
+          ))}
           {weather.daily.map((day) => (
             <ForecastDayRow day={day} key={day.date} />
           ))}

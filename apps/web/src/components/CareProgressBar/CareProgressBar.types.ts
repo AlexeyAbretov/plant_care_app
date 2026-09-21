@@ -12,3 +12,11 @@ export type CareProgressResult = {
   color: CareProgressColor;
   overdue: boolean;
 };
+
+export type WateringAdjustReason = 'heating' | 'heat' | 'overcast' | 'rain';
+
+export type EffectiveWateringInterval = {
+  intervalDays: number;
+  factor: number;
+  reasons: WateringAdjustReason[];
+};

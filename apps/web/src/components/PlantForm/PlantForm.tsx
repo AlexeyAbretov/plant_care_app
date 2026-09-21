@@ -1,7 +1,7 @@
-import { DatePicker, Form, Input, InputNumber } from 'antd';
+import { DatePicker, Form, Input, InputNumber, Radio } from 'antd';
 
 import type { PlantFormProps } from './PlantForm.types';
-import { plantFormRules } from './plantFormRules';
+import { plantFormRules } from './PlantForm.utils';
 
 export const PlantForm = ({
   disabled = false,
@@ -30,6 +30,18 @@ export const PlantForm = ({
 
       <Form.Item label="Размер" name="sizeInfo">
         <Input disabled={disabled} placeholder="Средний куст" />
+      </Form.Item>
+
+      <Form.Item
+        extra="Комнатным учитываем отопление, уличным — дождь"
+        label="Где стоит"
+        name="locationKind"
+        rules={plantFormRules.locationKind}
+      >
+        <Radio.Group disabled={disabled}>
+          <Radio value="indoor">В помещении</Radio>
+          <Radio value="outdoor">На улице / балконе</Radio>
+        </Radio.Group>
       </Form.Item>
 
       <Form.Item

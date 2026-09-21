@@ -1,5 +1,7 @@
 export type PlantSort = 'watering' | 'fertilizing';
 
+export type PlantLocationKind = 'indoor' | 'outdoor';
+
 export interface ListPlantsParams {
   sort?: PlantSort;
   categories?: string[];
@@ -12,6 +14,7 @@ export interface Plant {
   category: string;
   lightPreference: string;
   sizeInfo: string;
+  locationKind: PlantLocationKind;
   wateringIntervalDays: number;
   fertilizingIntervalDays: number;
   wateringNotes: string;
@@ -50,6 +53,7 @@ export interface CreatePlantPayload {
   category: string;
   lightPreference: string;
   sizeInfo: string;
+  locationKind: PlantLocationKind;
   wateringIntervalDays: number;
   fertilizingIntervalDays: number;
   wateringNotes: string;

@@ -7,6 +7,7 @@ import type {
   WeatherQuery,
   WeatherSnapshot,
 } from '../types/weather.js';
+import { deriveWateringClimate } from '../utils/wateringClimate.js';
 
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
 const GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search';
@@ -217,18 +218,21 @@ async function fetchForecast(place: GeoPlace): Promise<WeatherSnapshot> {
   const currentDescribed = describeWeatherCode(
     parsed.data.current.weather_code,
   );
+  const current = {
+    temperatureC: parsed.data.current.temperature_2m,
+    weatherCode: parsed.data.current.weather_code,
+    kind: currentDescribed.kind,
+    condition: currentDescribed.condition,
+  };
+  const daily = mapDaily(parsed.data.daily);
 
   return {
     locationLabel: place.locationLabel,
     latitude: parsed.data.latitude,
     longitude: parsed.data.longitude,
-    current: {
-      temperatureC: parsed.data.current.temperature_2m,
-      weatherCode: parsed.data.current.weather_code,
-      kind: currentDescribed.kind,
-      condition: currentDescribed.condition,
-    },
-    daily: mapDaily(parsed.data.daily),
+    current,
+    daily,
+    wateringClimate: deriveWateringClimate(current, daily),
   };
 }
 

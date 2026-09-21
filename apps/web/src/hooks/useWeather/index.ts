@@ -1,1 +1,1 @@
-export { useWeather } from './useWeather';
+export { useWeather, WeatherProvider } from './useWeather';

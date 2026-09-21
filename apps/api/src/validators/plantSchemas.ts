@@ -10,6 +10,7 @@ const plantFieldsSchema = z.object({
   category: z.string().default(''),
   lightPreference: z.string().default(''),
   sizeInfo: z.string().default(''),
+  locationKind: z.enum(['indoor', 'outdoor']).default('indoor'),
   wateringIntervalDays: positiveInt,
   fertilizingIntervalDays: positiveInt,
   wateringNotes: z.string().default(''),

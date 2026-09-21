@@ -1,3 +1,5 @@
+export type PlantLocationKind = 'indoor' | 'outdoor';
+
 export interface PlantDto {
   id: string;
   name: string;
@@ -5,6 +7,7 @@ export interface PlantDto {
   category: string;
   lightPreference: string;
   sizeInfo: string;
+  locationKind: PlantLocationKind;
   wateringIntervalDays: number;
   fertilizingIntervalDays: number;
   wateringNotes: string;
@@ -23,6 +26,7 @@ export interface PlantFields {
   category: string;
   lightPreference: string;
   sizeInfo: string;
+  locationKind: PlantLocationKind;
   wateringIntervalDays: number;
   fertilizingIntervalDays: number;
   wateringNotes: string;

@@ -113,6 +113,7 @@ export class PlantsApi {
     formData.append('category', payload.category);
     formData.append('lightPreference', payload.lightPreference);
     formData.append('sizeInfo', payload.sizeInfo);
+    formData.append('locationKind', payload.locationKind);
     formData.append(
       'wateringIntervalDays',
       String(payload.wateringIntervalDays),

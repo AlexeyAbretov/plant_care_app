@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { AppLayout } from '@components';
 import { WeatherWidgetContainer } from '@containers';
+import { WeatherProvider } from '@hooks';
 import { AddPage, CatalogPage, EditPlantPage } from '@pages';
 
 dayjs.locale('ru');
@@ -12,13 +13,15 @@ dayjs.locale('ru');
 export const App = (): React.JSX.Element => {
   return (
     <ConfigProvider locale={ruRU}>
-      <AppLayout headerExtra={<WeatherWidgetContainer />}>
-        <Routes>
-          <Route path="/" element={<CatalogPage />} />
-          <Route path="/add" element={<AddPage />} />
-          <Route path="/plants/:id/edit" element={<EditPlantPage />} />
-        </Routes>
-      </AppLayout>
+      <WeatherProvider>
+        <AppLayout headerExtra={<WeatherWidgetContainer />}>
+          <Routes>
+            <Route path="/" element={<CatalogPage />} />
+            <Route path="/add" element={<AddPage />} />
+            <Route path="/plants/:id/edit" element={<EditPlantPage />} />
+          </Routes>
+        </AppLayout>
+      </WeatherProvider>
     </ConfigProvider>
   );
 };

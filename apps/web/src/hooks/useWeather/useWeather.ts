@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  createContext,
+  createElement,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { ApiError, weatherApi } from '@api';
 import type { WeatherQuery, WeatherSnapshot, WeatherSource } from '@types';
@@ -11,7 +19,7 @@ const GEO_MAX_AGE_MS = 10 * 60 * 1000;
 type StoredWeatherLocation =
   { city: string; mode: 'city' } | { lat: number; lon: number; mode: 'geo' };
 
-export const useWeather = () => {
+const useWeatherState = () => {
   const [weather, setWeather] = useState<WeatherSnapshot | null>(null);
   const [source, setSource] = useState<WeatherSource>('default');
   const [loading, setLoading] = useState(true);
@@ -158,6 +166,30 @@ export const useWeather = () => {
     source,
     weather,
   };
+};
+
+type WeatherContextValue = ReturnType<typeof useWeatherState>;
+
+const WeatherContext = createContext<WeatherContextValue | null>(null);
+
+export const WeatherProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.JSX.Element => {
+  const value = useWeatherState();
+
+  return createElement(WeatherContext.Provider, { value }, children);
+};
+
+export const useWeather = (): WeatherContextValue => {
+  const value = useContext(WeatherContext);
+
+  if (value === null) {
+    throw new Error('useWeather must be used within WeatherProvider');
+  }
+
+  return value;
 };
 
 const readStoredLocation = (): StoredWeatherLocation | null => {
