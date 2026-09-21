@@ -3,7 +3,7 @@ import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 
 import { CloseOutlined } from '@ant-design/icons';
 
-import type { PlantSort } from '../../types';
+import type { PlantSort } from '../../../types';
 
 type CatalogToolbarProps = {
   sort: PlantSort;

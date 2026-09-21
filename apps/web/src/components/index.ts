@@ -1,4 +1,4 @@
-export { AppLayout } from './AppLayout.js';
+export { AppLayout } from './AppLayout/index.js';
 export { CareProgressTrack, CatalogToolbar, PlantCard } from './catalog';
 export {
   ALLOWED_IMAGE_TYPES,
@@ -10,4 +10,4 @@ export {
   type PlantFormValues,
   PlantImagePreview,
 } from './plant';
-export { RetryAlert } from './RetryAlert.js';
+export { RetryAlert } from './RetryAlert/index.js';
