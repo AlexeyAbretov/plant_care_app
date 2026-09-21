@@ -16,7 +16,7 @@ import type { PlantRecognizeResult } from '@types';
 
 type AddStep = 'upload' | 'recognizing' | 'form' | 'saving';
 
-function getDefaultFormValues(): PlantFormValues {
+const getDefaultFormValues = (): PlantFormValues => {
   const today = dayjs().startOf('day');
 
   return {
@@ -30,11 +30,11 @@ function getDefaultFormValues(): PlantFormValues {
     lastWateredAt: today,
     lastFertilizedAt: today,
   };
-}
+};
 
-function mapRecognizeToFormValues(
+const mapRecognizeToFormValues = (
   result: PlantRecognizeResult,
-): PlantFormValues {
+): PlantFormValues => {
   const today = dayjs().startOf('day');
 
   return {
@@ -42,9 +42,9 @@ function mapRecognizeToFormValues(
     lastWateredAt: today,
     lastFertilizedAt: today,
   };
-}
+};
 
-export function AddPage(): React.JSX.Element {
+export const AddPage = (): React.JSX.Element => {
   const navigate = useNavigate();
   const [form] = Form.useForm<PlantFormValues>();
   const [step, setStep] = useState<AddStep>('upload');
@@ -69,14 +69,14 @@ export function AddPage(): React.JSX.Element {
     };
   }, [imageFile]);
 
-  function openManualForm(): void {
+  const openManualForm = (): void => {
     setRecognizeError(null);
     setSaveError(null);
     form.setFieldsValue(getDefaultFormValues());
     setStep('form');
-  }
+  };
 
-  async function handleRecognize(): Promise<void> {
+  const handleRecognize = async (): Promise<void> => {
     if (imageFile === null) {
       message.error('Загрузите фото растения');
 
@@ -101,9 +101,9 @@ export function AddPage(): React.JSX.Element {
       form.setFieldsValue(getDefaultFormValues());
       setStep('form');
     }
-  }
+  };
 
-  async function handleSubmit(values: PlantFormValues): Promise<void> {
+  const handleSubmit = async (values: PlantFormValues): Promise<void> => {
     if (imageFile === null) {
       message.error('Загрузите фото растения');
 
@@ -126,7 +126,7 @@ export function AddPage(): React.JSX.Element {
       setSaveError(errorMessage);
       setStep('form');
     }
-  }
+  };
 
   const isBusy = step === 'recognizing' || step === 'saving';
 
@@ -239,4 +239,4 @@ export function AddPage(): React.JSX.Element {
       </Space>
     </Spin>
   );
-}
+};

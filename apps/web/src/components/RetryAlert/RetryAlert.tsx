@@ -16,7 +16,7 @@ type RetryAlertProps = Pick<
   retryDisabled?: boolean;
 };
 
-function RetryAlertDescription({
+const RetryAlertDescription = ({
   description,
   type,
   onRetry,
@@ -25,7 +25,7 @@ function RetryAlertDescription({
 }: Pick<
   RetryAlertProps,
   'description' | 'type' | 'onRetry' | 'retryLoading' | 'retryDisabled'
->): React.JSX.Element {
+>): React.JSX.Element => {
   const hasDescription =
     description !== null &&
     description !== undefined &&
@@ -49,9 +49,9 @@ function RetryAlertDescription({
       </div>
     </div>
   );
-}
+};
 
-export function RetryAlert({
+export const RetryAlert = ({
   type,
   message,
   description,
@@ -62,7 +62,7 @@ export function RetryAlert({
   onRetry,
   retryLoading,
   retryDisabled,
-}: RetryAlertProps): React.JSX.Element {
+}: RetryAlertProps): React.JSX.Element => {
   return (
     <Alert
       closable={closable}
@@ -82,4 +82,4 @@ export function RetryAlert({
       type={type}
     />
   );
-}
+};

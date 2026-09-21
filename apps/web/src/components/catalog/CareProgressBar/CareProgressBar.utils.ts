@@ -10,23 +10,23 @@ export interface CareProgressResult {
   overdue: boolean;
 }
 
-function clamp(value: number, min: number, max: number): number {
+const clamp = (value: number, min: number, max: number): number => {
   return Math.min(Math.max(value, min), max);
-}
+};
 
-function calendarDaysSince(
+const calendarDaysSince = (
   lastActionDate: string,
   today = dayjs().startOf('day'),
-): number {
+): number => {
   const lastAction = dayjs(lastActionDate).startOf('day');
 
   return today.diff(lastAction, 'day');
-}
+};
 
-export function getCareProgressColor(
+export const getCareProgressColor = (
   progress: number,
   overdue: boolean,
-): CareProgressColor {
+): CareProgressColor => {
   if (overdue) {
     return 'red';
   }
@@ -44,9 +44,9 @@ export function getCareProgressColor(
   }
 
   return 'green';
-}
+};
 
-export function getCareProgressColorHex(color: CareProgressColor): string {
+export const getCareProgressColorHex = (color: CareProgressColor): string => {
   switch (color) {
     case 'green':
       return '#52c41a';
@@ -57,12 +57,12 @@ export function getCareProgressColorHex(color: CareProgressColor): string {
     case 'red':
       return '#ff4d4f';
   }
-}
+};
 
-export function calculateCareProgress(
+export const calculateCareProgress = (
   lastActionDate: string,
   intervalDays: number,
-): CareProgressResult {
+): CareProgressResult => {
   const daysSince = calendarDaysSince(lastActionDate);
 
   if (intervalDays <= 0) {
@@ -85,4 +85,4 @@ export function calculateCareProgress(
     color: getCareProgressColor(progress, overdue),
     overdue,
   };
-}
+};

@@ -52,7 +52,7 @@ packages/linting — @llm/linting (ESLint + Prettier)
 docs/            — CONSTITUTION, MVP_PLAN, AGENT_PIPELINE
 ```
 
-`apps/web/src` (детали и соглашения импортов — [Frontend в CONSTITUTION](docs/CONSTITUTION.md#frontend-структура-и-соглашения)):
+`apps/web/src` (соглашения: стрелочные функции, импорты — [Frontend в CONSTITUTION](docs/CONSTITUTION.md#frontend-структура-и-соглашения)):
 
 ```
 pages/       — CatalogPage, AddPage, EditPlantPage (+ index.ts)

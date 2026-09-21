@@ -11,13 +11,13 @@ type CategoryCloudContentProps = {
   onCategoriesChange: (categories: string[]) => void;
 };
 
-function CategoryCloudContent({
+const CategoryCloudContent = ({
   categories,
   categoryOptions,
   disabled = false,
   onCategoriesChange,
-}: CategoryCloudContentProps): React.JSX.Element {
-  function toggleCategory(name: string): void {
+}: CategoryCloudContentProps): React.JSX.Element => {
+  const toggleCategory = (name: string): void => {
     if (disabled) {
       return;
     }
@@ -29,7 +29,7 @@ function CategoryCloudContent({
     }
 
     onCategoriesChange([...categories, name]);
-  }
+  };
 
   if (categoryOptions.length === 0) {
     return (
@@ -60,7 +60,7 @@ function CategoryCloudContent({
       ))}
     </Flex>
   );
-}
+};
 
 type CategoryCloudDrawerProps = {
   categories: string[];
@@ -72,7 +72,7 @@ type CategoryCloudDrawerProps = {
   open: boolean;
 };
 
-export function CategoryCloudDrawer({
+export const CategoryCloudDrawer = ({
   categories,
   categoryOptions,
   disabled = false,
@@ -80,7 +80,7 @@ export function CategoryCloudDrawer({
   onCategoriesChange,
   onOpenChange,
   open,
-}: CategoryCloudDrawerProps): React.JSX.Element | null {
+}: CategoryCloudDrawerProps): React.JSX.Element | null => {
   const cloud = (
     <CategoryCloudContent
       categories={categories}
@@ -128,4 +128,4 @@ export function CategoryCloudDrawer({
       {cloud}
     </Drawer>
   );
-}
+};

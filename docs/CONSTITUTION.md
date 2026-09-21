@@ -69,6 +69,10 @@ apps/web/src/
 
 Оболочка — `AppLayout`; локаль Ant Design — `ru_RU`.
 
+**Функции:**
+
+Именованные и экспортируемые функции — стрелочные (`export const PlantCard = () => {}`), не `function declaration`. Вложенные обработчики — `const handleX = async () => {}`. Методы классов в `api/` (`ApiClient`, `PlantsApi`) остаются методами. Линтер: `func-style: expression` в `apps/web/eslint.config.js` поверх `@llm/linting` (там для API по умолчанию `function`).
+
 **Импорты:**
 
 Алиасы (`tsconfig.app.json`, `vite.config.ts`): `@api`, `@components`, `@config`, `@hooks`, `@pages`, `@types` → соответствующие каталоги (или `config.ts`) в `src/`.

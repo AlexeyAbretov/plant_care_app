@@ -4,13 +4,13 @@ import type { CreatePlantPayload, Plant } from '@types';
 
 import type { PlantFormValues } from './PlantForm';
 
-function formatDateForApi(value: Dayjs): string {
+const formatDateForApi = (value: Dayjs): string => {
   return value.startOf('day').format('YYYY-MM-DD');
-}
+};
 
-export function mapFormValuesToPayload(
+export const mapFormValuesToPayload = (
   values: PlantFormValues,
-): CreatePlantPayload {
+): CreatePlantPayload => {
   return {
     name: values.name.trim(),
     description: values.description ?? '',
@@ -24,9 +24,9 @@ export function mapFormValuesToPayload(
     lastWateredAt: formatDateForApi(values.lastWateredAt),
     lastFertilizedAt: formatDateForApi(values.lastFertilizedAt),
   };
-}
+};
 
-export function mapPlantToFormValues(plant: Plant): PlantFormValues {
+export const mapPlantToFormValues = (plant: Plant): PlantFormValues => {
   return {
     name: plant.name,
     description: plant.description,
@@ -40,4 +40,4 @@ export function mapPlantToFormValues(plant: Plant): PlantFormValues {
     lastWateredAt: dayjs(plant.lastWateredAt).startOf('day'),
     lastFertilizedAt: dayjs(plant.lastFertilizedAt).startOf('day'),
   };
-}
+};

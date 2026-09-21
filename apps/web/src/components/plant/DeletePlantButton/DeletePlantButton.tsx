@@ -7,14 +7,14 @@ type DeletePlantButtonProps = {
   disabled?: boolean;
 };
 
-export function DeletePlantButton({
+export const DeletePlantButton = ({
   plantName,
   onConfirm,
   disabled = false,
-}: DeletePlantButtonProps): React.JSX.Element {
+}: DeletePlantButtonProps): React.JSX.Element => {
   const [loading, setLoading] = useState(false);
 
-  async function handleConfirm(): Promise<void> {
+  const handleConfirm = async (): Promise<void> => {
     setLoading(true);
 
     try {
@@ -22,7 +22,7 @@ export function DeletePlantButton({
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <Popconfirm
@@ -44,4 +44,4 @@ export function DeletePlantButton({
       </Button>
     </Popconfirm>
   );
-}
+};

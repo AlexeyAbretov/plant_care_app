@@ -12,15 +12,15 @@ import { usePlantsCatalog } from '@hooks';
 
 const { useBreakpoint } = Grid;
 
-function readInitialCategoriesDrawerOpen(): boolean {
+const readInitialCategoriesDrawerOpen = (): boolean => {
   if (typeof window === 'undefined') {
     return true;
   }
 
   return window.matchMedia('(min-width: 768px)').matches;
-}
+};
 
-export function CatalogPage(): React.JSX.Element {
+export const CatalogPage = (): React.JSX.Element => {
   const screens = useBreakpoint();
   const isWide = Boolean(screens.md);
   const [categoriesDrawerOpen, setCategoriesDrawerOpen] = useState(
@@ -103,4 +103,4 @@ export function CatalogPage(): React.JSX.Element {
       </Flex>
     </Spin>
   );
-}
+};

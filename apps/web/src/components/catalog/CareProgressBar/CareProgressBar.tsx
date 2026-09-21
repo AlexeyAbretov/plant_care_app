@@ -10,10 +10,10 @@ type CareProgressTrackProps = {
   intervalDays: number;
 };
 
-export function CareProgressTrack({
+export const CareProgressTrack = ({
   lastActionDate,
   intervalDays,
-}: CareProgressTrackProps): React.JSX.Element {
+}: CareProgressTrackProps): React.JSX.Element => {
   const { percent, color } = calculateCareProgress(
     lastActionDate,
     intervalDays,
@@ -32,4 +32,4 @@ export function CareProgressTrack({
       />
     </div>
   );
-}
+};

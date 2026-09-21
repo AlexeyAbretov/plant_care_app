@@ -11,7 +11,7 @@ type AppLayoutProps = {
   children: React.ReactNode;
 };
 
-export function AppLayout({ children }: AppLayoutProps): React.JSX.Element {
+export const AppLayout = ({ children }: AppLayoutProps): React.JSX.Element => {
   const location = useLocation();
 
   const selectedKey = location.pathname.startsWith('/add') ? 'add' : 'catalog';
@@ -61,4 +61,4 @@ export function AppLayout({ children }: AppLayoutProps): React.JSX.Element {
       </Content>
     </Layout>
   );
-}
+};

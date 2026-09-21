@@ -8,7 +8,7 @@ import { AddPage, CatalogPage, EditPlantPage } from '@pages';
 
 dayjs.locale('ru');
 
-export function App(): React.JSX.Element {
+export const App = (): React.JSX.Element => {
   return (
     <ConfigProvider locale={ruRU}>
       <AppLayout>
@@ -20,4 +20,4 @@ export function App(): React.JSX.Element {
       </AppLayout>
     </ConfigProvider>
   );
-}
+};

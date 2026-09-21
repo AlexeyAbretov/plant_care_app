@@ -1,43 +1,43 @@
-import createConfig from "@llm/linting";
+import createConfig from '@llm/linting';
 
 const aliasImportMessage =
-  "Use path aliases (@api, @components, @hooks, @pages, @types, " +
-  "@config) instead of relative paths to src root folders.";
+  'Use path aliases (@api, @components, @hooks, @pages, @types, ' +
+  '@config) instead of relative paths to src root folders.';
 
 export default [
   ...createConfig({
-    files: ["src/**/*.ts", "src/**/*.tsx"],
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
     tsconfigRootDir: import.meta.dirname,
   }),
   {
-    files: ["src/**/*.ts", "src/**/*.tsx"],
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
     rules: {
-      "no-restricted-imports": [
-        "error",
+      'func-style': ['error', 'expression'],
+      'no-restricted-imports': [
+        'error',
         {
           patterns: [
             {
-              group: ["./*", "../*", "../../*", "../../../*"],
-              importNamePattern: "^.+\\.js$",
+              group: ['./*', '../*', '../../*', '../../../*'],
+              importNamePattern: '^.+\\.js$',
               message:
-                "Relative imports must not include the .js file extension.",
+                'Relative imports must not include the .js file extension.',
             },
             {
-              regex:
-                "^(\\.\\./)+(api|components|hooks|pages|types)(/|$)",
+              regex: '^(\\.\\./)+(api|components|hooks|pages|types)(/|$)',
               message: aliasImportMessage,
             },
             {
-              regex: "^(\\.\\./)+config$",
-              message: "Use @config instead of a relative path.",
+              regex: '^(\\.\\./)+config$',
+              message: 'Use @config instead of a relative path.',
             },
             {
-              regex: "^\\./(api|components|hooks|pages|types)(/|$)",
+              regex: '^\\./(api|components|hooks|pages|types)(/|$)',
               message: aliasImportMessage,
             },
             {
-              regex: "^\\./config$",
-              message: "Use @config instead of ./config.",
+              regex: '^\\./config$',
+              message: 'Use @config instead of ./config.',
             },
           ],
         },
@@ -45,25 +45,22 @@ export default [
     },
   },
   {
-    files: ["src/**/*.ts", "src/**/*.tsx"],
-    ignores: [
-      "src/components/plant/**",
-      "src/components/catalog/**",
-    ],
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
+    ignores: ['src/components/plant/**', 'src/components/catalog/**'],
     rules: {
-      "no-restricted-imports": [
-        "error",
+      'no-restricted-imports': [
+        'error',
         {
           patterns: [
             {
               group: [
-                "**/components/plant",
-                "**/components/plant/*",
-                "**/components/catalog",
-                "**/components/catalog/*",
+                '**/components/plant',
+                '**/components/plant/*',
+                '**/components/catalog',
+                '**/components/catalog/*',
               ],
               message:
-                "Import from @components instead of plant/catalog subpaths.",
+                'Import from @components instead of plant/catalog subpaths.',
             },
           ],
         },

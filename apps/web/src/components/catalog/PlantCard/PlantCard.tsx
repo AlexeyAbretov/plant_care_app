@@ -19,16 +19,16 @@ type PlantCardProps = {
   onDelete: (id: string) => Promise<void>;
 };
 
-export function PlantCard({
+export const PlantCard = ({
   plant,
   onWater,
   onFertilize,
   onDelete,
-}: PlantCardProps): React.JSX.Element {
+}: PlantCardProps): React.JSX.Element => {
   const [waterLoading, setWaterLoading] = useState(false);
   const [fertilizeLoading, setFertilizeLoading] = useState(false);
 
-  async function handleWater(): Promise<void> {
+  const handleWater = async (): Promise<void> => {
     setWaterLoading(true);
 
     try {
@@ -36,9 +36,9 @@ export function PlantCard({
     } finally {
       setWaterLoading(false);
     }
-  }
+  };
 
-  async function handleFertilize(): Promise<void> {
+  const handleFertilize = async (): Promise<void> => {
     setFertilizeLoading(true);
 
     try {
@@ -46,7 +46,7 @@ export function PlantCard({
     } finally {
       setFertilizeLoading(false);
     }
-  }
+  };
 
   return (
     <Card>
@@ -113,4 +113,4 @@ export function PlantCard({
       </Space>
     </Card>
   );
-}
+};

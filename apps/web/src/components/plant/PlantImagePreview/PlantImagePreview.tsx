@@ -10,14 +10,14 @@ type PlantImagePreviewProps = {
   style?: CSSProperties;
 };
 
-export function PlantImagePreview({
+export const PlantImagePreview = ({
   alt,
   src,
   previewSrc,
   height,
   width,
   style,
-}: PlantImagePreviewProps): React.JSX.Element {
+}: PlantImagePreviewProps): React.JSX.Element => {
   const previewUrl = previewSrc ?? src;
 
   return (
@@ -37,4 +37,4 @@ export function PlantImagePreview({
       width={width}
     />
   );
-}
+};

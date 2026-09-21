@@ -11,13 +11,13 @@ type CatalogToolbarProps = {
   sort: PlantSort;
 };
 
-export function CatalogToolbar({
+export const CatalogToolbar = ({
   categoriesDrawerOpen,
   disabled = false,
   onCategoriesDrawerOpenChange,
   onSortChange,
   sort,
-}: CatalogToolbarProps): React.JSX.Element {
+}: CatalogToolbarProps): React.JSX.Element => {
   return (
     <Flex align="center" gap="middle" style={{ minWidth: 0, width: '100%' }}>
       <Button
@@ -45,4 +45,4 @@ export function CatalogToolbar({
       />
     </Flex>
   );
-}
+};

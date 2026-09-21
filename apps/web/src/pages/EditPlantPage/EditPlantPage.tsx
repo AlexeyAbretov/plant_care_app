@@ -17,7 +17,7 @@ import type { Plant } from '@types';
 
 type EditStep = 'loading' | 'form' | 'saving' | 'notFound' | 'error';
 
-export function EditPlantPage(): React.JSX.Element {
+export const EditPlantPage = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [form] = Form.useForm<PlantFormValues>();
@@ -37,7 +37,7 @@ export function EditPlantPage(): React.JSX.Element {
 
     let cancelled = false;
 
-    async function loadPlant(): Promise<void> {
+    const loadPlant = async (): Promise<void> => {
       setStep('loading');
 
       try {
@@ -68,7 +68,7 @@ export function EditPlantPage(): React.JSX.Element {
         );
         setStep('error');
       }
-    }
+    };
 
     void loadPlant();
 
@@ -93,7 +93,7 @@ export function EditPlantPage(): React.JSX.Element {
     };
   }, [imageFile, plant]);
 
-  async function handleSubmit(values: PlantFormValues): Promise<void> {
+  const handleSubmit = async (values: PlantFormValues): Promise<void> => {
     if (id === undefined || plant === null) {
       return;
     }
@@ -118,9 +118,9 @@ export function EditPlantPage(): React.JSX.Element {
       setSaveError(errorMessage);
       setStep('form');
     }
-  }
+  };
 
-  async function handleDelete(): Promise<void> {
+  const handleDelete = async (): Promise<void> => {
     if (id === undefined) {
       return;
     }
@@ -137,7 +137,7 @@ export function EditPlantPage(): React.JSX.Element {
 
       message.error(errorMessage);
     }
-  }
+  };
 
   if (step === 'loading') {
     return <Spin tip="Загружаем растение…" />;
@@ -240,4 +240,4 @@ export function EditPlantPage(): React.JSX.Element {
       </Space>
     </Spin>
   );
-}
+};

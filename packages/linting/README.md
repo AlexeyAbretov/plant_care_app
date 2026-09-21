@@ -1,6 +1,6 @@
 # @llm/linting
 
-Общий ESLint 9 + Prettier для TypeScript: `function`, всегда `{}`, Elvis (`?.` / `??`), группы импортов, строка ≤ 80.
+Общий ESLint 9 + Prettier для TypeScript: `function` declaration (по умолчанию), всегда `{}`, Elvis (`?.` / `??`), группы импортов, строка ≤ 80. В `apps/web` стиль функций переопределён на стрелки (`func-style: expression`).
 
 ## Подключение
 
@@ -36,7 +36,7 @@ export default createConfig({
 
 ### Monorepo: локальные правила (`apps/web`)
 
-В workspace-приложениях базовый конфиг из `@llm/linting` можно **расширить** своими блоками `rules`, не дублируя общий стиль. Пример — `apps/web/eslint.config.js`: spread `createConfig(...)`, затем `no-restricted-imports` (запрет `.js` в относительных путях; импорт `plant`/`catalog` только через баррель `components`). Такие правила остаются в потребителе; вынос в `@llm/linting` — только по отдельному решению.
+В workspace-приложениях базовый конфиг из `@llm/linting` можно **расширить** своими блоками `rules`, не дублируя общий стиль. Пример — `apps/web/eslint.config.js`: spread `createConfig(...)`, затем `func-style: expression` (стрелки вместо `function`) и `no-restricted-imports` (запрет `.js` в относительных путях; импорт `plant`/`catalog` только через баррель `components`). Такие правила остаются в потребителе; вынос в `@llm/linting` — только по отдельному решению.
 
 ```js
 import createConfig from "@llm/linting";
@@ -49,6 +49,7 @@ export default [
   {
     files: ["src/**/*.ts", "src/**/*.tsx"],
     rules: {
+      "func-style": ["error", "expression"],
       /* локальные no-restricted-imports — см. apps/web/eslint.config.js */
     },
   },

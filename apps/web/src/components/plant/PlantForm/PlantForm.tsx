@@ -21,9 +21,9 @@ type PlantFormProps = {
   disabled?: boolean;
 };
 
-export function PlantForm({
+export const PlantForm = ({
   disabled = false,
-}: PlantFormProps): React.JSX.Element {
+}: PlantFormProps): React.JSX.Element => {
   return (
     <>
       <Form.Item label="Название" name="name" rules={plantFormRules.name}>
@@ -107,4 +107,4 @@ export function PlantForm({
       </Form.Item>
     </>
   );
-}
+};

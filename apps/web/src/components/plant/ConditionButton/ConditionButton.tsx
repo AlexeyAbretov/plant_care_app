@@ -33,11 +33,11 @@ const HEALTH_LEVEL_COLORS: Record<PlantHealthLevel, string> = {
   poor: 'error',
 };
 
-function ConditionResultView({
+const ConditionResultView = ({
   result,
 }: {
   result: PlantConditionResult;
-}): React.JSX.Element {
+}): React.JSX.Element => {
   return (
     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
       <Tag color={HEALTH_LEVEL_COLORS[result.healthLevel]}>
@@ -60,19 +60,19 @@ function ConditionResultView({
       </div>
     </Space>
   );
-}
+};
 
-export function PlantConditionButton({
+export const PlantConditionButton = ({
   assess,
   disabled = false,
   disabledTooltip,
-}: PlantConditionButtonProps): React.JSX.Element {
+}: PlantConditionButtonProps): React.JSX.Element => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PlantConditionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  async function runAssessment(): Promise<void> {
+  const runAssessment = async (): Promise<void> => {
     setLoading(true);
     setError(null);
 
@@ -91,16 +91,16 @@ export function PlantConditionButton({
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  function handleOpen(): void {
+  const handleOpen = (): void => {
     setOpen(true);
     setResult(null);
     setError(null);
     void runAssessment();
-  }
+  };
 
-  function handleClose(): void {
+  const handleClose = (): void => {
     if (loading) {
       return;
     }
@@ -108,7 +108,7 @@ export function PlantConditionButton({
     setOpen(false);
     setResult(null);
     setError(null);
-  }
+  };
 
   const button = (
     <Button disabled={disabled} loading={loading && !open} onClick={handleOpen}>
@@ -176,4 +176,4 @@ export function PlantConditionButton({
       </Modal>
     </>
   );
-}
+};

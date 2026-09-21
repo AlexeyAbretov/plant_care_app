@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ApiError, plantsApi } from '@api';
 import type { Plant, PlantSort } from '@types';
 
-function collectCategories(plants: Plant[]): string[] {
+const collectCategories = (plants: Plant[]): string[] => {
   const categories = new Set<string>();
 
   for (const plant of plants) {
@@ -14,9 +14,9 @@ function collectCategories(plants: Plant[]): string[] {
   }
 
   return [...categories].sort((left, right) => left.localeCompare(right, 'ru'));
-}
+};
 
-function replacePlantInPlace(plants: Plant[], updatedPlant: Plant): Plant[] {
+const replacePlantInPlace = (plants: Plant[], updatedPlant: Plant): Plant[] => {
   const index = plants.findIndex((plant) => plant.id === updatedPlant.id);
 
   if (index === -1) {
@@ -28,9 +28,9 @@ function replacePlantInPlace(plants: Plant[], updatedPlant: Plant): Plant[] {
   nextPlants[index] = updatedPlant;
 
   return nextPlants;
-}
+};
 
-export function usePlantsCatalog() {
+export const usePlantsCatalog = () => {
   const [sort, setSort] = useState<PlantSort>('watering');
   const [categories, setCategories] = useState<string[]>([]);
   const [plants, setPlants] = useState<Plant[]>([]);
@@ -150,4 +150,4 @@ export function usePlantsCatalog() {
     fertilizePlant: handleFertilize,
     deletePlant: handleDelete,
   };
-}
+};

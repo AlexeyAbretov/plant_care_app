@@ -23,7 +23,7 @@ type ImageUploadProps = {
   disabled?: boolean;
 };
 
-function validateImageFile(file: File): string | null {
+const validateImageFile = (file: File): string | null => {
   if (
     !ALLOWED_IMAGE_TYPES.includes(
       file.type as (typeof ALLOWED_IMAGE_TYPES)[number],
@@ -37,15 +37,15 @@ function validateImageFile(file: File): string | null {
   }
 
   return null;
-}
+};
 
-export function ImageUpload({
+export const ImageUpload = ({
   file,
   previewUrl,
   previewOriginalUrl,
   onFileSelect,
   disabled = false,
-}: ImageUploadProps): React.JSX.Element {
+}: ImageUploadProps): React.JSX.Element => {
   const uploadProps: UploadProps = {
     accept: ALLOWED_IMAGE_TYPES.join(','),
     disabled,
@@ -102,4 +102,4 @@ export function ImageUpload({
       ) : null}
     </div>
   );
-}
+};
