@@ -10,17 +10,17 @@ import {
   getApiUrl,
   getPlant,
   updatePlant,
-} from '../api/index';
-import { RetryAlert } from '../components/index';
+} from '../api';
+import { RetryAlert } from '../components';
 import {
   DeletePlantButton,
   ImageUpload,
   PlantConditionButton,
   PlantForm,
   type PlantFormValues,
-} from '../components/plant/index';
-import type { Plant } from '../types/index';
-import { mapFormValuesToPayload, mapPlantToFormValues } from '../utils/index';
+} from '../components/plant';
+import type { Plant } from '../types';
+import { mapFormValuesToPayload, mapPlantToFormValues } from '../utils';
 
 type EditStep = 'loading' | 'form' | 'saving' | 'notFound' | 'error';
 
