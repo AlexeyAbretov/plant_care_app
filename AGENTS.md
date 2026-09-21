@@ -57,7 +57,7 @@ docs/            — CONSTITUTION, MVP_PLAN, AGENT_PIPELINE
 ```
 pages/       — CatalogPage, AddPage, EditPlantPage (+ index.ts)
 components/  — AppLayout, RetryAlert, catalog/*, plant/* (+ index.ts); утилиты одного компонента — `ComponentName.utils.ts` рядом с ним
-api/         — client, plants
+api/         — ApiClient, PlantsApi
 hooks/       — usePlantsCatalog
 types/       — модель растения
 App.tsx      — маршруты /, /add, /plants/:id/edit

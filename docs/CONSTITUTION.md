@@ -33,7 +33,7 @@ MongoDB (+ GridFS)    Ollama (локально)
 |---------|------------|
 | `pages/` | Экраны маршрутов: каталог, добавление, редактирование |
 | `components/` | Переиспользуемый UI (`AppLayout`, `RetryAlert`, домены `catalog/`, `plant/`) |
-| `api/` | HTTP-клиент (`ApiClient`) и REST (`PlantsApi`) |
+| `api/` | HTTP-клиент (`ApiClient.ts`) и REST (`PlantsApi.ts`) |
 | `hooks/` | React-хуки (например, `usePlantsCatalog`) |
 | `types/` | Общие TypeScript-типы (модель растения и т. п.) |
 | `config.ts` | Конфигурация из `import.meta.env` |
