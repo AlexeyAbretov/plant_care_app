@@ -5,5 +5,10 @@ export {
   ImageUpload,
   MAX_IMAGE_SIZE_BYTES,
 } from './ImageUpload';
-export { PlantForm, type PlantFormValues } from './PlantForm';
+export {
+  mapFormValuesToPayload,
+  mapPlantToFormValues,
+  PlantForm,
+  type PlantFormValues,
+} from './PlantForm';
 export { PlantImagePreview } from './PlantImagePreview';

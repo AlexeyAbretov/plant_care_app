@@ -35,7 +35,6 @@ MongoDB (+ GridFS)    Ollama (локально)
 | `components/` | Переиспользуемый UI (`AppLayout`, `RetryAlert`, домены `catalog/`, `plant/`) |
 | `api/` | HTTP-клиент (`client.ts`) и вызовы REST (`plants.ts`) |
 | `hooks/` | React-хуки (например, `usePlantsCatalog`) |
-| `utils/` | Чистые функции с несколькими потребителями (утилиты формы) |
 | `types/` | Общие TypeScript-типы (модель растения и т. п.) |
 | `config.ts` | Конфигурация из `import.meta.env` |
 
@@ -57,8 +56,7 @@ apps/web/src/
 │   ├── CatalogPage/
 │   ├── AddPage/
 │   └── EditPlantPage/
-├── types/
-└── utils/                # только код с несколькими потребителями
+└── types/
 ```
 
 **Маршруты** (`App.tsx`, React Router):
@@ -73,7 +71,7 @@ apps/web/src/
 
 **Импорты:**
 
-Алиасы (`tsconfig.app.json`, `vite.config.ts`): `@api`, `@components`, `@config`, `@hooks`, `@pages`, `@types`, `@utils` → соответствующие каталоги (или `config.ts`) в `src/`.
+Алиасы (`tsconfig.app.json`, `vite.config.ts`): `@api`, `@components`, `@config`, `@hooks`, `@pages`, `@types` → соответствующие каталоги (или `config.ts`) в `src/`.
 
 - Между корневыми каталогами `src` — только алиасы, не `../../api` и не `./components`.
 - Внутри одной папки/фичи — относительные `./` и `../` (соседи в `plant/`, `catalog/` и т. п.).
@@ -83,7 +81,12 @@ apps/web/src/
 
 **Колокация утилит компонента:**
 
-Чистые функции, которые нужны только одному компоненту, лежат в папке этого компонента файлом `ComponentName.utils.ts`. Импорт — относительный (`./ComponentName.utils`), в публичный баррель компонента их не реэкспортируют. Каталог `src/utils/` — только для кода, которым пользуются несколько страниц или компонентов.
+Чистые функции, которые относятся к одному компоненту, лежат в папке этого компонента файлом `ComponentName.utils.ts`.
+
+- Если их вызывает только сам компонент — относительный импорт (`./ComponentName.utils`), в баррель не реэкспортируют. Пример: `CareProgressBar.utils.ts`.
+- Если их вызывают страницы — реэкспорт через баррель компонента и `@components` (страницы не импортируют `plant/` / `catalog/` напрямую). Пример: `PlantForm.utils.ts` (`mapFormValuesToPayload`, `mapPlantToFormValues`).
+
+Каталог `src/utils/` заводят, когда появится код с несколькими независимыми потребителями вне одного компонента.
 
 Прогресс полива/подкормки в UI считается в `components/catalog/CareProgressBar/CareProgressBar.utils.ts` по тем же правилам, что в разделе «Прогресс-бар ухода» ниже.
 

@@ -1,7 +1,7 @@
 import createConfig from "@llm/linting";
 
 const aliasImportMessage =
-  "Use path aliases (@api, @components, @hooks, @pages, @types, @utils, " +
+  "Use path aliases (@api, @components, @hooks, @pages, @types, " +
   "@config) instead of relative paths to src root folders.";
 
 export default [
@@ -24,7 +24,7 @@ export default [
             },
             {
               regex:
-                "^(\\.\\./)+(api|components|hooks|pages|types|utils)(/|$)",
+                "^(\\.\\./)+(api|components|hooks|pages|types)(/|$)",
               message: aliasImportMessage,
             },
             {
@@ -32,7 +32,7 @@ export default [
               message: "Use @config instead of a relative path.",
             },
             {
-              regex: "^\\./(api|components|hooks|pages|types|utils)(/|$)",
+              regex: "^\\./(api|components|hooks|pages|types)(/|$)",
               message: aliasImportMessage,
             },
             {

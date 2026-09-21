@@ -11,13 +11,13 @@ import {
 } from '@api';
 import {
   ImageUpload,
+  mapFormValuesToPayload,
   PlantConditionButton,
   PlantForm,
   type PlantFormValues,
   RetryAlert,
 } from '@components';
 import type { PlantRecognizeResult } from '@types';
-import { mapFormValuesToPayload } from '@utils';
 
 type AddStep = 'upload' | 'recognizing' | 'form' | 'saving';
 

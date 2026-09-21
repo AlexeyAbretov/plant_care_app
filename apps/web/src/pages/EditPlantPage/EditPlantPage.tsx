@@ -14,13 +14,14 @@ import {
 import {
   DeletePlantButton,
   ImageUpload,
+  mapFormValuesToPayload,
+  mapPlantToFormValues,
   PlantConditionButton,
   PlantForm,
   type PlantFormValues,
   RetryAlert,
 } from '@components';
 import type { Plant } from '@types';
-import { mapFormValuesToPayload, mapPlantToFormValues } from '@utils';
 
 type EditStep = 'loading' | 'form' | 'saving' | 'notFound' | 'error';
 
