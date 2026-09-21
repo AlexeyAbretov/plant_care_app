@@ -1,6 +1,9 @@
 import { Progress } from 'antd';
 
-import { calculateCareProgress, getCareProgressColorHex } from '@utils';
+import {
+  calculateCareProgress,
+  getCareProgressColorHex,
+} from './CareProgressBar.utils';
 
 type CareProgressTrackProps = {
   lastActionDate: string;

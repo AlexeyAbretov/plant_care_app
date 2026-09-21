@@ -59,7 +59,7 @@ pages/       — CatalogPage, AddPage, EditPlantPage (+ index.ts)
 components/  — AppLayout, RetryAlert, catalog/*, plant/* (+ index.ts)
 api/         — client, plants
 hooks/       — usePlantsCatalog
-utils/       — careProgress, plantFormUtils
+utils/       — plantFormUtils (общий код; утилиты одного компонента — `ComponentName.utils.ts` рядом с ним)
 types/       — модель растения
 App.tsx      — маршруты /, /add, /plants/:id/edit
 ```
