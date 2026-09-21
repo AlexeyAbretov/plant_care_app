@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom';
 
 import { CareProgressTrack } from './CareProgressBar.js';
 
-import { getApiUrl } from '../../api/client.js';
-import { assessPlantConditionById } from '../../api/plants.js';
-import type { Plant } from '../../types/plant.js';
-import { PlantConditionButton } from '../plant/ConditionButton.js';
-import { DeletePlantButton } from '../plant/DeletePlantButton.js';
-import { PlantImagePreview } from '../plant/PlantImagePreview.js';
+import { assessPlantConditionById, getApiUrl } from '../../api/index.js';
+import type { Plant } from '../../types/index.js';
+import {
+  DeletePlantButton,
+  PlantConditionButton,
+  PlantImagePreview,
+} from '../plant/index.js';
 
 type PlantCardProps = {
   plant: Plant;

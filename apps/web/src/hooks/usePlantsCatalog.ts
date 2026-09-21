@@ -1,14 +1,14 @@
 import { message } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
-import { ApiError } from '../api/client.js';
 import {
+  ApiError,
   deletePlant as deletePlantApi,
   fertilizePlant,
   listPlants,
   waterPlant,
-} from '../api/plants.js';
-import type { Plant, PlantSort } from '../types/plant.js';
+} from '../api/index.js';
+import type { Plant, PlantSort } from '../types/index.js';
 
 function collectCategories(plants: Plant[]): string[] {
   const categories = new Set<string>();

@@ -7,7 +7,7 @@ import type {
   PlantConditionResult,
   PlantRecognizeResult,
   UpdatePlantPayload,
-} from '../types/plant.js';
+} from '../types/index.js';
 
 function appendPlantFields(
   formData: FormData,

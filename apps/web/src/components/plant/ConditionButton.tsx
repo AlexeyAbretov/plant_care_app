@@ -10,12 +10,12 @@ import {
 } from 'antd';
 import { useState } from 'react';
 
-import { ApiError } from '../../api/client.js';
+import { ApiError } from '../../api/index.js';
 import type {
   PlantConditionResult,
   PlantHealthLevel,
-} from '../../types/plant.js';
-import { RetryAlert } from '../RetryAlert.js';
+} from '../../types/index.js';
+import { RetryAlert } from '../index.js';
 
 type PlantConditionButtonProps = {
   assess: () => Promise<PlantConditionResult>;
