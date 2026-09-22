@@ -1,4 +1,5 @@
-import { Drawer, Flex, Tag, Typography } from 'antd';
+import { Drawer, Flex, Tag, theme, Typography } from 'antd';
+import { useState } from 'react';
 
 import type {
   CategoryCloudContentProps,
@@ -15,6 +16,9 @@ const CategoryCloudContent = ({
   disabled = false,
   onCategoriesChange,
 }: CategoryCloudContentProps): React.JSX.Element => {
+  const { token } = theme.useToken();
+  const [hoveredName, setHoveredName] = useState<string | null>(null);
+
   const toggleCategory = (name: string): void => {
     if (disabled) {
       return;
@@ -38,24 +42,52 @@ const CategoryCloudContent = ({
   }
 
   return (
-    <Flex gap="small" wrap="wrap">
-      {categoryOptions.map((name) => (
-        <CheckableTag
-          checked={categories.includes(name)}
-          key={name}
-          onChange={() => {
-            toggleCategory(name);
-          }}
-          style={{
-            marginInlineEnd: 0,
-            overflowWrap: 'anywhere',
-            whiteSpace: 'normal',
-            wordBreak: 'break-word',
-          }}
-        >
-          {name}
-        </CheckableTag>
-      ))}
+    <Flex gap={8} wrap="wrap">
+      {categoryOptions.map((name) => {
+        const checked = categories.includes(name);
+        const hovered = hoveredName === name && !checked;
+
+        return (
+          <span
+            key={name}
+            onMouseEnter={() => {
+              setHoveredName(name);
+            }}
+            onMouseLeave={() => {
+              setHoveredName(null);
+            }}
+          >
+            <CheckableTag
+              checked={checked}
+              onChange={() => {
+                toggleCategory(name);
+              }}
+              style={{
+                background: checked
+                  ? token.colorPrimary
+                  : token.colorBgContainer,
+                border: `1px solid ${
+                  checked || hovered ? token.colorPrimary : token.colorBorder
+                }`,
+                borderRadius: token.borderRadiusSM,
+                color: checked
+                  ? token.colorTextLightSolid
+                  : hovered
+                    ? token.colorPrimary
+                    : token.colorText,
+                lineHeight: 1.4,
+                marginInlineEnd: 0,
+                overflowWrap: 'anywhere',
+                padding: '4px 10px',
+                whiteSpace: 'normal',
+                wordBreak: 'break-word',
+              }}
+            >
+              {name}
+            </CheckableTag>
+          </span>
+        );
+      })}
     </Flex>
   );
 };
@@ -69,6 +101,7 @@ export const CategoryCloudDrawer = ({
   onOpenChange,
   open,
 }: CategoryCloudDrawerProps): React.JSX.Element | null => {
+  const { token } = theme.useToken();
   const cloud = (
     <CategoryCloudContent
       categories={categories}
@@ -87,13 +120,23 @@ export const CategoryCloudDrawer = ({
       <aside
         aria-label="Фильтр по категориям"
         style={{
-          borderRight: '1px solid rgba(0, 0, 0, 0.06)',
+          background: token.colorPrimaryBg,
+          border: `1px solid ${token.colorPrimaryBorder}`,
+          borderRadius: token.borderRadiusLG,
+          boxShadow: token.boxShadowTertiary,
           flexShrink: 0,
-          paddingRight: 16,
+          padding: 16,
           width: PANEL_WIDTH,
         }}
       >
-        <Typography.Text strong style={{ display: 'block', marginBottom: 12 }}>
+        <Typography.Text
+          strong
+          style={{
+            color: token.colorPrimaryText,
+            display: 'block',
+            marginBottom: 12,
+          }}
+        >
           Категории
         </Typography.Text>
         {cloud}
