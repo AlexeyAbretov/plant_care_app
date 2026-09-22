@@ -4,7 +4,7 @@
 
 - **Node.js** ≥ 22
 - **Docker** — для MongoDB в dev (`docker compose`); на Windows Docker Desktop должен быть **запущен** до `npm run dev`
-- **Ollama** — локально, модель: `ollama pull qwen3-vl:8b`
+- **Ollama** — локальный провайдер по умолчанию (`LLM_PROVIDER=ollama`), модель: `ollama pull qwen2.5vl:7b`. Альтернативы: `openai`, `google`, `grok` (нужен `LLM_API_KEY`)
 - **@llm/linting** — workspace-пакет в `packages/linting` (см. [README](packages/linting/README.md))
 
 ## Установка
@@ -37,11 +37,12 @@ cp .env.example .env
 |--------|------------|---------|
 | API | `PORT` | `3001` |
 | API | `MONGODB_URI` | `mongodb://localhost:27017/plant_care` |
-| API | `LLM_PROVIDER` | `ollama` (файл `services/<имя>.client.ts`) |
+| API | `LLM_PROVIDER` | `ollama` (`ollama`, `openai`, `google`, `grok` — файл `services/<имя>.client.ts`) |
 | API | `LLM_TIMEOUT_MS` | `120000` |
-| API | `LLM_API_KEY` | — |
-| API | `LLM_MODEL` | — |
-| API | `LLM_BASE_URL` | — |
+| API | `LLM_API_KEY` | — (для Ollama не нужен) |
+| API | `LLM_MODEL` | `qwen2.5vl:7b` в `.env.example` |
+| API | `LLM_BASE_URL` | `http://localhost:11434` в `.env.example` |
+| API | `WEATHER_DEFAULT_CITY` | `Москва` |
 | Web | `WEB_PORT` | `5173` |
 | Web | `VITE_API_BASE_URL` | `http://localhost:3001` |
 | Docker | `MONGO_PORT` | `27017` |
@@ -77,7 +78,7 @@ App.tsx      — маршруты /, /add, /plants/:id/edit; WeatherProvider; `h
 curl http://localhost:3001/api/health/llm
 ```
 
-Распознавание растения по фото (нужны запущенные API и Ollama с моделью `qwen3-vl:8b`):
+Распознавание растения по фото (нужны запущенные API и настроенный провайдер из `LLM_PROVIDER`; для Ollama — модель `qwen2.5vl:7b` из `.env.example`):
 
 ```bash
 curl -X POST http://localhost:3001/api/plants/recognize \

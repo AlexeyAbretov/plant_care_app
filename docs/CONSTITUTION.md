@@ -8,7 +8,7 @@
 | Backend | Node.js ≥ 22, TypeScript, Express |
 | База данных | MongoDB (dev — Docker Compose) |
 | Файлы изображений | MongoDB GridFS |
-| LLM | Ollama, ChatGPT или Gemma (`LLM_PROVIDER`, server-side, без выбора в UI) |
+| LLM | Ollama, ChatGPT, Gemma или Grok (`LLM_PROVIDER`, server-side, без выбора в UI) |
 | Lint | ESLint 9 + Prettier через `@llm/linting` (in-repo, `packages/linting`) |
 
 ## Архитектура
@@ -18,7 +18,7 @@
     ↓ REST API
 Backend (Express)
     ↓                    ↓
-MongoDB (+ GridFS)    Ollama, ChatGPT или Gemma
+MongoDB (+ GridFS)    Ollama, ChatGPT, Gemma или Grok
 ```
 
 - Frontend обращается только к backend REST API.
@@ -159,7 +159,7 @@ MVP **закрыт**: этапы 0–6 выполнены, см. [MVP_PLAN.md](M
 
 - UI только на русском языке
 - Загрузка фото, генерация превью 128×128
-- Распознавание через настроенную LLM (Ollama или ChatGPT): название, описание, параметры, уход, категория
+- Распознавание через настроенную LLM (Ollama, ChatGPT, Gemma или Grok): название, описание, параметры, уход, категория
 - Интервалы полива/подкормки: LLM предлагает, пользователь может уточнить
 - Категория — произвольная строка с возможностью правки
 - Даты последнего полива/подкормки (по умолчанию «сегодня»)
@@ -172,7 +172,7 @@ MVP **закрыт**: этапы 0–6 выполнены, см. [MVP_PLAN.md](M
 - PWA / offline
 - Аутентификация и мультипользовательский режим
 - Push-напоминания, история ухода
-- Выбор модели Ollama в UI
+- Выбор провайдера и модели LLM в UI
 
 ## Переменные окружения
 
@@ -184,11 +184,12 @@ Dev-окружение настраивается **одним** файлом `.
 |------------|--------------|----------|
 | `PORT` | `3001` | Порт HTTP API |
 | `MONGODB_URI` | `mongodb://localhost:27017/plant_care` | Строка подключения MongoDB |
-| `LLM_PROVIDER` | `ollama` | Имя клиента: `services/<имя>.client.ts` |
+| `LLM_PROVIDER` | `ollama` | Клиент `services/<имя>.client.ts`: `ollama`, `openai`, `google`, `grok` |
 | `LLM_TIMEOUT_MS` | `120000` | Таймаут запроса к модели |
 | `LLM_API_KEY` | — | Ключ облачной модели. Для Ollama не нужен |
-| `LLM_MODEL` | — | Имя модели |
-| `LLM_BASE_URL` | — | Базовый URL модели |
+| `LLM_MODEL` | — | Имя модели. В `.env.example` для Ollama: `qwen2.5vl:7b` |
+| `LLM_BASE_URL` | — | Базовый URL. В `.env.example` для Ollama: `http://localhost:11434` |
+| `WEATHER_DEFAULT_CITY` | `Москва` | Город по умолчанию для прогноза |
 
 ### Frontend (`apps/web`)
 
