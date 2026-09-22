@@ -113,6 +113,16 @@ apps/web/src/
 
 Стили одного компонента — `ComponentName.css` рядом с ним (пример: `WeatherWidget.css`). Глобальный `index.css` — только сброс страницы (`body`, `#root`).
 
+**Стори (Storybook):**
+
+У каждого компонента в `components/` есть стори. Файл лежит в каталоге `__stories__` этой папки: `ComponentName/__stories__/ComponentName.stories.tsx` (пример: `PlantCard/__stories__/PlantCard.stories.tsx`).
+
+- Импорт компонента — относительный (`../ComponentName`). В баррель (`index.ts`, `@components`) стори не реэкспортируют.
+- Формат CSF3: `satisfies Meta<typeof Component>`, каждая стори — именованный экспорт. `title` — `Components/ComponentName`, чтобы каталог `__stories__` не попадал в сайдбар.
+- Минимум одна стори. Отличимые состояния UI — отдельные стори.
+- Общие провайдеры (локаль Ant Design, роутер) задаются в `apps/web/.storybook/preview.tsx`.
+- Запуск из корня: `npm run storybook` (порт `6006`).
+
 Каталог `src/utils/` заводят, когда появится код с несколькими независимыми потребителями вне одного компонента.
 
 Прогресс полива/подкормки в UI считается в `components/CareProgressBar/CareProgressBar.utils.ts` по тем же правилам, что в разделе «Прогресс-бар ухода» ниже. Для полива в каталоге в `intervalDays` подставляется **эффективный** интервал (см. «Полив и погода»).

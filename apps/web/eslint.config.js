@@ -1,4 +1,5 @@
 import createConfig from '@llm/linting';
+import storybook from 'eslint-plugin-storybook';
 
 const aliasImportMessage =
   'Use path aliases (@api, @components, @containers, @hooks, ' +
@@ -71,4 +72,5 @@ export default [
       ],
     },
   },
+  ...storybook.configs['flat/recommended'],
 ];

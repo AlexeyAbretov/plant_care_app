@@ -1,0 +1,47 @@
+---
+description: У каждого UI-компонента есть Storybook-стори в __stories__
+globs: "apps/web/src/components/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Стори компонентов
+
+У каждого компонента в `apps/web/src/components/<Name>/` есть стори
+Storybook. Файл — `__stories__/<Name>.stories.tsx` внутри папки компонента.
+Вложенные модули той же папки (`WeatherTrigger` в `WeatherWidget`) отдельных
+стори не получают: их покрывают стори родителя.
+
+- Импорт компонента — относительный (`../Name`). В `index.ts` и
+  `@components` стори не реэкспортируют.
+- CSF3: `satisfies Meta<typeof Name>`, стори — именованные экспорты.
+  `title` — `Components/Name`, чтобы каталог `__stories__` не попадал в сайдбар.
+- Минимум одна стори. Отличимые состояния UI — отдельные стори.
+- Колбэки — `fn()` из `storybook/test`.
+- Провайдеры приложения (локаль Ant Design, роутер) уже в
+  `apps/web/.storybook/preview.tsx`. В стори их не дублировать.
+- Запуск: `npm run storybook` из корня (порт `6006`).
+
+```tsx
+// ❌ BAD — стори рядом с компонентом или в общем src/stories
+// components/PlantCard/PlantCard.stories.tsx
+
+// ✅ GOOD — components/PlantCard/__stories__/PlantCard.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn } from 'storybook/test';
+
+import { PlantCard } from '../PlantCard';
+
+const meta = {
+  title: 'Components/PlantCard',
+  component: PlantCard,
+  args: {
+    onWater: fn(async () => {}),
+  },
+} satisfies Meta<typeof PlantCard>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const OnSchedule: Story = {};
+```

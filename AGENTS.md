@@ -22,6 +22,7 @@ npm install
 | `npm run dev:apps` | Backend + frontend без Docker (MongoDB должна быть уже запущена); обходной путь, если Docker недоступен |
 | `npm run lint` | ESLint во всех workspaces |
 | `npm run build` | Сборка web + api |
+| `npm run storybook` | Storybook web (`:6006`); стори компонентов — `components/Name/__stories__/` |
 
 ## Переменные окружения
 
@@ -56,7 +57,7 @@ docs/            — CONSTITUTION, MVP_PLAN, AGENT_PIPELINE
 
 ```
 pages/       — CatalogPage, AddPage, EditPlantPage (+ index.ts); типы — `PageName.types.ts`
-components/  — AppLayout, RetryAlert, WeatherWidget, catalog/*, plant/* (+ index.ts); утилиты — `ComponentName.utils.ts`, типы — `ComponentName.types.ts`, стили — `ComponentName.css` рядом с компонентом
+components/  — AppLayout, RetryAlert, WeatherWidget, catalog/*, plant/* (+ index.ts); утилиты — `ComponentName.utils.ts`, типы — `ComponentName.types.ts`, стили — `ComponentName.css` рядом с компонентом; стори — `__stories__/ComponentName.stories.tsx` (обязательны для каждого компонента)
 containers/  — WeatherWidgetContainer (+ index.ts); алиас `@containers`
 api/         — ApiClient, PlantsApi
 hooks/       — usePlantsCatalog, useWeather

@@ -10,7 +10,8 @@
     "dev:mongo": "node scripts/dev.mjs mongo",
     "dev:apps": "node scripts/dev.mjs apps",
     "lint": "npm run lint --workspaces --if-present",
-    "build": "npm run build --workspaces --if-present"
+    "build": "npm run build --workspaces --if-present",
+    "storybook": "npm run storybook -w @plant-care/web"
   },
   "devDependencies": {
     "@llm/linting": "workspace:*",
