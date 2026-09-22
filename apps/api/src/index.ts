@@ -19,7 +19,11 @@ async function main(): Promise<void> {
   app.use('/api/weather', weatherRouter);
 
   app.listen(config.port, () => {
+    const llmModel =
+      config.llmProvider === 'openai' ? config.openaiModel : config.ollamaModel;
+
     console.log(`API: http://localhost:${config.port}`);
+    console.log(`LLM: ${config.llmProvider} (${llmModel})`);
   });
 }
 

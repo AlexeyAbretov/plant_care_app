@@ -37,8 +37,13 @@ cp .env.example .env
 |--------|------------|---------|
 | API | `PORT` | `3001` |
 | API | `MONGODB_URI` | `mongodb://localhost:27017/plant_care` |
+| API | `LLM_PROVIDER` | `ollama` (`ollama` \| `openai`) |
+| API | `LLM_TIMEOUT_MS` | `120000` |
 | API | `OLLAMA_BASE_URL` | `http://localhost:11434` |
-| API | `OLLAMA_TIMEOUT_MS` | `120000` |
+| API | `OLLAMA_MODEL` | `qwen2.5vl:7b` |
+| API | `OPENAI_API_KEY` | — |
+| API | `OPENAI_MODEL` | `gpt-4.1-mini` |
+| API | `OPENAI_BASE_URL` | `https://api.openai.com/v1` |
 | Web | `WEB_PORT` | `5173` |
 | Web | `VITE_API_BASE_URL` | `http://localhost:3001` |
 | Docker | `MONGO_PORT` | `27017` |
@@ -67,6 +72,12 @@ App.tsx      — маршруты /, /add, /plants/:id/edit; WeatherProvider; `h
 ```
 
 ## API (этап 2)
+
+Проверка LLM (провайдер из `LLM_PROVIDER`):
+
+```bash
+curl http://localhost:3001/api/health/llm
+```
 
 Проверка Ollama:
 

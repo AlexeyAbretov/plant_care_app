@@ -1,4 +1,4 @@
-import { chatWithImage } from './ollama.client.js';
+import { chatWithImage } from './llm.client.js';
 import {
   InvalidImageFormatError,
   validateImageMime,
@@ -57,6 +57,7 @@ async function assessFromBuffer(
     systemPrompt: PLANT_CONDITION_SYSTEM_PROMPT,
     userPrompt: PLANT_CONDITION_USER_PROMPT,
     imageBase64,
+    mimeType,
   });
 
   try {
@@ -71,6 +72,7 @@ async function assessFromBuffer(
       systemPrompt: PLANT_CONDITION_SYSTEM_PROMPT,
       userPrompt: retryUserPrompt,
       imageBase64,
+      mimeType,
     });
 
     return parseConditionContent(retryResponse);

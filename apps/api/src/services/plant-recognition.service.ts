@@ -1,4 +1,4 @@
-import { chatWithImage } from './ollama.client.js';
+import { chatWithImage } from './llm.client.js';
 
 import {
   buildRecognitionSystemPrompt,
@@ -78,6 +78,7 @@ export async function recognizePlantFromImage(
     systemPrompt,
     userPrompt,
     imageBase64,
+    mimeType,
   });
 
   try {
@@ -91,6 +92,7 @@ export async function recognizePlantFromImage(
       systemPrompt,
       userPrompt: retryUserPrompt,
       imageBase64,
+      mimeType,
     });
 
     return parseRecognitionContent(retryResponse);

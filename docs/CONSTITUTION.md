@@ -8,7 +8,7 @@
 | Backend | Node.js ≥ 22, TypeScript, Express |
 | База данных | MongoDB (dev — Docker Compose) |
 | Файлы изображений | MongoDB GridFS |
-| LLM | Ollama, модель `qwen3-vl:8b` (server-side, без выбора модели в UI) |
+| LLM | Ollama или ChatGPT (`LLM_PROVIDER`, server-side, без выбора в UI) |
 | Lint | ESLint 9 + Prettier через `@llm/linting` (in-repo, `packages/linting`) |
 
 ## Архитектура
@@ -18,11 +18,11 @@
     ↓ REST API
 Backend (Express)
     ↓                    ↓
-MongoDB (+ GridFS)    Ollama (локально)
+MongoDB (+ GridFS)    Ollama или ChatGPT
 ```
 
 - Frontend обращается только к backend REST API.
-- Распознавание изображений выполняется на backend через Ollama.
+- Распознавание изображений выполняется на backend через провайдера из `LLM_PROVIDER` (`ollama` или `openai`).
 - Изображения растений хранятся в GridFS; метаданные — в коллекциях MongoDB.
 
 ## Frontend: структура и соглашения
@@ -159,7 +159,7 @@ MVP **закрыт**: этапы 0–6 выполнены, см. [MVP_PLAN.md](M
 
 - UI только на русском языке
 - Загрузка фото, генерация превью 128×128
-- Распознавание через Ollama (`qwen3-vl:8b`): название, описание, параметры, уход, категория
+- Распознавание через настроенную LLM (Ollama или ChatGPT): название, описание, параметры, уход, категория
 - Интервалы полива/подкормки: LLM предлагает, пользователь может уточнить
 - Категория — произвольная строка с возможностью правки
 - Даты последнего полива/подкормки (по умолчанию «сегодня»)
@@ -184,7 +184,13 @@ Dev-окружение настраивается **одним** файлом `.
 |------------|--------------|----------|
 | `PORT` | `3001` | Порт HTTP API |
 | `MONGODB_URI` | `mongodb://localhost:27017/plant_care` | Строка подключения MongoDB |
+| `LLM_PROVIDER` | `ollama` | `ollama` или `openai` (ChatGPT) |
+| `LLM_TIMEOUT_MS` | `120000` | Таймаут запроса к модели |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Базовый URL Ollama |
+| `OLLAMA_MODEL` | `qwen2.5vl:7b` | Модель Ollama |
+| `OPENAI_API_KEY` | — | Ключ OpenAI, только для `openai` |
+| `OPENAI_MODEL` | `gpt-4.1-mini` | Модель ChatGPT |
+| `OPENAI_BASE_URL` | `https://api.openai.com/v1` | Базовый URL OpenAI |
 
 ### Frontend (`apps/web`)
 

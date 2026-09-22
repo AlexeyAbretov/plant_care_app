@@ -16,9 +16,9 @@ import {
   ImageNotFoundError,
 } from '../services/imageStorage.js';
 import {
-  OllamaTimeoutError,
-  OllamaUnavailableError,
-} from '../services/ollama.client.js';
+  LlmTimeoutError,
+  LlmUnavailableError,
+} from '../services/llm.errors.js';
 import {
   assessPlantConditionByImageId,
   assessPlantConditionByPlantId,
@@ -137,13 +137,13 @@ function handleConditionError(
     return;
   }
 
-  if (error instanceof OllamaUnavailableError) {
+  if (error instanceof LlmUnavailableError) {
     res.status(503).json({ error: error.message });
 
     return;
   }
 
-  if (error instanceof OllamaTimeoutError) {
+  if (error instanceof LlmTimeoutError) {
     res.status(504).json({ error: error.message });
 
     return;
@@ -257,13 +257,13 @@ plantsRouter.post('/recognize', (req, res, next) => {
           return;
         }
 
-        if (recognizeError instanceof OllamaUnavailableError) {
+        if (recognizeError instanceof LlmUnavailableError) {
           res.status(503).json({ error: recognizeError.message });
 
           return;
         }
 
-        if (recognizeError instanceof OllamaTimeoutError) {
+        if (recognizeError instanceof LlmTimeoutError) {
           res.status(504).json({ error: recognizeError.message });
 
           return;

@@ -1,15 +1,16 @@
+import { LlmTimeoutError, LlmUnavailableError } from './llm.errors.js';
+import type { ChatWithImageOptions } from './llm.types.js';
+
 import { config } from '../config.js';
 
-export const OLLAMA_MODEL = 'qwen2.5vl:7b';
-
-export class OllamaUnavailableError extends Error {
+export class OllamaUnavailableError extends LlmUnavailableError {
   constructor(message = 'Ollama недоступен') {
     super(message);
     this.name = 'OllamaUnavailableError';
   }
 }
 
-export class OllamaTimeoutError extends Error {
+export class OllamaTimeoutError extends LlmTimeoutError {
   constructor(message = 'Превышено время ожидания') {
     super(message);
     this.name = 'OllamaTimeoutError';
@@ -22,26 +23,20 @@ interface OllamaChatResponse {
   };
 }
 
-interface ChatWithImageOptions {
-  systemPrompt: string;
-  userPrompt: string;
-  imageBase64: string;
-}
-
-export async function chatWithImage(
+export async function chatWithOllama(
   options: ChatWithImageOptions,
 ): Promise<string> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
     controller.abort();
-  }, config.ollamaTimeoutMs);
+  }, config.llmTimeoutMs);
 
   try {
     const response = await fetch(`${config.ollamaBaseUrl}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: OLLAMA_MODEL,
+        model: config.ollamaModel,
         stream: false,
         format: 'json',
         messages: [
@@ -69,7 +64,7 @@ export async function chatWithImage(
 
     return content;
   } catch (error: unknown) {
-    if (error instanceof OllamaUnavailableError) {
+    if (error instanceof LlmUnavailableError) {
       throw error;
     }
 
