@@ -2,7 +2,7 @@ import { message } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
 import { ApiError, plantsApi } from '@api';
-import type { Plant, PlantSort } from '@types';
+import type { Plant, PlantConditionResult, PlantSort } from '@types';
 
 const collectCategories = (plants: Plant[]): string[] => {
   const categories = new Set<string>();
@@ -118,6 +118,13 @@ export const usePlantsCatalog = () => {
     }
   }, []);
 
+  const handleAssess = useCallback(
+    (id: string): Promise<PlantConditionResult> => {
+      return plantsApi.assessConditionById(id);
+    },
+    [],
+  );
+
   const handleDelete = useCallback(
     async (id: string): Promise<void> => {
       try {
@@ -149,5 +156,6 @@ export const usePlantsCatalog = () => {
     waterPlant: handleWater,
     fertilizePlant: handleFertilize,
     deletePlant: handleDelete,
+    assessPlant: handleAssess,
   };
 };

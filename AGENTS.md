@@ -57,7 +57,7 @@ docs/            — CONSTITUTION, MVP_PLAN, AGENT_PIPELINE
 
 ```
 pages/       — CatalogPage, AddPage, EditPlantPage (+ index.ts); типы — `PageName.types.ts`
-components/  — AppLayout, RetryAlert, WeatherWidget, catalog/*, plant/* (+ index.ts); утилиты — `ComponentName.utils.ts`, типы — `ComponentName.types.ts`, стили — `ComponentName.css` рядом с компонентом; стори — `__stories__/ComponentName.stories.tsx` (обязательны для каждого компонента)
+components/  — AppLayout, RetryAlert, WeatherWidget, catalog/*, plant/* (+ index.ts); утилиты — `ComponentName.utils.ts`, типы — `ComponentName.types.ts`, стили — `ComponentName.css` рядом с компонентом; стори — `__stories__/ComponentName.stories.tsx` (обязательны для каждого компонента); без `@api` (включая `ApiError`) — колбэки, готовые URL и `Error.message` снаружи (`pages/`, `hooks/`, `containers/`)
 containers/  — WeatherWidgetContainer (+ index.ts); алиас `@containers`
 api/         — ApiClient, PlantsApi
 hooks/       — usePlantsCatalog, useWeather

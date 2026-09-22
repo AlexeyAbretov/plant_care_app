@@ -2,6 +2,7 @@ import { Col, Empty, Flex, Grid, Row, Spin, Typography } from 'antd';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import { apiClient } from '@api';
 import {
   CatalogToolbar,
   CategoryCloudDrawer,
@@ -41,6 +42,7 @@ export const CatalogPage = (): React.JSX.Element => {
     waterPlant,
     fertilizePlant,
     deletePlant,
+    assessPlant,
   } = usePlantsCatalog();
 
   const { weather } = useWeather();
@@ -110,10 +112,13 @@ export const CatalogPage = (): React.JSX.Element => {
                   xs={24}
                 >
                   <PlantCard
+                    imageSrc={apiClient.url(plant.thumbnailUrl)}
+                    onAssess={assessPlant}
                     onDelete={deletePlant}
                     onFertilize={fertilizePlant}
                     onWater={waterPlant}
                     plant={plant}
+                    previewSrc={apiClient.url(plant.imageUrl)}
                     wateringClimate={wateringClimate}
                   />
                 </Col>

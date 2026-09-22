@@ -55,10 +55,17 @@ const meta = {
   },
   args: {
     plant: createPlant(),
+    imageSrc: '/storybook/plant.svg',
+    previewSrc: '/storybook/plant.svg',
     wateringClimate: null,
     onWater: fn(async () => {}),
     onFertilize: fn(async () => {}),
     onDelete: fn(async () => {}),
+    onAssess: fn(async () => ({
+      assessment: 'Листья плотные, без пятен.',
+      healthLevel: 'good',
+      recommendations: ['Продолжайте текущий уход'],
+    })),
   },
 } satisfies Meta<typeof PlantCard>;
 

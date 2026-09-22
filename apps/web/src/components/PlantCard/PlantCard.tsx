@@ -2,8 +2,6 @@ import { Button, Card, Flex, Space, Typography } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { apiClient, plantsApi } from '@api';
-
 import type { PlantCardProps } from './PlantCard.types';
 
 import {
@@ -25,10 +23,13 @@ const actionButtonStyle: React.CSSProperties = {
 
 export const PlantCard = ({
   plant,
+  imageSrc,
+  previewSrc,
   wateringClimate,
   onWater,
   onFertilize,
   onDelete,
+  onAssess,
 }: PlantCardProps): React.JSX.Element => {
   const [waterLoading, setWaterLoading] = useState(false);
   const [fertilizeLoading, setFertilizeLoading] = useState(false);
@@ -76,8 +77,8 @@ export const PlantCard = ({
         <PlantImagePreview
           alt={plant.name}
           height={128}
-          previewSrc={apiClient.url(plant.imageUrl)}
-          src={apiClient.url(plant.thumbnailUrl)}
+          previewSrc={previewSrc}
+          src={imageSrc}
           style={{ borderRadius: 8, objectFit: 'cover' }}
           width={128}
         />
@@ -126,9 +127,7 @@ export const PlantCard = ({
           >
             Подкормил сегодня
           </Button>
-          <PlantConditionButton
-            assess={() => plantsApi.assessConditionById(plant.id)}
-          />
+          <PlantConditionButton assess={() => onAssess(plant.id)} />
           <Link
             to={`/plants/${plant.id}/edit`}
             style={{ maxWidth: '100%', minWidth: 0 }}

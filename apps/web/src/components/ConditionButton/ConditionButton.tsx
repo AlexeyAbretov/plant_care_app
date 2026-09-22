@@ -10,7 +10,6 @@ import {
 } from 'antd';
 import { useState } from 'react';
 
-import { ApiError } from '@api';
 import type { PlantConditionResult, PlantHealthLevel } from '@types';
 
 import type {
@@ -78,10 +77,10 @@ export const PlantConditionButton = ({
 
       setResult(assessmentResult);
     } catch (assessError: unknown) {
+      const thrownMessage =
+        assessError instanceof Error ? assessError.message : '';
       const errorMessage =
-        assessError instanceof ApiError
-          ? assessError.message
-          : 'Не удалось оценить состояние растения';
+        thrownMessage || 'Не удалось оценить состояние растения';
 
       setError(errorMessage);
       setResult(null);
