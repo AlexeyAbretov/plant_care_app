@@ -138,6 +138,15 @@ apps/web/src/
 - Общие провайдеры (локаль Ant Design, роутер) задаются в `apps/web/.storybook/preview.tsx`.
 - Запуск из корня: `npm run storybook` (порт `6006`).
 
+**Unit-тесты (Vitest):**
+
+Тесты лежат в подпапке `__tests__` того артефакта, который проверяют: `PlantCard/__tests__/PlantCard.test.tsx`, `api/PlantsApi/__tests__/PlantsApi.test.ts`, `utils/__tests__/date.test.ts`. В баррель тесты не реэкспортируют. Импорт проверяемого модуля — относительный, как в стори.
+
+- Раннер — Vitest (`jsdom`), запросы к DOM — Testing Library. Общая подготовка — `apps/web/src/test/setup.ts` (календарная дата зафиксирована на 2026-09-22, сериализатор снапшотов стабилизирует id и классы анимации Ant Design). Рендер с локалью `ru_RU` и роутером — `renderUi` из `apps/web/src/test/render.tsx`.
+- Отображение компонентов, контейнеров и страниц проверяется снапшотами (`toMatchSnapshot`). Клиенты API, хуки и утилиты — утверждениями на вызовы и возвращаемые значения.
+- В покрытие входят `src/api`, `src/components`, `src/containers`, `src/hooks`, `src/pages`, `src/utils`. Не входят `*.types.ts`, баррели `index.ts`, `__stories__` и `__tests__`. Порог веток — 80%. Строки, операторы и функции — 100%: в HTML-отчёте не должно оставаться красных непокрытых строк. Жёлтым могут оставаться частично покрытые ветки (`apps/web/vite.config.ts`).
+- Из корня: `npm test`. Режим наблюдения: `npm run test:watch -w @plant-care/web`. В режиме `test` `VITE_API_BASE_URL` фиксируется как `http://localhost:3001`.
+
 Каталог `src/utils/` — для кода с несколькими независимыми потребителями вне одного компонента. Календарные даты — `utils/date.ts`.
 
 Прогресс полива/подкормки в UI считается в `components/CareProgressBar/CareProgressBar.utils.ts` по тем же правилам, что в разделе «Прогресс-бар ухода» ниже. Для полива в каталоге в `intervalDays` подставляется **эффективный** интервал (см. «Полив и погода»).

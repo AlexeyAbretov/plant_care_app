@@ -1,0 +1,169 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CatalogToolbar > переключает категории и сортировку 1`] = `
+<div>
+  <div
+    class="ant-flex ant-flex-gap-middle"
+    style="min-width: 0px; width: 100%;"
+  >
+    <button
+      aria-expanded="false"
+      aria-label="Показать категории"
+      class="ant-btn ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only"
+      type="button"
+    >
+      <span
+        class="ant-btn-icon"
+      >
+        <span
+          aria-label="filter"
+          class="anticon anticon-filter"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="filter"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M880.1 154H143.9c-24.5 0-39.8 26.7-27.5 48L349 597.4V838c0 17.7 14.2 32 31.8 32h262.4c17.6 0 31.8-14.3 31.8-32V597.4L907.7 202c12.2-21.3-3.1-48-27.6-48zM603.4 798H420.6V642h182.9v156zm9.6-236.6l-9.5 16.6h-183l-9.5-16.6L212.7 226h598.6L613 561.4z"
+            />
+          </svg>
+        </span>
+      </span>
+    </button>
+    <div
+      aria-label="segmented control"
+      aria-orientation="horizontal"
+      class="ant-segmented"
+      role="radiogroup"
+      tabindex="0"
+    >
+      <div
+        class="ant-segmented-group"
+      >
+        <label
+          class="ant-segmented-item ant-segmented-item-selected"
+        >
+          <input
+            checked=""
+            class="ant-segmented-item-input"
+            name="test-id"
+            type="radio"
+          />
+          <div
+            class="ant-segmented-item-label"
+            title="По поливу"
+          >
+            По поливу
+          </div>
+        </label>
+        <label
+          class="ant-segmented-item"
+        >
+          <input
+            class="ant-segmented-item-input"
+            name="test-id"
+            type="radio"
+          />
+          <div
+            class="ant-segmented-item-label"
+            title="По подкормке"
+          >
+            По подкормке
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CatalogToolbar > рисует открытый фильтр и блокирует действия 1`] = `
+<div>
+  <div
+    class="ant-flex ant-flex-gap-middle"
+    style="min-width: 0px; width: 100%;"
+  >
+    <button
+      aria-expanded="true"
+      aria-label="Скрыть категории"
+      class="ant-btn ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only"
+      disabled=""
+      type="button"
+    >
+      <span
+        class="ant-btn-icon"
+      >
+        <span
+          aria-label="filter"
+          class="anticon anticon-filter"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="filter"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <path
+              d="M880.1 154H143.9c-24.5 0-39.8 26.7-27.5 48L349 597.4V838c0 17.7 14.2 32 31.8 32h262.4c17.6 0 31.8-14.3 31.8-32V597.4L907.7 202c12.2-21.3-3.1-48-27.6-48zM603.4 798H420.6V642h182.9v156zm9.6-236.6l-9.5 16.6h-183l-9.5-16.6L212.7 226h598.6L613 561.4z"
+            />
+          </svg>
+        </span>
+      </span>
+    </button>
+    <div
+      aria-label="segmented control"
+      aria-orientation="horizontal"
+      class="ant-segmented ant-segmented-disabled"
+      role="radiogroup"
+    >
+      <div
+        class="ant-segmented-group"
+      >
+        <label
+          class="ant-segmented-item ant-segmented-item-disabled"
+        >
+          <input
+            class="ant-segmented-item-input"
+            disabled=""
+            name="test-id"
+            type="radio"
+          />
+          <div
+            class="ant-segmented-item-label"
+            title="По поливу"
+          >
+            По поливу
+          </div>
+        </label>
+        <label
+          class="ant-segmented-item ant-segmented-item-selected ant-segmented-item-disabled"
+        >
+          <input
+            checked=""
+            class="ant-segmented-item-input"
+            disabled=""
+            name="test-id"
+            type="radio"
+          />
+          <div
+            class="ant-segmented-item-label"
+            title="По подкормке"
+          >
+            По подкормке
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+`;

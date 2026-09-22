@@ -14,7 +14,22 @@ import {
 } from '@components';
 import type { Plant } from '@types';
 
-import type { EditPlantFormProps, EditStep } from './EditPlantPage.types';
+import type {
+  EditPlantFormProps,
+  EditPlantScreenProps,
+  EditStep,
+} from './EditPlantPage.types';
+
+const PlantNotFound = (): React.JSX.Element => {
+  return (
+    <Space direction="vertical" size="large">
+      <Typography.Title level={3} style={{ marginTop: 0 }}>
+        Растение не найдено
+      </Typography.Title>
+      <Link to="/">Вернуться в каталог</Link>
+    </Space>
+  );
+};
 
 const EditPlantForm = ({
   disabled,
@@ -72,8 +87,7 @@ const EditPlantForm = ({
   );
 };
 
-export const EditPlantPage = (): React.JSX.Element => {
-  const { id } = useParams<{ id: string }>();
+const EditPlantScreen = ({ id }: EditPlantScreenProps): React.JSX.Element => {
   const navigate = useNavigate();
   const [step, setStep] = useState<EditStep>('loading');
   const [plant, setPlant] = useState<Plant | null>(null);
@@ -81,19 +95,13 @@ export const EditPlantPage = (): React.JSX.Element => {
   const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (id === undefined) {
-      setStep('notFound');
-
-      return;
-    }
-
     let cancelled = false;
 
     const loadPlant = async (): Promise<void> => {
       setStep('loading');
 
       try {
-        const loadedPlant = await plantsApi.get(id!);
+        const loadedPlant = await plantsApi.get(id);
 
         if (cancelled) {
           return;
@@ -129,10 +137,6 @@ export const EditPlantPage = (): React.JSX.Element => {
   }, [id]);
 
   const handleSubmit = async (values: PlantFormValues): Promise<void> => {
-    if (id === undefined || plant === null) {
-      return;
-    }
-
     setSaveError(null);
     setStep('saving');
 
@@ -158,10 +162,6 @@ export const EditPlantPage = (): React.JSX.Element => {
   };
 
   const handleAddImages = async (files: File[]): Promise<void> => {
-    if (id === undefined) {
-      return;
-    }
-
     try {
       const updated = await plantsApi.addImages(id, files);
 
@@ -173,10 +173,6 @@ export const EditPlantPage = (): React.JSX.Element => {
   };
 
   const handleDeleteImage = async (imageId: string): Promise<void> => {
-    if (id === undefined) {
-      return;
-    }
-
     try {
       const updated = await plantsApi.deleteImage(id, imageId);
 
@@ -188,10 +184,6 @@ export const EditPlantPage = (): React.JSX.Element => {
   };
 
   const handleSetDefault = async (imageId: string | null): Promise<void> => {
-    if (id === undefined) {
-      return;
-    }
-
     try {
       const updated = await plantsApi.setDefaultImage(id, imageId);
 
@@ -207,10 +199,6 @@ export const EditPlantPage = (): React.JSX.Element => {
   };
 
   const handleDelete = async (): Promise<void> => {
-    if (id === undefined) {
-      return;
-    }
-
     try {
       await plantsApi.delete(id);
       message.success('Растение удалено');
@@ -234,14 +222,7 @@ export const EditPlantPage = (): React.JSX.Element => {
   }
 
   if (step === 'notFound') {
-    return (
-      <Space direction="vertical" size="large">
-        <Typography.Title level={3} style={{ marginTop: 0 }}>
-          Растение не найдено
-        </Typography.Title>
-        <Link to="/">Вернуться в каталог</Link>
-      </Space>
-    );
+    return <PlantNotFound />;
   }
 
   if (step === 'error') {
@@ -276,7 +257,7 @@ export const EditPlantPage = (): React.JSX.Element => {
             })}
             onAddFiles={handleAddImages}
             onAssess={(imageId) => {
-              return plantsApi.assessConditionByImageId(id!, imageId);
+              return plantsApi.assessConditionByImageId(id, imageId);
             }}
             onDelete={handleDeleteImage}
             onSetDefault={handleSetDefault}
@@ -301,4 +282,14 @@ export const EditPlantPage = (): React.JSX.Element => {
       </Space>
     </Spin>
   );
+};
+
+export const EditPlantPage = (): React.JSX.Element => {
+  const { id } = useParams<{ id: string }>();
+
+  if (id === undefined) {
+    return <PlantNotFound />;
+  }
+
+  return <EditPlantScreen id={id} />;
 };

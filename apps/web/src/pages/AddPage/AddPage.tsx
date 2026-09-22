@@ -78,18 +78,12 @@ export const AddPage = (): React.JSX.Element => {
     setStep('form');
   };
 
-  const handleRecognize = async (): Promise<void> => {
-    if (imageFile === null) {
-      message.error('Загрузите фото растения');
-
-      return;
-    }
-
+  const handleRecognize = async (file: File): Promise<void> => {
     setRecognizeError(null);
     setStep('recognizing');
 
     try {
-      const result = await plantsApi.recognize(imageFile);
+      const result = await plantsApi.recognize(file);
 
       form.setFieldsValue(mapRecognizeToFormValues(result));
       setStep('form');
@@ -105,18 +99,15 @@ export const AddPage = (): React.JSX.Element => {
     }
   };
 
-  const handleSubmit = async (values: PlantFormValues): Promise<void> => {
-    if (imageFile === null) {
-      message.error('Загрузите фото растения');
-
-      return;
-    }
-
+  const handleSubmit = async (
+    file: File,
+    values: PlantFormValues,
+  ): Promise<void> => {
     setSaveError(null);
     setStep('saving');
 
     try {
-      await plantsApi.create(mapFormValuesToPayload(values), imageFile);
+      await plantsApi.create(mapFormValuesToPayload(values), file);
       message.success('Растение сохранено');
       navigate('/');
     } catch (error: unknown) {
@@ -151,9 +142,13 @@ export const AddPage = (): React.JSX.Element => {
           <Space wrap>
             <Button
               disabled={imageFile === null}
-              onClick={() => {
-                void handleRecognize();
-              }}
+              onClick={
+                imageFile === null
+                  ? undefined
+                  : () => {
+                      void handleRecognize(imageFile);
+                    }
+              }
               type="primary"
             >
               Распознать растение
@@ -164,7 +159,7 @@ export const AddPage = (): React.JSX.Element => {
           </Space>
         ) : null}
 
-        {step === 'form' || step === 'saving' ? (
+        {imageFile !== null && (step === 'form' || step === 'saving') ? (
           <>
             {recognizeError !== null ? (
               <RetryAlert
@@ -177,7 +172,7 @@ export const AddPage = (): React.JSX.Element => {
                   setRecognizeError(null);
                 }}
                 onRetry={() => {
-                  void handleRecognize();
+                  void handleRecognize(imageFile);
                 }}
                 retryDisabled={step === 'saving'}
                 showIcon
@@ -206,7 +201,7 @@ export const AddPage = (): React.JSX.Element => {
               form={form}
               layout="vertical"
               onFinish={(values) => {
-                void handleSubmit(values);
+                void handleSubmit(imageFile, values);
               }}
             >
               <PlantForm disabled={step === 'saving'} />
@@ -220,9 +215,7 @@ export const AddPage = (): React.JSX.Element => {
                   Сохранить
                 </Button>
                 <PlantConditionButton
-                  assess={() => plantsApi.assessCondition(imageFile!)}
-                  disabled={imageFile === null}
-                  disabledTooltip="Сначала загрузите фото"
+                  assess={() => plantsApi.assessCondition(imageFile)}
                 />
                 <Button
                   disabled={step === 'saving'}

@@ -23,10 +23,8 @@ const isControlTarget = (target: EventTarget | null): boolean => {
 const capturePointer = (element: HTMLElement, pointerId: number): void => {
   try {
     element.setPointerCapture(pointerId);
-  } catch (error) {
-    if (!(error instanceof DOMException)) {
-      throw error;
-    }
+  } catch {
+    return;
   }
 };
 
@@ -245,10 +243,16 @@ export const PlantImagePreview = ({
   };
 
   const renderPreview = (original: React.ReactElement): React.ReactElement => {
-    const image = cloneElement(original, {
-      onDoubleClick: blockPreviewZoom,
-      title: sizeTitle,
-    });
+    const image = cloneElement(
+      original as React.ReactElement<{
+        onDoubleClick?: (event: React.MouseEvent<HTMLImageElement>) => void;
+        title?: string;
+      }>,
+      {
+        onDoubleClick: blockPreviewZoom,
+        title: sizeTitle,
+      },
+    );
 
     return (
       <span className="plant-image-preview-shell">

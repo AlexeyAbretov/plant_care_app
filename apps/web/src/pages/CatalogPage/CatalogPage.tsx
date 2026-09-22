@@ -16,10 +16,6 @@ import type { Plant } from '@types';
 const { useBreakpoint } = Grid;
 
 const readInitialCategoriesDrawerOpen = (): boolean => {
-  if (typeof window === 'undefined') {
-    return true;
-  }
-
   return window.matchMedia('(min-width: 768px)').matches;
 };
 
