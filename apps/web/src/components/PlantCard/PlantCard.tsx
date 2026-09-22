@@ -9,8 +9,8 @@ import {
   getEffectiveWateringInterval,
   getWateringDueCaption,
 } from '../CareProgressBar';
-import { PlantConditionButton } from '../PlantConditionButton';
 import { DeletePlantButton } from '../DeletePlantButton';
+import { PlantConditionButton } from '../PlantConditionButton';
 import { PlantImagePreview } from '../PlantImagePreview';
 
 const actionButtonStyle: React.CSSProperties = {
@@ -24,7 +24,8 @@ const actionButtonStyle: React.CSSProperties = {
 export const PlantCard = ({
   plant,
   imageSrc,
-  previewSrc,
+  previewSrcs,
+  previewIndex = 0,
   wateringClimate,
   onWater,
   onFertilize,
@@ -77,7 +78,8 @@ export const PlantCard = ({
         <PlantImagePreview
           alt={plant.name}
           height={128}
-          previewSrc={previewSrc}
+          previewIndex={previewIndex}
+          previewSrcs={previewSrcs}
           src={imageSrc}
           style={{ borderRadius: 8, objectFit: 'cover' }}
           width={128}

@@ -1,12 +1,10 @@
-import { getImageBuffer, ImageNotFoundError } from './imageStorage.js';
 import { chatWithImage } from './ollama.client.js';
 import {
   InvalidImageFormatError,
   validateImageMime,
 } from './plant-recognition.service.js';
-import { PlantNotFoundError } from './plantService.js';
+import { readPlantImageBuffer } from './plantService.js';
 
-import { PlantModel } from '../models/Plant.js';
 import {
   PLANT_CONDITION_RETRY_PROMPT,
   PLANT_CONDITION_SYSTEM_PROMPT,
@@ -89,21 +87,16 @@ export async function assessPlantConditionFromImage(
 export async function assessPlantConditionByPlantId(
   id: string,
 ): Promise<PlantConditionResult> {
-  const plant = await PlantModel.findById(id);
+  const { buffer, contentType } = await readPlantImageBuffer(id);
 
-  if (!plant) {
-    throw new PlantNotFoundError();
-  }
+  return assessFromBuffer(buffer, contentType);
+}
 
-  try {
-    const { buffer, contentType } = await getImageBuffer(plant.imageFileId);
+export async function assessPlantConditionByImageId(
+  plantId: string,
+  imageId: string,
+): Promise<PlantConditionResult> {
+  const { buffer, contentType } = await readPlantImageBuffer(plantId, imageId);
 
-    return assessFromBuffer(buffer, contentType);
-  } catch (error) {
-    if (error instanceof ImageNotFoundError) {
-      throw new PlantNotFoundError();
-    }
-
-    throw error;
-  }
+  return assessFromBuffer(buffer, contentType);
 }

@@ -6,7 +6,11 @@ import {
 } from 'express';
 import { z } from 'zod';
 
-import { handleUploadError, uploadPlantImage } from '../middleware/upload.js';
+import {
+  handleUploadError,
+  uploadPlantImage,
+  uploadPlantImages,
+} from '../middleware/upload.js';
 import {
   type ImageMimeType,
   ImageNotFoundError,
@@ -16,6 +20,7 @@ import {
   OllamaUnavailableError,
 } from '../services/ollama.client.js';
 import {
+  assessPlantConditionByImageId,
   assessPlantConditionByPlantId,
   assessPlantConditionFromImage,
   PlantConditionError,
@@ -26,13 +31,18 @@ import {
   recognizePlantFromImage,
 } from '../services/plant-recognition.service.js';
 import {
+  addPlantImages,
   createPlant,
   deletePlant,
+  deletePlantImage,
   fertilizePlant,
   getPlantById,
   getPlantImage,
+  LastPlantImageError,
   listPlants,
   PlantNotFoundError,
+  setPlantDefaultImage,
+  TooManyPlantImagesError,
   updatePlant,
   waterPlant,
 } from '../services/plantService.js';
@@ -41,10 +51,27 @@ import {
   formatZodError,
   parseCreatePlantBody,
   parseListPlantsQuery,
+  parseSetDefaultImageBody,
   parseUpdatePlantBody,
 } from '../validators/plantSchemas.js';
 
 export const plantsRouter = Router();
+
+function getImagesFromRequest(req: Request) {
+  const files = req.files;
+
+  if (!Array.isArray(files)) {
+    return [];
+  }
+
+  return files.map((file) => {
+    return {
+      buffer: file.buffer,
+      mimetype: file.mimetype as ImageMimeType,
+      originalname: file.originalname,
+    };
+  });
+}
 
 function getImageFromRequest(req: Request) {
   if (!req.file) {
@@ -71,6 +98,15 @@ function handleRouteError(
 
   if (error instanceof PlantNotFoundError) {
     res.status(404).json({ error: error.message });
+
+    return;
+  }
+
+  if (
+    error instanceof LastPlantImageError ||
+    error instanceof TooManyPlantImagesError
+  ) {
+    res.status(400).json({ error: error.message });
 
     return;
   }
@@ -114,6 +150,24 @@ function handleConditionError(
   }
 
   next(error);
+}
+
+function withImagesUpload(
+  handler: (req: Request, res: Response) => Promise<void>,
+) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    uploadPlantImages(req, res, (error) => {
+      if (error) {
+        handleUploadError(error, req, res, next);
+
+        return;
+      }
+
+      handler(req, res).catch((handlerError) => {
+        handleRouteError(handlerError, res, next);
+      });
+    });
+  };
 }
 
 function withUpload(handler: (req: Request, res: Response) => Promise<void>) {
@@ -363,6 +417,194 @@ plantsRouter.get(
   },
 );
 
+plantsRouter.post(
+  '/:id/images',
+  withImagesUpload(async (req, res) => {
+    const id = getRouteParam(req, 'id');
+
+    if (!parseObjectId(id)) {
+      res.status(404).json({ error: 'Растение не найдено' });
+
+      return;
+    }
+
+    const images = getImagesFromRequest(req);
+
+    if (images.length === 0) {
+      res.status(400).json({ error: 'Файл изображения не передан' });
+
+      return;
+    }
+
+    const plant = await addPlantImages(id, images);
+
+    res.status(201).json(plant);
+  }),
+);
+
+plantsRouter.delete(
+  '/:id/images/:imageId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = getRouteParam(req, 'id');
+      const imageId = getRouteParam(req, 'imageId');
+
+      if (!parseObjectId(id)) {
+        res.status(404).json({ error: 'Растение не найдено' });
+
+        return;
+      }
+
+      if (!parseObjectId(imageId)) {
+        res.status(404).json({ error: 'Изображение не найдено' });
+
+        return;
+      }
+
+      const plant = await deletePlantImage(id, imageId);
+
+      res.json(plant);
+    } catch (error) {
+      handleRouteError(error, res, next);
+    }
+  },
+);
+
+plantsRouter.patch(
+  '/:id/default-image',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = getRouteParam(req, 'id');
+
+      if (!parseObjectId(id)) {
+        res.status(404).json({ error: 'Растение не найдено' });
+
+        return;
+      }
+
+      const { imageId } = parseSetDefaultImageBody(req.body);
+
+      if (imageId !== null && !parseObjectId(imageId)) {
+        res.status(404).json({ error: 'Изображение не найдено' });
+
+        return;
+      }
+
+      const plant = await setPlantDefaultImage(id, imageId);
+
+      res.json(plant);
+    } catch (error) {
+      handleRouteError(error, res, next);
+    }
+  },
+);
+
+plantsRouter.post(
+  '/:id/images/:imageId/assess-condition',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = getRouteParam(req, 'id');
+      const imageId = getRouteParam(req, 'imageId');
+
+      if (!parseObjectId(id)) {
+        res.status(404).json({ error: 'Растение не найдено' });
+
+        return;
+      }
+
+      if (!parseObjectId(imageId)) {
+        res.status(404).json({ error: 'Изображение не найдено' });
+
+        return;
+      }
+
+      const result = await assessPlantConditionByImageId(id, imageId);
+
+      res.json(result);
+    } catch (error) {
+      if (error instanceof PlantNotFoundError) {
+        res.status(404).json({ error: error.message });
+
+        return;
+      }
+
+      if (error instanceof ImageNotFoundError) {
+        res.status(404).json({ error: error.message });
+
+        return;
+      }
+
+      handleConditionError(error, res, next);
+    }
+  },
+);
+
+plantsRouter.get(
+  '/:id/images/:imageId/thumbnail',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = getRouteParam(req, 'id');
+      const imageId = getRouteParam(req, 'imageId');
+
+      if (!parseObjectId(id)) {
+        res.status(404).json({ error: 'Растение не найдено' });
+
+        return;
+      }
+
+      if (!parseObjectId(imageId)) {
+        res.status(404).json({ error: 'Изображение не найдено' });
+
+        return;
+      }
+
+      const { stream, contentType } = await getPlantImage(
+        id,
+        'thumbnail',
+        imageId,
+      );
+
+      res.setHeader('Content-Type', contentType);
+      stream.pipe(res);
+    } catch (error) {
+      handleRouteError(error, res, next);
+    }
+  },
+);
+
+plantsRouter.get(
+  '/:id/images/:imageId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = getRouteParam(req, 'id');
+      const imageId = getRouteParam(req, 'imageId');
+
+      if (!parseObjectId(id)) {
+        res.status(404).json({ error: 'Растение не найдено' });
+
+        return;
+      }
+
+      if (!parseObjectId(imageId)) {
+        res.status(404).json({ error: 'Изображение не найдено' });
+
+        return;
+      }
+
+      const { stream, contentType } = await getPlantImage(
+        id,
+        'original',
+        imageId,
+      );
+
+      res.setHeader('Content-Type', contentType);
+      stream.pipe(res);
+    } catch (error) {
+      handleRouteError(error, res, next);
+    }
+  },
+);
+
 plantsRouter.get(
   '/:id',
   async (req: Request, res: Response, next: NextFunction) => {
@@ -386,21 +628,24 @@ plantsRouter.get(
 
 plantsRouter.patch(
   '/:id',
-  withUpload(async (req, res) => {
-    const id = getRouteParam(req, 'id');
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = getRouteParam(req, 'id');
 
-    if (!parseObjectId(id)) {
-      res.status(404).json({ error: 'Растение не найдено' });
+      if (!parseObjectId(id)) {
+        res.status(404).json({ error: 'Растение не найдено' });
 
-      return;
+        return;
+      }
+
+      const fields = parseUpdatePlantBody(req.body);
+      const plant = await updatePlant(id, fields);
+
+      res.json(plant);
+    } catch (error) {
+      handleRouteError(error, res, next);
     }
-
-    const fields = parseUpdatePlantBody(req.body);
-    const image = getImageFromRequest(req);
-    const plant = await updatePlant(id, fields, image);
-
-    res.json(plant);
-  }),
+  },
 );
 
 plantsRouter.delete(

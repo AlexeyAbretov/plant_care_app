@@ -11,6 +11,7 @@ import {
   RetryAlert,
 } from '@components';
 import { usePlantsCatalog, useWeather } from '@hooks';
+import type { Plant } from '@types';
 
 const { useBreakpoint } = Grid;
 
@@ -20,6 +21,22 @@ const readInitialCategoriesDrawerOpen = (): boolean => {
   }
 
   return window.matchMedia('(min-width: 768px)').matches;
+};
+
+const getTileImages = (
+  plant: Plant,
+): { imageSrc: string; previewIndex: number; previewSrcs: string[] } => {
+  const previewSrcs =
+    plant.images.length > 0
+      ? plant.images.map((image) => apiClient.url(image.imageUrl))
+      : [apiClient.url(plant.imageUrl)];
+  const coverIndex = plant.images.findIndex((image) => image.isCover);
+
+  return {
+    imageSrc: apiClient.url(plant.thumbnailUrl),
+    previewIndex: coverIndex < 0 ? 0 : coverIndex,
+    previewSrcs,
+  };
 };
 
 export const CatalogPage = (): React.JSX.Element => {
@@ -102,27 +119,32 @@ export const CatalogPage = (): React.JSX.Element => {
 
           {!loading && error === null && catalogPlants.length > 0 ? (
             <Row gutter={[16, 16]}>
-              {catalogPlants.map((plant) => (
-                <Col
-                  key={plant.id}
-                  lg={6}
-                  md={8}
-                  sm={12}
-                  style={{ minWidth: 0 }}
-                  xs={24}
-                >
-                  <PlantCard
-                    imageSrc={apiClient.url(plant.thumbnailUrl)}
-                    onAssess={assessPlant}
-                    onDelete={deletePlant}
-                    onFertilize={fertilizePlant}
-                    onWater={waterPlant}
-                    plant={plant}
-                    previewSrc={apiClient.url(plant.imageUrl)}
-                    wateringClimate={wateringClimate}
-                  />
-                </Col>
-              ))}
+              {catalogPlants.map((plant) => {
+                const tileImages = getTileImages(plant);
+
+                return (
+                  <Col
+                    key={plant.id}
+                    lg={6}
+                    md={8}
+                    sm={12}
+                    style={{ minWidth: 0 }}
+                    xs={24}
+                  >
+                    <PlantCard
+                      imageSrc={tileImages.imageSrc}
+                      onAssess={assessPlant}
+                      onDelete={deletePlant}
+                      onFertilize={fertilizePlant}
+                      onWater={waterPlant}
+                      plant={plant}
+                      previewIndex={tileImages.previewIndex}
+                      previewSrcs={tileImages.previewSrcs}
+                      wateringClimate={wateringClimate}
+                    />
+                  </Col>
+                );
+              })}
             </Row>
           ) : null}
         </div>

@@ -7,6 +7,15 @@ export interface ListPlantsParams {
   categories?: string[];
 }
 
+export interface PlantImage {
+  id: string;
+  imageUrl: string;
+  thumbnailUrl: string;
+  createdAt: string;
+  isDefault: boolean;
+  isCover: boolean;
+}
+
 export interface Plant {
   id: string;
   name: string;
@@ -21,6 +30,7 @@ export interface Plant {
   fertilizingNotes: string;
   lastWateredAt: string;
   lastFertilizedAt: string;
+  images: PlantImage[];
   imageUrl: string;
   thumbnailUrl: string;
   createdAt: string;

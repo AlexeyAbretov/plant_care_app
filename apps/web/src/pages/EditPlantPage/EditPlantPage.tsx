@@ -5,12 +5,11 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { apiClient, ApiError, plantsApi } from '@api';
 import {
   DeletePlantButton,
-  ImageUpload,
   mapFormValuesToPayload,
   mapPlantToFormValues,
-  PlantConditionButton,
   PlantForm,
   type PlantFormValues,
+  PlantImageGallery,
   RetryAlert,
 } from '@components';
 import type { Plant } from '@types';
@@ -24,8 +23,6 @@ export const EditPlantPage = (): React.JSX.Element => {
   const [step, setStep] = useState<EditStep>('loading');
   const [plant, setPlant] = useState<Plant | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -77,22 +74,6 @@ export const EditPlantPage = (): React.JSX.Element => {
     };
   }, [form, id]);
 
-  useEffect(() => {
-    if (imageFile === null) {
-      setPreviewUrl(plant !== null ? apiClient.url(plant.thumbnailUrl) : null);
-
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(imageFile);
-
-    setPreviewUrl(objectUrl);
-
-    return () => {
-      URL.revokeObjectURL(objectUrl);
-    };
-  }, [imageFile, plant]);
-
   const handleSubmit = async (values: PlantFormValues): Promise<void> => {
     if (id === undefined || plant === null) {
       return;
@@ -102,11 +83,7 @@ export const EditPlantPage = (): React.JSX.Element => {
     setStep('saving');
 
     try {
-      await plantsApi.update(
-        id,
-        mapFormValuesToPayload(values),
-        imageFile ?? undefined,
-      );
+      await plantsApi.update(id, mapFormValuesToPayload(values));
       message.success('Растение обновлено');
       navigate('/');
     } catch (error: unknown) {
@@ -117,6 +94,61 @@ export const EditPlantPage = (): React.JSX.Element => {
 
       setSaveError(errorMessage);
       setStep('form');
+    }
+  };
+
+  const showImageError = (error: unknown, fallback: string): void => {
+    const errorMessage = error instanceof ApiError ? error.message : fallback;
+
+    message.error(errorMessage);
+  };
+
+  const handleAddImages = async (files: File[]): Promise<void> => {
+    if (id === undefined) {
+      return;
+    }
+
+    try {
+      const updated = await plantsApi.addImages(id, files);
+
+      setPlant(updated);
+      message.success(files.length > 1 ? 'Фото добавлены' : 'Фото добавлено');
+    } catch (error: unknown) {
+      showImageError(error, 'Не удалось добавить фото');
+    }
+  };
+
+  const handleDeleteImage = async (imageId: string): Promise<void> => {
+    if (id === undefined) {
+      return;
+    }
+
+    try {
+      const updated = await plantsApi.deleteImage(id, imageId);
+
+      setPlant(updated);
+      message.success('Фото удалено');
+    } catch (error: unknown) {
+      showImageError(error, 'Не удалось удалить фото');
+    }
+  };
+
+  const handleSetDefault = async (imageId: string | null): Promise<void> => {
+    if (id === undefined) {
+      return;
+    }
+
+    try {
+      const updated = await plantsApi.setDefaultImage(id, imageId);
+
+      setPlant(updated);
+      message.success(
+        imageId === null
+          ? 'На плитке снова последнее фото'
+          : 'Фото по умолчанию обновлено',
+      );
+    } catch (error: unknown) {
+      showImageError(error, 'Не удалось обновить фото по умолчанию');
     }
   };
 
@@ -172,28 +204,26 @@ export const EditPlantPage = (): React.JSX.Element => {
       </Typography.Title>
 
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        <Space align="start" wrap>
-          <ImageUpload
+        {plant !== null ? (
+          <PlantImageGallery
             disabled={isBusy}
-            file={imageFile}
-            onFileSelect={setImageFile}
-            previewOriginalUrl={
-              imageFile !== null
-                ? previewUrl
-                : plant !== null
-                  ? apiClient.url(plant.imageUrl)
-                  : null
-            }
-            previewUrl={previewUrl}
+            images={plant.images.map((image) => {
+              return {
+                id: image.id,
+                src: apiClient.url(image.thumbnailUrl),
+                previewSrc: apiClient.url(image.imageUrl),
+                isDefault: image.isDefault,
+                isCover: image.isCover,
+              };
+            })}
+            onAddFiles={handleAddImages}
+            onAssess={(imageId) => {
+              return plantsApi.assessConditionByImageId(id!, imageId);
+            }}
+            onDelete={handleDeleteImage}
+            onSetDefault={handleSetDefault}
           />
-          <PlantConditionButton
-            assess={() =>
-              imageFile !== null
-                ? plantsApi.assessCondition(imageFile)
-                : plantsApi.assessConditionById(id!)
-            }
-          />
-        </Space>
+        ) : null}
 
         {saveError !== null ? (
           <RetryAlert

@@ -1,0 +1,36 @@
+.plant-image-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.plant-image-gallery__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.plant-image-gallery__item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 180px;
+}
+
+.plant-image-gallery__item .ant-image {
+  display: block;
+  height: 128px;
+  width: 128px;
+}
+
+.plant-image-gallery__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plant-image-gallery__actions .ant-btn {
+  width: 100%;
+  white-space: nowrap;
+}

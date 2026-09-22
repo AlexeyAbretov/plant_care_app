@@ -1,5 +1,14 @@
 export type PlantLocationKind = 'indoor' | 'outdoor';
 
+export interface PlantImageDto {
+  id: string;
+  imageUrl: string;
+  thumbnailUrl: string;
+  createdAt: string;
+  isDefault: boolean;
+  isCover: boolean;
+}
+
 export interface PlantDto {
   id: string;
   name: string;
@@ -14,6 +23,7 @@ export interface PlantDto {
   fertilizingNotes: string;
   lastWateredAt: string;
   lastFertilizedAt: string;
+  images: PlantImageDto[];
   imageUrl: string;
   thumbnailUrl: string;
   createdAt: string;

@@ -47,6 +47,16 @@ export function parseCreatePlantBody(
   return createPlantSchema.parse(body);
 }
 
+export const setDefaultImageSchema = z.object({
+  imageId: z.string().trim().min(1).nullable(),
+});
+
+export function parseSetDefaultImageBody(
+  body: unknown,
+): z.infer<typeof setDefaultImageSchema> {
+  return setDefaultImageSchema.parse(body);
+}
+
 export function parseUpdatePlantBody(
   body: Record<string, unknown>,
 ): z.infer<typeof updatePlantSchema> {

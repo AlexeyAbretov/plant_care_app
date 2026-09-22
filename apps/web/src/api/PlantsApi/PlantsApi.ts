@@ -79,28 +79,49 @@ export class PlantsApi {
     });
   }
 
-  async update(
-    id: string,
-    payload: UpdatePlantPayload,
-    imageFile?: File,
-  ): Promise<Plant> {
-    if (imageFile !== undefined) {
-      const formData = new FormData();
-
-      this.appendFields(formData, payload);
-      formData.append('image', imageFile);
-
-      return this.client.fetchJson<Plant>(`/api/plants/${id}`, {
-        method: 'PATCH',
-        body: formData,
-      });
-    }
-
+  async update(id: string, payload: UpdatePlantPayload): Promise<Plant> {
     return this.client.fetchJson<Plant>(`/api/plants/${id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
+  }
+
+  async addImages(id: string, files: File[]): Promise<Plant> {
+    const formData = new FormData();
+
+    for (const file of files) {
+      formData.append('images', file);
+    }
+
+    return this.client.fetchJson<Plant>(`/api/plants/${id}/images`, {
+      method: 'POST',
+      body: formData,
+    });
+  }
+
+  async deleteImage(id: string, imageId: string): Promise<Plant> {
+    return this.client.fetchJson<Plant>(`/api/plants/${id}/images/${imageId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async setDefaultImage(id: string, imageId: string | null): Promise<Plant> {
+    return this.client.fetchJson<Plant>(`/api/plants/${id}/default-image`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageId }),
+    });
+  }
+
+  async assessConditionByImageId(
+    id: string,
+    imageId: string,
+  ): Promise<PlantConditionResult> {
+    return this.client.fetchJson<PlantConditionResult>(
+      `/api/plants/${id}/images/${imageId}/assess-condition`,
+      { method: 'POST' },
+    );
   }
 
   async delete(id: string): Promise<void> {
