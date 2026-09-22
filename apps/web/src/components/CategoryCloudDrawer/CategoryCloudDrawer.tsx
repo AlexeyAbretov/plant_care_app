@@ -29,7 +29,7 @@ const CategoryCloudContent = ({
     onCategoriesChange([...categories, name]);
   };
 
-  if (categoryOptions.length === 0) {
+  if (!categoryOptions.length) {
     return (
       <Typography.Text type="secondary">
         Категорий пока нет — они появятся у растений с указанной категорией.
@@ -103,7 +103,7 @@ export const CategoryCloudDrawer = ({
 
   return (
     <Drawer
-      destroyOnClose={false}
+      destroyOnHidden={false}
       maskClosable
       onClose={() => {
         onOpenChange(false);

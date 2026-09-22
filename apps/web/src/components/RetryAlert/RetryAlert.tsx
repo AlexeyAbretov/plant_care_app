@@ -12,16 +12,10 @@ const RetryAlertDescription = ({
   retryLoading,
   retryDisabled,
 }: RetryAlertDescriptionProps): React.JSX.Element => {
-  const hasDescription =
-    description !== null &&
-    description !== undefined &&
-    description !== false &&
-    description !== true;
-
   return (
     <div>
-      {hasDescription ? <div>{description}</div> : null}
-      <div style={{ marginTop: hasDescription ? 12 : 0 }}>
+      {!!description && <div>{description}</div>}
+      <div style={{ marginTop: !!description ? 12 : 0 }}>
         <Button
           danger={type === 'error'}
           disabled={retryDisabled}

@@ -1,6 +1,6 @@
 import type { WeatherQuery, WeatherSnapshot } from '@types';
 
-import { type ApiClient, apiClient } from './ApiClient';
+import { type ApiClient, apiClient } from '../ApiClient';
 
 export class WeatherApi {
   constructor(private readonly client: ApiClient) {}
@@ -12,11 +12,11 @@ export class WeatherApi {
   private weatherPath(params?: WeatherQuery): string {
     const searchParams = new URLSearchParams();
 
-    if (params?.city !== undefined && params.city !== '') {
+    if (params?.city) {
       searchParams.set('city', params.city);
     }
 
-    if (params?.lat !== undefined && params.lon !== undefined) {
+    if (params?.lat != null && params?.lon != null) {
       searchParams.set('lat', String(params.lat));
       searchParams.set('lon', String(params.lon));
     }

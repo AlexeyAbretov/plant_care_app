@@ -24,7 +24,7 @@ export const CareProgressTrack = ({
         size="small"
         strokeColor={strokeColor}
         style={{ width: '100%' }}
-        trailColor={percent === 0 ? strokeColor : undefined}
+        trailColor={!percent ? strokeColor : undefined}
       />
     </div>
   );

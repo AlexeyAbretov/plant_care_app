@@ -7,7 +7,7 @@ import type {
   UpdatePlantPayload,
 } from '@types';
 
-import { type ApiClient, apiClient } from './ApiClient';
+import { type ApiClient, apiClient } from '../ApiClient';
 
 export class PlantsApi {
   constructor(private readonly client: ApiClient) {}
