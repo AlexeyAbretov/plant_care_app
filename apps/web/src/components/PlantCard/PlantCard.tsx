@@ -1,3 +1,5 @@
+import './PlantCard.css';
+
 import { Button, Card, Flex, Space, Typography } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -75,15 +77,15 @@ export const PlantCard = ({
         style={{ minWidth: 0, width: '100%' }}
         styles={{ item: { alignSelf: 'stretch', minWidth: 0, width: '100%' } }}
       >
-        <PlantImagePreview
-          alt={plant.name}
-          height={128}
-          previewIndex={previewIndex}
-          previewSrcs={previewSrcs}
-          src={imageSrc}
-          style={{ borderRadius: 8, objectFit: 'cover' }}
-          width={128}
-        />
+        <div className="plant-card__photo">
+          <PlantImagePreview
+            alt={plant.name}
+            previewIndex={previewIndex}
+            previewSrcs={previewSrcs}
+            src={imageSrc}
+            style={{ borderRadius: 8, objectFit: 'cover' }}
+          />
+        </div>
         <Typography.Title level={5} style={{ margin: 0 }}>
           {plant.name}
         </Typography.Title>
