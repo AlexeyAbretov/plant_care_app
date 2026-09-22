@@ -14,12 +14,67 @@ import {
 } from '@components';
 import type { Plant } from '@types';
 
-import type { EditStep } from './EditPlantPage.types';
+import type { EditPlantFormProps, EditStep } from './EditPlantPage.types';
+
+const EditPlantForm = ({
+  disabled,
+  onCancel,
+  onCloseError,
+  onDelete,
+  onSubmit,
+  plant,
+  saveError,
+}: EditPlantFormProps): React.JSX.Element => {
+  const [form] = Form.useForm<PlantFormValues>();
+
+  return (
+    <>
+      {saveError !== null ? (
+        <RetryAlert
+          closable
+          message={saveError}
+          onClose={onCloseError}
+          onRetry={() => {
+            form.submit();
+          }}
+          retryLoading={disabled}
+          showIcon
+          type="error"
+        />
+      ) : null}
+
+      <Form
+        disabled={disabled}
+        form={form}
+        initialValues={mapPlantToFormValues(plant)}
+        layout="vertical"
+        onFinish={(values) => {
+          void onSubmit(values);
+        }}
+      >
+        <PlantForm disabled={disabled} />
+
+        <Space wrap>
+          <Button htmlType="submit" loading={disabled} type="primary">
+            Сохранить
+          </Button>
+          <Button disabled={disabled} onClick={onCancel}>
+            Отмена
+          </Button>
+          <DeletePlantButton
+            disabled={disabled}
+            onConfirm={onDelete}
+            plantName={plant.name}
+          />
+        </Space>
+      </Form>
+    </>
+  );
+};
 
 export const EditPlantPage = (): React.JSX.Element => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [form] = Form.useForm<PlantFormValues>();
   const [step, setStep] = useState<EditStep>('loading');
   const [plant, setPlant] = useState<Plant | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -45,7 +100,6 @@ export const EditPlantPage = (): React.JSX.Element => {
         }
 
         setPlant(loadedPlant);
-        form.setFieldsValue(mapPlantToFormValues(loadedPlant));
         setStep('form');
       } catch (error: unknown) {
         if (cancelled) {
@@ -72,7 +126,7 @@ export const EditPlantPage = (): React.JSX.Element => {
     return () => {
       cancelled = true;
     };
-  }, [form, id]);
+  }, [id]);
 
   const handleSubmit = async (values: PlantFormValues): Promise<void> => {
     if (id === undefined || plant === null) {
@@ -172,7 +226,11 @@ export const EditPlantPage = (): React.JSX.Element => {
   };
 
   if (step === 'loading') {
-    return <Spin tip="Загружаем растение…" />;
+    return (
+      <Spin tip="Загружаем растение…">
+        <div style={{ minHeight: 120 }} />
+      </Spin>
+    );
   }
 
   if (step === 'notFound') {
@@ -225,48 +283,21 @@ export const EditPlantPage = (): React.JSX.Element => {
           />
         ) : null}
 
-        {saveError !== null ? (
-          <RetryAlert
-            closable
-            message={saveError}
-            onClose={() => {
+        {plant !== null ? (
+          <EditPlantForm
+            disabled={isBusy}
+            onCancel={() => {
+              navigate('/');
+            }}
+            onCloseError={() => {
               setSaveError(null);
             }}
-            onRetry={() => {
-              form.submit();
-            }}
-            retryLoading={isBusy}
-            showIcon
-            type="error"
+            onDelete={handleDelete}
+            onSubmit={handleSubmit}
+            plant={plant}
+            saveError={saveError}
           />
         ) : null}
-
-        <Form
-          disabled={isBusy}
-          form={form}
-          layout="vertical"
-          onFinish={(values) => {
-            void handleSubmit(values);
-          }}
-        >
-          <PlantForm disabled={isBusy} />
-
-          <Space wrap>
-            <Button htmlType="submit" loading={isBusy} type="primary">
-              Сохранить
-            </Button>
-            <Button disabled={isBusy} onClick={() => navigate('/')}>
-              Отмена
-            </Button>
-            {plant !== null ? (
-              <DeletePlantButton
-                disabled={isBusy}
-                onConfirm={handleDelete}
-                plantName={plant.name}
-              />
-            ) : null}
-          </Space>
-        </Form>
       </Space>
     </Spin>
   );

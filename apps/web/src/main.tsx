@@ -1,3 +1,4 @@
+import '@ant-design/v5-patch-for-react-19';
 import 'dayjs/locale/ru';
 import './index.css';
 
