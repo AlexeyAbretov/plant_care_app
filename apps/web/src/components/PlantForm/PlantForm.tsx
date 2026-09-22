@@ -1,5 +1,6 @@
-import { DatePicker, Form, Input, InputNumber, Radio } from 'antd';
+import { Form, Input, InputNumber, Radio } from 'antd';
 
+import { PlantDateField } from './PlantDateField';
 import type { PlantFormProps } from './PlantForm.types';
 import { plantFormRules } from './PlantForm.utils';
 
@@ -49,7 +50,7 @@ export const PlantForm = ({
         name="wateringIntervalDays"
         rules={plantFormRules.wateringIntervalDays}
       >
-        <InputNumber disabled={disabled} min={1} style={{ width: '100%' }} />
+        <InputNumber disabled={disabled} min={1} style={{ width: '7rem' }} />
       </Form.Item>
 
       <Form.Item
@@ -57,7 +58,7 @@ export const PlantForm = ({
         name="fertilizingIntervalDays"
         rules={plantFormRules.fertilizingIntervalDays}
       >
-        <InputNumber disabled={disabled} min={1} style={{ width: '100%' }} />
+        <InputNumber disabled={disabled} min={1} style={{ width: '7rem' }} />
       </Form.Item>
 
       <Form.Item label="Заметки по поливу" name="wateringNotes">
@@ -81,11 +82,7 @@ export const PlantForm = ({
         name="lastWateredAt"
         rules={plantFormRules.lastWateredAt}
       >
-        <DatePicker
-          disabled={disabled}
-          format="DD.MM.YYYY"
-          style={{ width: '100%' }}
-        />
+        <PlantDateField disabled={disabled} />
       </Form.Item>
 
       <Form.Item
@@ -93,11 +90,7 @@ export const PlantForm = ({
         name="lastFertilizedAt"
         rules={plantFormRules.lastFertilizedAt}
       >
-        <DatePicker
-          disabled={disabled}
-          format="DD.MM.YYYY"
-          style={{ width: '100%' }}
-        />
+        <PlantDateField disabled={disabled} />
       </Form.Item>
     </>
   );

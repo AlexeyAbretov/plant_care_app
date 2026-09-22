@@ -61,7 +61,10 @@ apps/web/src/
 │   ├── CatalogPage/
 │   ├── AddPage/
 │   └── EditPlantPage/
-└── types/
+├── types/
+└── utils/
+    ├── index.ts          # баррель @utils
+    └── date.ts           # Date и Intl
 ```
 
 **Маршруты** (`App.tsx`, React Router):
@@ -74,13 +77,17 @@ apps/web/src/
 
 Оболочка — `AppLayout`; локаль Ant Design — `ru_RU`.
 
+**Зависимости:**
+
+Не добавляй npm-пакет, если ту же задачу закрывает стандартная библиотека JavaScript (`Date`, `Intl`, `URL`, `fetch` и т. п.). Календарная арифметика и даты формы — через `Date` и `Intl` (`src/utils/date.ts`, баррель `@utils`), в форме дата хранится строкой `YYYY-MM-DD`. Локаль интерфейса, включая `DatePicker`, задаёт `ConfigProvider locale={ruRU}`. `dayjs` не импортировать в страницах и стори: у `DatePicker` Ant Design значение внутри — `Dayjs`, перевод в строку живёт рядом с полем. Пакет ставит `antd`.
+
 **Функции:**
 
 Именованные и экспортируемые функции — стрелочные (`export const PlantCard = () => {}`), не `function declaration`. Вложенные обработчики — `const handleX = async () => {}`. Методы классов в `api/` (`ApiClient`, `PlantsApi`) остаются методами. Линтер: `func-style: expression` в `apps/web/eslint.config.js` поверх `@llm/linting` (там для API по умолчанию `function`).
 
 **Импорты:**
 
-Алиасы (`tsconfig.app.json`, `vite.config.ts`): `@api`, `@components`, `@config`, `@containers`, `@hooks`, `@pages`, `@types` → соответствующие каталоги (или `config.ts`) в `src/`.
+Алиасы (`tsconfig.app.json`, `vite.config.ts`): `@api`, `@components`, `@config`, `@containers`, `@hooks`, `@pages`, `@types`, `@utils` → соответствующие каталоги (или `config.ts`) в `src/`.
 
 - Между корневыми каталогами `src` — только алиасы, не `../../api` и не `./components`.
 - Внутри одной папки/фичи — относительные `./` и `../` (соседи в `plant/`, `catalog/` и т. п.).
@@ -131,7 +138,7 @@ apps/web/src/
 - Общие провайдеры (локаль Ant Design, роутер) задаются в `apps/web/.storybook/preview.tsx`.
 - Запуск из корня: `npm run storybook` (порт `6006`).
 
-Каталог `src/utils/` заводят, когда появится код с несколькими независимыми потребителями вне одного компонента.
+Каталог `src/utils/` — для кода с несколькими независимыми потребителями вне одного компонента. Календарные даты — `utils/date.ts`.
 
 Прогресс полива/подкормки в UI считается в `components/CareProgressBar/CareProgressBar.utils.ts` по тем же правилам, что в разделе «Прогресс-бар ухода» ниже. Для полива в каталоге в `intervalDays` подставляется **эффективный** интервал (см. «Полив и погода»).
 

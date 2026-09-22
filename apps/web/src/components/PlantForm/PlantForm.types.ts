@@ -1,5 +1,3 @@
-import type { Dayjs } from 'dayjs';
-
 import type { PlantLocationKind } from '@types';
 
 export type PlantFormValues = {
@@ -13,10 +11,17 @@ export type PlantFormValues = {
   fertilizingIntervalDays?: number;
   wateringNotes: string;
   fertilizingNotes: string;
-  lastWateredAt: Dayjs;
-  lastFertilizedAt: Dayjs;
+  lastWateredAt: string;
+  lastFertilizedAt: string;
 };
 
 export type PlantFormProps = {
   disabled?: boolean;
+};
+
+export type PlantDateFieldProps = {
+  disabled?: boolean;
+  id?: string;
+  onChange?: (value: string) => void;
+  value?: string;
 };

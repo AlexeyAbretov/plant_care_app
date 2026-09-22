@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Form } from 'antd';
-import dayjs from 'dayjs';
+
+import { addCalendarDays, formatIsoDate, todayIsoDate } from '@utils';
 
 import { PlantForm } from '../PlantForm';
 import type { PlantFormValues } from '../PlantForm.types';
@@ -16,8 +17,8 @@ const filledValues: Partial<PlantFormValues> = {
   fertilizingIntervalDays: 30,
   wateringNotes: 'После просыхания верхнего слоя.',
   fertilizingNotes: 'Удобрение для декоративно-лиственных.',
-  lastWateredAt: dayjs().startOf('day'),
-  lastFertilizedAt: dayjs().subtract(10, 'day').startOf('day'),
+  lastWateredAt: todayIsoDate(),
+  lastFertilizedAt: formatIsoDate(addCalendarDays(new Date(), -10)),
 };
 
 const meta = {

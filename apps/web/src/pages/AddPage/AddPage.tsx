@@ -1,5 +1,4 @@
 import { Button, Form, message, Space, Spin, Typography } from 'antd';
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,11 +12,12 @@ import {
   RetryAlert,
 } from '@components';
 import type { PlantRecognizeResult } from '@types';
+import { todayIsoDate } from '@utils';
 
 import type { AddStep } from './AddPage.types';
 
 const getDefaultFormValues = (): PlantFormValues => {
-  const today = dayjs().startOf('day');
+  const today = todayIsoDate();
 
   return {
     name: '',
@@ -36,7 +36,7 @@ const getDefaultFormValues = (): PlantFormValues => {
 const mapRecognizeToFormValues = (
   result: PlantRecognizeResult,
 ): PlantFormValues => {
-  const today = dayjs().startOf('day');
+  const today = todayIsoDate();
 
   return {
     ...result,

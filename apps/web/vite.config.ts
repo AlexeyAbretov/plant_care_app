@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
         "@hooks": path.resolve(srcDir, "hooks"),
         "@pages": path.resolve(srcDir, "pages"),
         "@types": path.resolve(srcDir, "types"),
+        "@utils": path.resolve(srcDir, "utils"),
       },
     },
     server: {

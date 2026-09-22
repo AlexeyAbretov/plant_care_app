@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import dayjs from 'dayjs';
 import { fn } from 'storybook/test';
 
 import type { Plant, WateringClimate } from '@types';
+import { addCalendarDays } from '@utils';
 
 import { PlantCard } from '../PlantCard';
 
 const daysAgo = (days: number): string => {
-  return dayjs().subtract(days, 'day').startOf('day').toISOString();
+  return addCalendarDays(new Date(), -days).toISOString();
 };
 
 const createPlant = (overrides: Partial<Plant> = {}): Plant => {

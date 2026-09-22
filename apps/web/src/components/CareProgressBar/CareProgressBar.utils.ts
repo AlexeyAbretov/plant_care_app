@@ -1,6 +1,10 @@
-import dayjs from 'dayjs';
-
 import type { Plant, PlantLocationKind, WateringClimate } from '@types';
+import {
+  addCalendarDays,
+  calendarDaysBetween,
+  parseLocalDate,
+  todayIsoDate,
+} from '@utils';
 
 import type {
   CareProgressColor,
@@ -29,11 +33,9 @@ const clamp = (value: number, min: number, max: number): number => {
 
 const calendarDaysSince = (
   lastActionDate: string,
-  today = dayjs().startOf('day'),
+  today = parseLocalDate(todayIsoDate()),
 ): number => {
-  const lastAction = dayjs(lastActionDate).startOf('day');
-
-  return today.diff(lastAction, 'day');
+  return calendarDaysBetween(parseLocalDate(lastActionDate), today);
 };
 
 export const getCareProgressColor = (
@@ -203,10 +205,10 @@ const wateringDueValue = (
     climate,
   );
 
-  return dayjs(plant.lastWateredAt)
-    .startOf('day')
-    .add(intervalDays, 'day')
-    .valueOf();
+  return addCalendarDays(
+    parseLocalDate(plant.lastWateredAt),
+    intervalDays,
+  ).getTime();
 };
 
 const wateringTimingLabel = (

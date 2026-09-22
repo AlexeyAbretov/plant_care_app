@@ -1,7 +1,7 @@
 import type { Rule } from 'antd/es/form';
-import dayjs, { type Dayjs } from 'dayjs';
 
 import type { CreatePlantPayload, Plant } from '@types';
+import { formatIsoDate, parseLocalDate } from '@utils';
 
 import type { PlantFormValues } from './PlantForm.types';
 
@@ -24,8 +24,8 @@ export const plantFormRules: Record<string, Rule[]> = {
   lastFertilizedAt: [{ required: true, message: 'Укажите дату подкормки' }],
 };
 
-const formatDateForApi = (value: Dayjs): string => {
-  return value.startOf('day').format('YYYY-MM-DD');
+const formatDateForApi = (value: string): string => {
+  return formatIsoDate(parseLocalDate(value));
 };
 
 export const mapFormValuesToPayload = (
@@ -59,7 +59,7 @@ export const mapPlantToFormValues = (plant: Plant): PlantFormValues => {
     fertilizingIntervalDays: plant.fertilizingIntervalDays,
     wateringNotes: plant.wateringNotes,
     fertilizingNotes: plant.fertilizingNotes,
-    lastWateredAt: dayjs(plant.lastWateredAt).startOf('day'),
-    lastFertilizedAt: dayjs(plant.lastFertilizedAt).startOf('day'),
+    lastWateredAt: formatDateForApi(plant.lastWateredAt),
+    lastFertilizedAt: formatDateForApi(plant.lastFertilizedAt),
   };
 };

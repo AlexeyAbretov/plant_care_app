@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import dayjs from 'dayjs';
 import { expect, fn, userEvent, within } from 'storybook/test';
 
 import type { WeatherDay, WeatherSnapshot } from '@types';
+import { addCalendarDays, formatIsoDate } from '@utils';
 
 import { WeatherWidget } from '../WeatherWidget';
 
 const day = (offset: number, fields: Omit<WeatherDay, 'date'>): WeatherDay => {
   return {
-    date: dayjs().add(offset, 'day').format('YYYY-MM-DD'),
+    date: formatIsoDate(addCalendarDays(new Date(), offset)),
     ...fields,
   };
 };

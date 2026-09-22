@@ -1,5 +1,6 @@
 import { Typography } from 'antd';
-import dayjs from 'dayjs';
+
+import { formatRuDayMonth, formatRuWeekday } from '@utils';
 
 import type { ForecastDayRowProps } from './WeatherWidget.types';
 import { formatTemperatureC, weatherKindEmoji } from './WeatherWidget.utils';
@@ -7,8 +8,8 @@ import { formatTemperatureC, weatherKindEmoji } from './WeatherWidget.utils';
 export const ForecastDayRow = ({
   day,
 }: ForecastDayRowProps): React.JSX.Element => {
-  const weekday = dayjs(day.date).format('dd');
-  const dateLabel = dayjs(day.date).format('DD.MM');
+  const weekday = formatRuWeekday(day.date);
+  const dateLabel = formatRuDayMonth(day.date);
   const emoji = weatherKindEmoji(day.kind);
   const range =
     `${formatTemperatureC(day.tempMinC)} / ` + formatTemperatureC(day.tempMaxC);

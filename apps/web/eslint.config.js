@@ -3,7 +3,7 @@ import storybook from 'eslint-plugin-storybook';
 
 const aliasImportMessage =
   'Use path aliases (@api, @components, @containers, @hooks, ' +
-  '@pages, @types, @config) instead of relative paths to src ' +
+  '@pages, @types, @utils, @config) instead of relative paths to src ' +
   'root folders.';
 
 export default [
@@ -27,8 +27,8 @@ export default [
             },
             {
               regex:
-                '^(\\.\\./)+(api|components|containers|hooks|pages|types)' +
-                '(/|$)',
+                '^(\\.\\./)+(api|components|containers|hooks|pages|types|' +
+                'utils)(/|$)',
               message: aliasImportMessage,
             },
             {
@@ -37,7 +37,8 @@ export default [
             },
             {
               regex:
-                '^\\./(api|components|containers|hooks|pages|types)(/|$)',
+                '^\\./(api|components|containers|hooks|pages|types|utils)' +
+                '(/|$)',
               message: aliasImportMessage,
             },
             {
