@@ -5,7 +5,7 @@ export {
 } from './CareProgressBar';
 export { CatalogToolbar } from './CatalogToolbar';
 export { CategoryCloudDrawer } from './CategoryCloudDrawer';
-export { PlantConditionButton } from './ConditionButton';
+export { PlantConditionButton } from './PlantConditionButton';
 export { DeletePlantButton } from './DeletePlantButton';
 export {
   ALLOWED_IMAGE_TYPES,

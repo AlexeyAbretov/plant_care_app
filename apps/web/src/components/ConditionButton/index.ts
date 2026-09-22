@@ -1,1 +1,0 @@
-export { PlantConditionButton } from './ConditionButton';

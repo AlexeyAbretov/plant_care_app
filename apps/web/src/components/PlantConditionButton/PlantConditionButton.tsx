@@ -15,7 +15,7 @@ import type { PlantConditionResult, PlantHealthLevel } from '@types';
 import type {
   ConditionResultViewProps,
   PlantConditionButtonProps,
-} from './ConditionButton.types';
+} from './PlantConditionButton.types';
 
 import { RetryAlert } from '../RetryAlert';
 

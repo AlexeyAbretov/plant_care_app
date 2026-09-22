@@ -9,7 +9,7 @@ import {
   getEffectiveWateringInterval,
   getWateringDueCaption,
 } from '../CareProgressBar';
-import { PlantConditionButton } from '../ConditionButton';
+import { PlantConditionButton } from '../PlantConditionButton';
 import { DeletePlantButton } from '../DeletePlantButton';
 import { PlantImagePreview } from '../PlantImagePreview';
 
