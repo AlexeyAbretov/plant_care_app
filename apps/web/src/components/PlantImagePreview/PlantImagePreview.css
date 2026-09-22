@@ -1,16 +1,63 @@
-.plant-image-preview-stage {
+.plant-image-preview-shell {
   position: relative;
-  display: inline-block;
-  max-width: 100%;
+  width: min(calc(100vw - 160px), 920px);
+  height: 70vh;
   line-height: 0;
+}
+
+.plant-image-preview-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.plant-image-preview-frame:has(.plant-image-preview-stage--original) {
+  overflow: auto;
+  align-items: center;
+  justify-content: center;
+  align-items: safe center;
+  justify-content: safe center;
+  touch-action: manipulation;
+}
+
+.plant-image-preview-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.plant-image-preview-stage--original {
+  flex: none;
+  width: max-content;
+  height: max-content;
 }
 
 .plant-image-preview-stage > .ant-image-preview-img {
   display: block;
+  width: 100%;
+  height: 100%;
   max-width: 100%;
-  max-height: 70vh;
-  cursor: default;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: zoom-in;
   touch-action: none;
+}
+
+.plant-image-preview-stage--original > .ant-image-preview-img {
+  flex: none;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  object-fit: none;
+  cursor: zoom-out;
+  touch-action: manipulation;
 }
 
 .plant-image-preview .ant-image-preview-switch-left,
@@ -73,6 +120,11 @@
 }
 
 @media (max-width: 600px) {
+  .plant-image-preview-shell {
+    width: calc(100vw - 32px);
+    height: 70vh;
+  }
+
   .plant-image-preview-nav {
     display: none;
   }
