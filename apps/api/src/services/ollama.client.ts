@@ -23,20 +23,18 @@ interface OllamaChatResponse {
   };
 }
 
-export async function chatWithOllama(
-  options: ChatWithImageOptions,
-): Promise<string> {
+export async function chat(options: ChatWithImageOptions): Promise<string> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
     controller.abort();
   }, config.llmTimeoutMs);
 
   try {
-    const response = await fetch(`${config.ollamaBaseUrl}/api/chat`, {
+    const response = await fetch(`${config.llmBaseUrl}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: config.ollamaModel,
+        model: config.llmModel,
         stream: false,
         format: 'json',
         messages: [
@@ -78,9 +76,9 @@ export async function chatWithOllama(
   }
 }
 
-export async function checkOllamaHealth(): Promise<'ok' | 'unavailable'> {
+export async function checkHealth(): Promise<'ok' | 'unavailable'> {
   try {
-    const response = await fetch(`${config.ollamaBaseUrl}/api/tags`, {
+    const response = await fetch(`${config.llmBaseUrl}/api/tags`, {
       signal: AbortSignal.timeout(5000),
     });
 

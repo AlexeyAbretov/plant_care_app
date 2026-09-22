@@ -8,7 +8,7 @@
 | Backend | Node.js ≥ 22, TypeScript, Express |
 | База данных | MongoDB (dev — Docker Compose) |
 | Файлы изображений | MongoDB GridFS |
-| LLM | Ollama или ChatGPT (`LLM_PROVIDER`, server-side, без выбора в UI) |
+| LLM | Ollama, ChatGPT или Gemma (`LLM_PROVIDER`, server-side, без выбора в UI) |
 | Lint | ESLint 9 + Prettier через `@llm/linting` (in-repo, `packages/linting`) |
 
 ## Архитектура
@@ -18,11 +18,11 @@
     ↓ REST API
 Backend (Express)
     ↓                    ↓
-MongoDB (+ GridFS)    Ollama или ChatGPT
+MongoDB (+ GridFS)    Ollama, ChatGPT или Gemma
 ```
 
 - Frontend обращается только к backend REST API.
-- Распознавание изображений выполняется на backend через провайдера из `LLM_PROVIDER` (`ollama` или `openai`).
+- Распознавание изображений выполняется на backend через клиент `services/<LLM_PROVIDER>.client.ts`.
 - Изображения растений хранятся в GridFS; метаданные — в коллекциях MongoDB.
 
 ## Frontend: структура и соглашения
@@ -184,13 +184,11 @@ Dev-окружение настраивается **одним** файлом `.
 |------------|--------------|----------|
 | `PORT` | `3001` | Порт HTTP API |
 | `MONGODB_URI` | `mongodb://localhost:27017/plant_care` | Строка подключения MongoDB |
-| `LLM_PROVIDER` | `ollama` | `ollama` или `openai` (ChatGPT) |
+| `LLM_PROVIDER` | `ollama` | Имя клиента: `services/<имя>.client.ts` |
 | `LLM_TIMEOUT_MS` | `120000` | Таймаут запроса к модели |
-| `OLLAMA_BASE_URL` | `http://localhost:11434` | Базовый URL Ollama |
-| `OLLAMA_MODEL` | `qwen2.5vl:7b` | Модель Ollama |
-| `OPENAI_API_KEY` | — | Ключ OpenAI, только для `openai` |
-| `OPENAI_MODEL` | `gpt-4.1-mini` | Модель ChatGPT |
-| `OPENAI_BASE_URL` | `https://api.openai.com/v1` | Базовый URL OpenAI |
+| `LLM_API_KEY` | — | Ключ облачной модели. Для Ollama не нужен |
+| `LLM_MODEL` | — | Имя модели |
+| `LLM_BASE_URL` | — | Базовый URL модели |
 
 ### Frontend (`apps/web`)
 

@@ -70,9 +70,9 @@ cp .env.example .env
 | `WEB_PORT` | Web (Vite dev) | `5173` |
 | `MONGO_PORT` | Docker MongoDB | `27017` |
 | `MONGODB_URI` | API | `mongodb://localhost:27017/plant_care` |
-| `LLM_PROVIDER` | API | `ollama` (`ollama` или `openai`) |
-| `OLLAMA_BASE_URL` | API | `http://localhost:11434` |
-| `OPENAI_MODEL` | API | `gpt-4.1-mini` |
+| `LLM_PROVIDER` | API | `ollama` (файл `services/<имя>.client.ts`) |
+| `LLM_MODEL` | API | из `.env` |
+| `LLM_BASE_URL` | API | из `.env` |
 | `VITE_API_BASE_URL` | Web | `http://localhost:3001` |
 
 При смене `MONGO_PORT` обновите также порт в `MONGODB_URI`.

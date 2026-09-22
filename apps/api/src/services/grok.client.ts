@@ -3,7 +3,7 @@ import type { ChatWithImageOptions } from './llm.types.js';
 
 import { config } from '../config.js';
 
-interface OpenAiChatResponse {
+interface GrokChatResponse {
   choices?: Array<{
     message?: {
       content?: string | null;
@@ -50,14 +50,14 @@ export async function chat(options: ChatWithImageOptions): Promise<string> {
     });
 
     if (!response.ok) {
-      throw new LlmUnavailableError(`ChatGPT недоступен (${response.status})`);
+      throw new LlmUnavailableError(`Grok недоступен (${response.status})`);
     }
 
-    const data = (await response.json()) as OpenAiChatResponse;
+    const data = (await response.json()) as GrokChatResponse;
     const content = data.choices?.[0]?.message?.content?.trim();
 
     if (!content) {
-      throw new LlmUnavailableError('Пустой ответ ChatGPT');
+      throw new LlmUnavailableError('Пустой ответ Grok');
     }
 
     return content;
@@ -70,7 +70,7 @@ export async function chat(options: ChatWithImageOptions): Promise<string> {
       throw new LlmTimeoutError();
     }
 
-    throw new LlmUnavailableError('ChatGPT недоступен');
+    throw new LlmUnavailableError('Grok недоступен');
   } finally {
     clearTimeout(timeoutId);
   }

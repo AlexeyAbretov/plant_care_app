@@ -6,6 +6,7 @@ import { connectDb } from './db.js';
 import { healthRouter } from './routes/health.js';
 import { plantsRouter } from './routes/plants.js';
 import { weatherRouter } from './routes/weather.js';
+import { activeLlmModel } from './services/llm.client.js';
 
 async function main(): Promise<void> {
   await connectDb();
@@ -19,11 +20,8 @@ async function main(): Promise<void> {
   app.use('/api/weather', weatherRouter);
 
   app.listen(config.port, () => {
-    const llmModel =
-      config.llmProvider === 'openai' ? config.openaiModel : config.ollamaModel;
-
     console.log(`API: http://localhost:${config.port}`);
-    console.log(`LLM: ${config.llmProvider} (${llmModel})`);
+    console.log(`LLM: ${config.llmProvider} (${activeLlmModel()})`);
   });
 }
 

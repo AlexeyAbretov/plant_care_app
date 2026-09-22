@@ -4,3 +4,8 @@ export interface ChatWithImageOptions {
   imageBase64: string;
   mimeType: string;
 }
+
+export interface LlmClient {
+  chat(options: ChatWithImageOptions): Promise<string>;
+  checkHealth(): Promise<'ok' | 'unavailable'>;
+}

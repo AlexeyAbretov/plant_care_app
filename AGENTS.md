@@ -37,13 +37,11 @@ cp .env.example .env
 |--------|------------|---------|
 | API | `PORT` | `3001` |
 | API | `MONGODB_URI` | `mongodb://localhost:27017/plant_care` |
-| API | `LLM_PROVIDER` | `ollama` (`ollama` \| `openai`) |
+| API | `LLM_PROVIDER` | `ollama` (файл `services/<имя>.client.ts`) |
 | API | `LLM_TIMEOUT_MS` | `120000` |
-| API | `OLLAMA_BASE_URL` | `http://localhost:11434` |
-| API | `OLLAMA_MODEL` | `qwen2.5vl:7b` |
-| API | `OPENAI_API_KEY` | — |
-| API | `OPENAI_MODEL` | `gpt-4.1-mini` |
-| API | `OPENAI_BASE_URL` | `https://api.openai.com/v1` |
+| API | `LLM_API_KEY` | — |
+| API | `LLM_MODEL` | — |
+| API | `LLM_BASE_URL` | — |
 | Web | `WEB_PORT` | `5173` |
 | Web | `VITE_API_BASE_URL` | `http://localhost:3001` |
 | Docker | `MONGO_PORT` | `27017` |
@@ -77,12 +75,6 @@ App.tsx      — маршруты /, /add, /plants/:id/edit; WeatherProvider; `h
 
 ```bash
 curl http://localhost:3001/api/health/llm
-```
-
-Проверка Ollama:
-
-```bash
-curl http://localhost:3001/api/health/ollama
 ```
 
 Распознавание растения по фото (нужны запущенные API и Ollama с моделью `qwen3-vl:8b`):
