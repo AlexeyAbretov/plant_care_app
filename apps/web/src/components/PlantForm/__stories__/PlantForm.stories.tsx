@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Form } from 'antd';
+import { fn } from 'storybook/test';
 
 import { addCalendarDays, formatIsoDate, todayIsoDate } from '@utils';
 
@@ -60,6 +61,27 @@ export const Disabled: Story = {
   name: 'Недоступна',
   args: {
     disabled: true,
+  },
+  parameters: {
+    formValues: filledValues,
+  },
+};
+
+export const WithRecognize: Story = {
+  name: 'С распознаванием',
+  args: {
+    onRecognize: fn(),
+  },
+  parameters: {
+    formValues: filledValues,
+  },
+};
+
+export const RecognizeLoading: Story = {
+  name: 'Распознавание',
+  args: {
+    onRecognize: fn(),
+    recognizeLoading: true,
   },
   parameters: {
     formValues: filledValues,

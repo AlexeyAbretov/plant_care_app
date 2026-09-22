@@ -33,10 +33,15 @@ export class PlantsApi {
     );
   }
 
-  async recognize(file: File): Promise<PlantRecognizeResult> {
+  async recognize(file: File, name = ''): Promise<PlantRecognizeResult> {
     const formData = new FormData();
+    const hint = name.trim();
 
     formData.append('image', file);
+
+    if (hint !== '') {
+      formData.append('name', hint);
+    }
 
     return this.client.fetchJson<PlantRecognizeResult>(
       '/api/plants/recognize',

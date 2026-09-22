@@ -38,3 +38,56 @@ const RETRY_LINES = [
 ];
 
 export const PLANT_RECOGNITION_RETRY_PROMPT = RETRY_LINES.join('\n');
+
+const NAME_HINT_MAX_LENGTH = 120;
+
+const NAME_HINT_SYSTEM_LINES = [
+  'Если пользователь указал название, оно важнее догадки по фото.',
+  'Опиши уход для указанного растения, а не для похожего вида.',
+];
+
+const NAME_HINT_USER_LINES = [
+  'Пользователь указал название растения: «{name}».',
+  'Считай это название верным и не подменяй вид догадкой по фото.',
+  'Верни уход, категорию и параметры именно для этого растения.',
+  'В поле name оставь указанное название, поправив только орфографию.',
+  'Фото используй, чтобы описание совпало с внешним видом.',
+];
+
+function normalizeNameHint(nameHint?: string): string | undefined {
+  const hint = (nameHint ?? '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/[«»"]/g, "'")
+    .slice(0, NAME_HINT_MAX_LENGTH);
+
+  if (hint === '') {
+    return undefined;
+  }
+
+  return hint;
+}
+
+export function buildRecognitionSystemPrompt(nameHint?: string): string {
+  if (normalizeNameHint(nameHint) === undefined) {
+    return PLANT_RECOGNITION_SYSTEM_PROMPT;
+  }
+
+  return [PLANT_RECOGNITION_SYSTEM_PROMPT, ...NAME_HINT_SYSTEM_LINES].join(
+    '\n',
+  );
+}
+
+export function buildRecognitionUserPrompt(nameHint?: string): string {
+  const hint = normalizeNameHint(nameHint);
+
+  if (hint === undefined) {
+    return PLANT_RECOGNITION_USER_PROMPT;
+  }
+
+  const hintText = NAME_HINT_USER_LINES.map((line) => {
+    return line.replace('{name}', hint);
+  }).join('\n');
+
+  return [hintText, PLANT_RECOGNITION_USER_PROMPT].join('\n');
+}

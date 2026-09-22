@@ -53,6 +53,8 @@ export const AddPage = (): React.JSX.Element => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [recognizeError, setRecognizeError] = useState<string | null>(null);
+  const [recognizeWithName, setRecognizeWithName] = useState(false);
+  const [isRecognizing, setIsRecognizing] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -79,6 +81,7 @@ export const AddPage = (): React.JSX.Element => {
   };
 
   const handleRecognize = async (file: File): Promise<void> => {
+    setRecognizeWithName(false);
     setRecognizeError(null);
     setStep('recognizing');
 
@@ -96,6 +99,35 @@ export const AddPage = (): React.JSX.Element => {
       setRecognizeError(errorMessage);
       form.setFieldsValue(getDefaultFormValues());
       setStep('form');
+    }
+  };
+
+  const recognizeByName = async (file: File): Promise<void> => {
+    const name = String(form.getFieldValue('name') ?? '').trim();
+    const current = form.getFieldsValue();
+
+    setRecognizeWithName(true);
+    setRecognizeError(null);
+    setIsRecognizing(true);
+
+    try {
+      const result = await plantsApi.recognize(file, name);
+
+      form.setFieldsValue({
+        ...mapRecognizeToFormValues(result),
+        lastFertilizedAt: current.lastFertilizedAt || todayIsoDate(),
+        lastWateredAt: current.lastWateredAt || todayIsoDate(),
+        locationKind: current.locationKind ?? 'indoor',
+      });
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof ApiError
+          ? error.message
+          : 'Не удалось распознать растение';
+
+      setRecognizeError(errorMessage);
+    } finally {
+      setIsRecognizing(false);
     }
   };
 
@@ -121,10 +153,14 @@ export const AddPage = (): React.JSX.Element => {
     }
   };
 
-  const isBusy = step === 'recognizing' || step === 'saving';
+  const isBusy = step === 'recognizing' || step === 'saving' || isRecognizing;
+  const formLocked = step === 'saving' || isRecognizing;
 
   return (
-    <Spin spinning={step === 'recognizing'} tip="Распознаём растение…">
+    <Spin
+      spinning={step === 'recognizing' || isRecognizing}
+      tip="Распознаём растение…"
+    >
       <Typography.Title level={3} style={{ marginTop: 0 }}>
         Добавить растение
       </Typography.Title>
@@ -172,6 +208,12 @@ export const AddPage = (): React.JSX.Element => {
                   setRecognizeError(null);
                 }}
                 onRetry={() => {
+                  if (recognizeWithName) {
+                    void recognizeByName(imageFile);
+
+                    return;
+                  }
+
                   void handleRecognize(imageFile);
                 }}
                 retryDisabled={step === 'saving'}
@@ -197,14 +239,20 @@ export const AddPage = (): React.JSX.Element => {
             ) : null}
 
             <Form
-              disabled={step === 'saving'}
+              disabled={formLocked}
               form={form}
               layout="vertical"
               onFinish={(values) => {
                 void handleSubmit(imageFile, values);
               }}
             >
-              <PlantForm disabled={step === 'saving'} />
+              <PlantForm
+                disabled={formLocked}
+                onRecognize={() => {
+                  void recognizeByName(imageFile);
+                }}
+                recognizeLoading={isRecognizing}
+              />
 
               <Space wrap>
                 <Button
@@ -216,9 +264,10 @@ export const AddPage = (): React.JSX.Element => {
                 </Button>
                 <PlantConditionButton
                   assess={() => plantsApi.assessCondition(imageFile)}
+                  disabled={formLocked}
                 />
                 <Button
-                  disabled={step === 'saving'}
+                  disabled={formLocked}
                   onClick={() => {
                     setStep('upload');
                     setRecognizeError(null);

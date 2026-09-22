@@ -235,9 +235,12 @@ plantsRouter.post('/recognize', (req, res, next) => {
       }
 
       try {
+        const rawName = (req.body as { name?: unknown } | undefined)?.name;
+        const nameHint = typeof rawName === 'string' ? rawName : undefined;
         const result = await recognizePlantFromImage(
           file.buffer,
           file.mimetype,
+          nameHint,
         );
 
         res.json(result);

@@ -47,18 +47,31 @@ describe('PlantsApi', () => {
 
     fetchJson
       .mockResolvedValueOnce(condition)
+      .mockResolvedValueOnce(recognizeResult())
+      .mockResolvedValueOnce(recognizeResult())
       .mockResolvedValueOnce(recognizeResult());
 
     await expect(api.assessCondition(file)).resolves.toEqual(condition);
     await expect(api.recognize(file)).resolves.toEqual(recognizeResult());
+    await expect(api.recognize(file, '  Монстера  ')).resolves.toEqual(
+      recognizeResult(),
+    );
+    await expect(api.recognize(file, '   ')).resolves.toEqual(
+      recognizeResult(),
+    );
 
     const assessBody = fetchJson.mock.calls[0]?.[1].body as FormData;
     const recognizeBody = fetchJson.mock.calls[1]?.[1].body as FormData;
+    const namedBody = fetchJson.mock.calls[2]?.[1].body as FormData;
+    const blankNameBody = fetchJson.mock.calls[3]?.[1].body as FormData;
 
     expect(fetchJson.mock.calls[0]?.[0]).toBe('/api/plants/assess-condition');
     expect(assessBody.get('image')).toBe(file);
     expect(fetchJson.mock.calls[1]?.[0]).toBe('/api/plants/recognize');
     expect(recognizeBody.get('image')).toBe(file);
+    expect(recognizeBody.get('name')).toBeNull();
+    expect(namedBody.get('name')).toBe('Монстера');
+    expect(blankNameBody.get('name')).toBeNull();
   });
 
   it('создаёт растение и дописывает поля формы', async () => {

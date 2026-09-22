@@ -17,6 +17,17 @@ export type PlantFormValues = {
 
 export type PlantFormProps = {
   disabled?: boolean;
+  onRecognize?: () => void;
+  recognizeLoading?: boolean;
+};
+
+export type NameWithRecognizeProps = {
+  disabled?: boolean;
+  id?: string;
+  onChange?: (value: string) => void;
+  onRecognize: () => void;
+  recognizeLoading?: boolean;
+  value?: string;
 };
 
 export type PlantDateFieldProps = {

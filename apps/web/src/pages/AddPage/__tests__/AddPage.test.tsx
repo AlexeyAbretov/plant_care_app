@@ -140,4 +140,63 @@ describe('AddPage', () => {
     expect(await screen.findByText('Листья упругие')).toBeTruthy();
     expect(api.assessCondition).toHaveBeenCalledOnce();
   });
+
+  it('распознаёт по названию и фото и затирает поля', async () => {
+    const user = userEvent.setup();
+
+    renderUi(<AddPage />, { route: '/add' });
+    await user.upload(fileInput(), imageFile());
+    await user.click(screen.getByRole('button', { name: 'Заполнить вручную' }));
+
+    const recognize = screen.getByRole('button', { name: 'Распознать' });
+
+    expect(recognize).toBeDisabled();
+
+    await user.click(screen.getByRole('radio', { name: 'На улице / балконе' }));
+    await user.click(screen.getAllByPlaceholderText('Выберите дату')[0]);
+    await user.click(await screen.findByTitle('2026-09-10'));
+    await user.type(
+      screen.getByPlaceholderText('Например, монстера'),
+      'Монстера',
+    );
+    expect(recognize).toBeEnabled();
+
+    await user.click(recognize);
+
+    expect(await screen.findByDisplayValue('Фикус')).toBeTruthy();
+    expect(screen.getByDisplayValue('Комнатное дерево')).toBeTruthy();
+    expect(screen.getByDisplayValue('10.09.2026')).toBeTruthy();
+    expect(
+      screen.getByRole('radio', { name: 'На улице / балконе' }),
+    ).toBeChecked();
+    expect(api.recognize).toHaveBeenCalledWith(expect.any(File), 'Монстера');
+  });
+
+  it('оставляет поля, если распознавание по имени не удалось', async () => {
+    const user = userEvent.setup();
+
+    renderUi(<AddPage />, { route: '/add' });
+    await user.upload(fileInput(), imageFile());
+    await user.click(screen.getByRole('button', { name: 'Заполнить вручную' }));
+    await user.type(
+      screen.getByPlaceholderText('Например, монстера'),
+      'Монстера',
+    );
+
+    api.recognize.mockRejectedValueOnce(new ApiError('Модель недоступна', 503));
+    await user.click(screen.getByRole('button', { name: 'Распознать' }));
+    expect(await screen.findByText('Модель недоступна')).toBeTruthy();
+    expect(screen.getByDisplayValue('Монстера')).toBeTruthy();
+
+    api.recognize.mockRejectedValueOnce(new Error('boom'));
+    await user.click(screen.getByRole('button', { name: 'Повторить' }));
+    expect(
+      await screen.findByText('Не удалось распознать растение'),
+    ).toBeTruthy();
+    expect(screen.getByDisplayValue('Монстера')).toBeTruthy();
+    expect(api.recognize).toHaveBeenLastCalledWith(
+      expect.any(File),
+      'Монстера',
+    );
+  });
 });

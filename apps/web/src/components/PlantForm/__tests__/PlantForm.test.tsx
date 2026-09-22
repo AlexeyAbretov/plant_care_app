@@ -33,6 +33,45 @@ describe('PlantForm', () => {
 
     expect(disabled.container).toMatchSnapshot();
   });
+
+  it('ставит «Распознать» рядом с названием', async () => {
+    const user = userEvent.setup();
+    const onRecognize = vi.fn();
+    const view = renderUi(
+      <Form
+        initialValues={{
+          lastFertilizedAt: '2026-09-22',
+          lastWateredAt: '2026-09-22',
+          locationKind: 'indoor',
+          name: '',
+        }}
+      >
+        <PlantForm onRecognize={onRecognize} />
+      </Form>,
+    );
+    const button = screen.getByRole('button', { name: 'Распознать' });
+
+    expect(view.container).toMatchSnapshot();
+    expect(button).toBeDisabled();
+
+    await user.type(screen.getByPlaceholderText('Например, монстера'), '   ');
+    expect(button).toBeDisabled();
+
+    await user.type(screen.getByPlaceholderText('Например, монстера'), 'Фикус');
+    expect(button).toBeEnabled();
+
+    await user.click(button);
+    expect(onRecognize).toHaveBeenCalledOnce();
+    view.unmount();
+
+    renderUi(
+      <Form initialValues={{ name: 'Фикус' }}>
+        <PlantForm disabled onRecognize={onRecognize} recognizeLoading />
+      </Form>,
+    );
+
+    expect(screen.getByRole('button', { name: /Распознать/ })).toBeDisabled();
+  });
 });
 
 describe('PlantDateField', () => {

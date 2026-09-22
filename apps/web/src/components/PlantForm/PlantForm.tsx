@@ -1,17 +1,63 @@
-import { Form, Input, InputNumber, Radio } from 'antd';
+import { Button, Form, Input, InputNumber, Radio } from 'antd';
 
 import { PlantDateField } from './PlantDateField';
-import type { PlantFormProps } from './PlantForm.types';
+import type { NameWithRecognizeProps, PlantFormProps } from './PlantForm.types';
 import { plantFormRules } from './PlantForm.utils';
+
+const NameWithRecognize = ({
+  disabled = false,
+  id,
+  onChange,
+  onRecognize,
+  recognizeLoading = false,
+  value,
+}: NameWithRecognizeProps): React.JSX.Element => {
+  const nameMissing = (value ?? '').trim() === '';
+
+  return (
+    <div style={{ display: 'flex', gap: 8 }}>
+      <Input
+        disabled={disabled}
+        id={id}
+        onChange={(event) => {
+          onChange?.(event.target.value);
+        }}
+        placeholder="Например, монстера"
+        style={{ flex: '1 1 auto', minWidth: 0 }}
+        value={value ?? ''}
+      />
+      <Button
+        disabled={disabled || nameMissing}
+        htmlType="button"
+        loading={recognizeLoading}
+        onClick={onRecognize}
+      >
+        Распознать
+      </Button>
+    </div>
+  );
+};
 
 export const PlantForm = ({
   disabled = false,
+  onRecognize,
+  recognizeLoading = false,
 }: PlantFormProps): React.JSX.Element => {
   return (
     <>
-      <Form.Item label="Название" name="name" rules={plantFormRules.name}>
-        <Input disabled={disabled} placeholder="Например, монстера" />
-      </Form.Item>
+      {onRecognize === undefined ? (
+        <Form.Item label="Название" name="name" rules={plantFormRules.name}>
+          <Input disabled={disabled} placeholder="Например, монстера" />
+        </Form.Item>
+      ) : (
+        <Form.Item label="Название" name="name" rules={plantFormRules.name}>
+          <NameWithRecognize
+            disabled={disabled}
+            onRecognize={onRecognize}
+            recognizeLoading={recognizeLoading}
+          />
+        </Form.Item>
+      )}
 
       <Form.Item label="Описание" name="description">
         <Input.TextArea

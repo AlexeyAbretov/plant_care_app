@@ -1,9 +1,9 @@
 import { chatWithImage } from './ollama.client.js';
 
 import {
+  buildRecognitionSystemPrompt,
+  buildRecognitionUserPrompt,
   PLANT_RECOGNITION_RETRY_PROMPT,
-  PLANT_RECOGNITION_SYSTEM_PROMPT,
-  PLANT_RECOGNITION_USER_PROMPT,
 } from '../prompts/plant-recognition.prompt.js';
 import {
   type PlantRecognitionResult,
@@ -64,29 +64,31 @@ function parseRecognitionContent(content: string): PlantRecognitionResult {
 export async function recognizePlantFromImage(
   imageBuffer: Buffer,
   mimeType: string,
+  nameHint?: string,
 ): Promise<PlantRecognitionResult> {
   if (!validateImageMime(mimeType)) {
     throw new InvalidImageFormatError();
   }
 
   const imageBase64 = imageBuffer.toString('base64');
+  const systemPrompt = buildRecognitionSystemPrompt(nameHint);
+  const userPrompt = buildRecognitionUserPrompt(nameHint);
 
   const firstResponse = await chatWithImage({
-    systemPrompt: PLANT_RECOGNITION_SYSTEM_PROMPT,
-    userPrompt: PLANT_RECOGNITION_USER_PROMPT,
+    systemPrompt,
+    userPrompt,
     imageBase64,
   });
 
   try {
     return parseRecognitionContent(firstResponse);
   } catch {
-    const retryUserPrompt = [
-      PLANT_RECOGNITION_USER_PROMPT,
-      PLANT_RECOGNITION_RETRY_PROMPT,
-    ].join('\n\n');
+    const retryUserPrompt = [userPrompt, PLANT_RECOGNITION_RETRY_PROMPT].join(
+      '\n\n',
+    );
 
     const retryResponse = await chatWithImage({
-      systemPrompt: PLANT_RECOGNITION_SYSTEM_PROMPT,
+      systemPrompt,
       userPrompt: retryUserPrompt,
       imageBase64,
     });
