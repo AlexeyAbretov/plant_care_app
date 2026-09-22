@@ -9,6 +9,7 @@ import {
   type PlantRecognitionResult,
   plantRecognitionSchema,
 } from '../schemas/plant-recognition.schema.js';
+import { intervalDaysFromNotes } from '../utils/careIntervalFromNotes.js';
 import { extractJson } from '../utils/extract-json.js';
 
 export class PlantRecognitionError extends Error {
@@ -48,7 +49,16 @@ function parseRecognitionContent(content: string): PlantRecognitionResult {
     throw new PlantRecognitionError();
   }
 
-  return result.data;
+  const { wateringNotes, fertilizingNotes } = result.data;
+
+  return {
+    ...result.data,
+    wateringIntervalDays:
+      intervalDaysFromNotes(wateringNotes) ?? result.data.wateringIntervalDays,
+    fertilizingIntervalDays:
+      intervalDaysFromNotes(fertilizingNotes) ??
+      result.data.fertilizingIntervalDays,
+  };
 }
 
 export async function recognizePlantFromImage(
