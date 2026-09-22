@@ -30,6 +30,31 @@ function googleModelUrl(action: string): string {
   return `${config.llmBaseUrl}/models/${model}${action}`;
 }
 
+function gemmaContents(options: ChatWithImageOptions): unknown[] {
+  return [
+    {
+      role: 'user',
+      parts: [{ text: options.systemPrompt }],
+    },
+    {
+      role: 'model',
+      parts: [{ text: 'Хорошо.' }],
+    },
+    {
+      role: 'user',
+      parts: [
+        { text: options.userPrompt },
+        {
+          inline_data: {
+            mime_type: options.mimeType,
+            data: options.imageBase64,
+          },
+        },
+      ],
+    },
+  ];
+}
+
 function readCandidateText(data: GoogleGenerateResponse): string {
   const parts = data.candidates?.[0]?.content?.parts ?? [];
 
@@ -59,7 +84,6 @@ export async function chat(options: ChatWithImageOptions): Promise<string> {
     throw new LlmUnavailableError('Не задан LLM_API_KEY');
   }
 
-  const prompt = [options.systemPrompt, options.userPrompt].join('\n\n');
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
     controller.abort();
@@ -70,19 +94,7 @@ export async function chat(options: ChatWithImageOptions): Promise<string> {
       method: 'POST',
       headers: googleHeaders(),
       body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: prompt },
-              {
-                inline_data: {
-                  mime_type: options.mimeType,
-                  data: options.imageBase64,
-                },
-              },
-            ],
-          },
-        ],
+        contents: gemmaContents(options),
       }),
       signal: controller.signal,
     });
