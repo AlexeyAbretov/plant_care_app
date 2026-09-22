@@ -1,4 +1,11 @@
-html,
+/* Не ставить overflow на html: блокировка скролла превью сужает body,
+   а скроллбар остаётся и сдвигает каталог. */
+html {
+  margin: 0;
+  max-width: 100%;
+  min-height: 100vh;
+}
+
 body,
 #root {
   margin: 0;
