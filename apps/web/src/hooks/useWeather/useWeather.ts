@@ -32,7 +32,7 @@ const useWeatherState = () => {
       nextQuery?: WeatherQuery,
       nextSource: WeatherSource = 'default',
       options?: { silent?: boolean },
-    ): Promise<void> => {
+    ): Promise<WeatherSnapshot | null> => {
       const requestId = requestIdRef.current + 1;
 
       requestIdRef.current = requestId;
@@ -47,19 +47,21 @@ const useWeatherState = () => {
         const snapshot = await weatherApi.get(nextQuery);
 
         if (requestId !== requestIdRef.current) {
-          return;
+          return null;
         }
 
         setWeather(snapshot);
         setSource(nextSource);
         setError(null);
+
+        return snapshot;
       } catch (loadError: unknown) {
         if (requestId !== requestIdRef.current) {
-          return;
+          return null;
         }
 
         if (options?.silent === true) {
-          return;
+          return null;
         }
 
         const errorMessage =
@@ -68,6 +70,8 @@ const useWeatherState = () => {
             : 'Не удалось загрузить погоду';
 
         setError(errorMessage);
+
+        return null;
       } finally {
         if (requestId === requestIdRef.current) {
           setLoading(false);
@@ -134,7 +138,7 @@ const useWeatherState = () => {
     [fetchWeather],
   );
 
-  const locate = useCallback(async (): Promise<void> => {
+  const locate = useCallback(async (): Promise<WeatherSnapshot | null> => {
     setLoading(true);
     setError(null);
 
@@ -146,10 +150,13 @@ const useWeatherState = () => {
         lat: coords.lat,
         lon: coords.lon,
       });
-      await fetchWeather({ lat: coords.lat, lon: coords.lon }, 'geo');
+
+      return await fetchWeather({ lat: coords.lat, lon: coords.lon }, 'geo');
     } catch {
       setLoading(false);
       setError('Нет доступа к геолокации');
+
+      return null;
     }
   }, [fetchWeather]);
 

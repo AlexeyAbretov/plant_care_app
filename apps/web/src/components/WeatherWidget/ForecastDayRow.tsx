@@ -8,7 +8,7 @@ export const ForecastDayRow = ({
   day,
 }: ForecastDayRowProps): React.JSX.Element => {
   const weekday = dayjs(day.date).format('dd');
-  const dateLabel = dayjs(day.date).format('D MMM');
+  const dateLabel = dayjs(day.date).format('DD.MM');
   const emoji = weatherKindEmoji(day.kind);
   const range =
     `${formatTemperatureC(day.tempMinC)} / ` + formatTemperatureC(day.tempMaxC);
@@ -22,7 +22,7 @@ export const ForecastDayRow = ({
         <span aria-hidden className="weather-forecast-emoji">
           {emoji}
         </span>
-        {day.condition}
+        <span className="weather-forecast-label">{day.condition}</span>
       </Typography.Text>
       <Typography.Text className="weather-forecast-temp">
         {range}

@@ -11,6 +11,14 @@ export const WeatherWidget = (props: WeatherWidgetProps): React.JSX.Element => {
 
   return (
     <Popover
+      align={{
+        overflow: {
+          adjustX: true,
+          adjustY: true,
+          shiftX: true,
+          shiftY: true,
+        },
+      }}
       content={<WeatherPopoverContent {...props} />}
       getPopupContainer={() => document.body}
       placement="bottomRight"

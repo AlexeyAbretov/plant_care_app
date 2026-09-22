@@ -17,7 +17,7 @@ export const WeatherPopoverContent = ({
   weather,
 }: WeatherPopoverContentProps): React.JSX.Element => {
   return (
-    <Flex style={{ width: 300 }} vertical gap={12}>
+    <Flex className="weather-popover" vertical gap={12}>
       <Input.Search
         allowClear
         loading={loading}
@@ -52,9 +52,11 @@ export const WeatherPopoverContent = ({
               {note}
             </Typography.Text>
           ))}
-          {weather.daily.map((day) => (
-            <ForecastDayRow day={day} key={day.date} />
-          ))}
+          <div className="weather-forecast">
+            {weather.daily.map((day) => (
+              <ForecastDayRow day={day} key={day.date} />
+            ))}
+          </div>
         </Flex>
       ) : null}
     </Flex>

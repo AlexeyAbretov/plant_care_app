@@ -4,26 +4,25 @@ import { WeatherWidget } from '@components';
 import { useWeather } from '@hooks';
 
 export const WeatherWidgetContainer = (): React.JSX.Element => {
-  const { error, loading, locate, reload, selectCity, source, weather } =
-    useWeather();
+  const { error, loading, locate, reload, selectCity, weather } = useWeather();
   const [cityInput, setCityInput] = useState('');
 
   useEffect(() => {
-    if (source === 'geo') {
-      setCityInput('');
-
-      return;
-    }
-
     setCityInput(weather?.locationLabel ?? '');
-  }, [source, weather?.locationLabel]);
+  }, [weather?.locationLabel]);
 
   const handleSearch = (value: string): void => {
     void selectCity(value);
   };
 
   const handleLocate = (): void => {
-    void locate();
+    void locate().then((snapshot) => {
+      if (snapshot === null) {
+        return;
+      }
+
+      setCityInput(snapshot.locationLabel);
+    });
   };
 
   const handleRetry = (): void => {

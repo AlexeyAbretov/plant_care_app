@@ -11,6 +11,8 @@ import { deriveWateringClimate } from '../utils/wateringClimate.js';
 
 const FORECAST_URL = 'https://api.open-meteo.com/v1/forecast';
 const GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search';
+const REVERSE_GEOCODING_URL = 'https://nominatim.openstreetmap.org/reverse';
+const NOMINATIM_USER_AGENT = 'plant-care-app/1.0';
 const CACHE_TTL_MS = 15 * 60 * 1000;
 const FETCH_TIMEOUT_MS = 10_000;
 const GEO_LOCATION_LABEL = 'Моя локация';
@@ -39,6 +41,20 @@ const geocodingSchema = z.object({
         admin1: z.string().optional(),
       }),
     )
+    .optional(),
+});
+
+const reverseGeocodingSchema = z.object({
+  name: z.string().optional(),
+  address: z
+    .object({
+      city: z.string().optional(),
+      town: z.string().optional(),
+      village: z.string().optional(),
+      hamlet: z.string().optional(),
+      municipality: z.string().optional(),
+      state: z.string().optional(),
+    })
     .optional(),
 });
 
@@ -75,7 +91,7 @@ export async function getWeather(
   query: WeatherQuery,
 ): Promise<WeatherSnapshot> {
   if (query.lat !== undefined && query.lon !== undefined) {
-    return getWeatherByCoords(query.lat, query.lon, GEO_LOCATION_LABEL);
+    return getWeatherByCoords(query.lat, query.lon);
   }
 
   const city = query.city ?? config.weatherDefaultCity;
@@ -150,7 +166,6 @@ async function getWeatherByCity(city: string): Promise<WeatherSnapshot> {
 async function getWeatherByCoords(
   lat: number,
   lon: number,
-  locationLabel: string,
 ): Promise<WeatherSnapshot> {
   const cacheKey = coordsCacheKey(lat, lon);
   const cached = readCache(cacheKey);
@@ -159,6 +174,7 @@ async function getWeatherByCoords(
     return cached;
   }
 
+  const locationLabel = await reverseGeocodeCity(lat, lon);
   const snapshot = await fetchForecast({
     latitude: lat,
     longitude: lon,
@@ -168,6 +184,45 @@ async function getWeatherByCoords(
   writeCache(cacheKey, snapshot);
 
   return snapshot;
+}
+
+async function reverseGeocodeCity(lat: number, lon: number): Promise<string> {
+  try {
+    const params = new URLSearchParams({
+      lat: String(lat),
+      lon: String(lon),
+      format: 'jsonv2',
+      addressdetails: '1',
+      'accept-language': 'ru',
+      zoom: '18',
+    });
+    const payload = await fetchJson(
+      `${REVERSE_GEOCODING_URL}?${params.toString()}`,
+      { 'User-Agent': NOMINATIM_USER_AGENT },
+    );
+    const parsed = reverseGeocodingSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return GEO_LOCATION_LABEL;
+    }
+
+    const address = parsed.data.address;
+    const name =
+      address?.city ??
+      address?.town ??
+      address?.village ??
+      address?.hamlet ??
+      address?.municipality ??
+      parsed.data.name;
+
+    if (name === undefined || name === '') {
+      return GEO_LOCATION_LABEL;
+    }
+
+    return formatLocationLabel(name, address?.state);
+  } catch {
+    return GEO_LOCATION_LABEL;
+  }
 }
 
 async function geocodeCity(city: string): Promise<GeoPlace> {
@@ -185,16 +240,19 @@ async function geocodeCity(city: string): Promise<GeoPlace> {
     throw new WeatherNotFoundError(`Город «${city}» не найден`);
   }
 
-  const regionSuffix =
-    place.admin1 !== undefined && place.admin1 !== place.name
-      ? `, ${place.admin1}`
-      : '';
-
   return {
     latitude: place.latitude,
     longitude: place.longitude,
-    locationLabel: `${place.name}${regionSuffix}`,
+    locationLabel: formatLocationLabel(place.name, place.admin1),
   };
+}
+
+function formatLocationLabel(name: string, region?: string): string {
+  if (region === undefined || region === '' || region === name) {
+    return name;
+  }
+
+  return `${name}, ${region}`;
 }
 
 async function fetchForecast(place: GeoPlace): Promise<WeatherSnapshot> {
@@ -256,14 +314,20 @@ function mapDaily(
   });
 }
 
-async function fetchJson(url: string): Promise<unknown> {
+async function fetchJson(
+  url: string,
+  headers?: Record<string, string>,
+): Promise<unknown> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
     controller.abort();
   }, FETCH_TIMEOUT_MS);
 
   try {
-    const response = await fetch(url, { signal: controller.signal });
+    const response = await fetch(url, {
+      headers,
+      signal: controller.signal,
+    });
 
     if (!response.ok) {
       throw new WeatherUnavailableError();
