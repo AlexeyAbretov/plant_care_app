@@ -10,11 +10,24 @@ import { MemoryRouter } from 'react-router-dom';
 
 dayjs.locale('ru');
 
+const isStringList = (value: unknown): value is string[] => {
+  return (
+    Array.isArray(value) && value.every((item) => typeof item === 'string')
+  );
+};
+
 const preview: Preview = {
   decorators: [
-    (Story) => (
+    (Story, context) => (
       <ConfigProvider locale={ruRU}>
-        <MemoryRouter>
+        <MemoryRouter
+          initialEntries={
+            isStringList(context.parameters.initialEntries)
+              ? context.parameters.initialEntries
+              : ['/']
+          }
+          key={context.id}
+        >
           <Story />
         </MemoryRouter>
       </ConfigProvider>
