@@ -23,7 +23,7 @@ const MAX_FACTOR = 1.5;
 const REASON_LABELS: Record<WateringAdjustReason, string> = {
   heating: 'отопление, воздух суше обычного',
   heat: 'жара, земля сохнет быстрее',
-  overcast: 'пасмурно, земля сохнет медленнее',
+  overcast: 'мало солнца, земля сохнет медленнее',
   rain: 'осадки, можно позже',
 };
 

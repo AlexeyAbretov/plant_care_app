@@ -37,11 +37,11 @@ export const wateringClimateNotes = (climate: WateringClimate): string[] => {
   }
 
   if (climate.overcast && !climate.heat && !climate.heatingSeason) {
-    notes.push('Пасмурно: можно поливать чуть позже');
+    notes.push('На неделе мало солнца: можно поливать чуть позже');
   }
 
   if (climate.precipitationLikely) {
-    notes.push('Осадки: уличным можно поливать позже');
+    notes.push('На неделе осадки: уличным можно поливать позже');
   }
 
   return notes;

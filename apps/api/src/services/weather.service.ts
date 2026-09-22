@@ -290,7 +290,7 @@ async function fetchForecast(place: GeoPlace): Promise<WeatherSnapshot> {
     longitude: parsed.data.longitude,
     current,
     daily,
-    wateringClimate: deriveWateringClimate(current, daily),
+    wateringClimate: deriveWateringClimate(daily),
   };
 }
 

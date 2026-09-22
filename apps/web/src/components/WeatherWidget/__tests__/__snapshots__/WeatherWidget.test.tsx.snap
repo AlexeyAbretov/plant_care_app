@@ -380,7 +380,7 @@ exports[`WeatherWidget > показывает заметки, прогноз, о
       <span
         class="ant-typography ant-typography-secondary"
       >
-        Осадки: уличным можно поливать позже
+        На неделе осадки: уличным можно поливать позже
       </span>
       <div
         class="weather-forecast"
