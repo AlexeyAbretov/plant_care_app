@@ -44,6 +44,8 @@ export default createConfig({
 
 Нужен `tsconfig.json` в корне проекта: type-aware правила (`prefer-optional-chain`, `prefer-nullish-coalescing`) читают его через `projectService`.
 
+`packages/linting/**` не проверяется: этот путь добавляется к `ignores` всегда, даже если передан свой список.
+
 ### Frontend
 
 `createWebConfig` из `@llm/linting/web` — базовый конфиг плюс правила только для frontend: `func-style: expression`, `no-restricted-imports` (без `.js` в относительных путях; между корневыми каталогами `src` — алиасы `@api`, `@components`, `@containers`, `@hooks`, `@pages`, `@types`, `@utils`, `@config`) и `eslint-plugin-storybook` (`flat/recommended`). По умолчанию проверяет `src/**/*.ts` и `src/**/*.tsx`.

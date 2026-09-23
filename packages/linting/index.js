@@ -9,13 +9,17 @@ import simpleImportSort from "eslint-plugin-simple-import-sort";
  *
  * @param {object} [options]
  * @param {string[]} [options.files] Paths to lint. Default: src TypeScript files
- * @param {string[]} [options.ignores] Default: dist and test
+ * @param {string[]} [options.ignores] Default: dist and test.
+ *   `packages/linting/**` is always ignored.
  * @param {string} [options.tsconfigRootDir] Consuming project root
  *   (`import.meta.dirname`). Needed for type-aware Elvis rules.
  */
 export function createConfig(options = {}) {
   const files = options.files ?? ["src/**/*.ts"];
-  const ignores = options.ignores ?? ["dist/**", "test/**"];
+  const ignores = [
+    "packages/linting/**",
+    ...(options.ignores ?? ["dist/**", "test/**"]),
+  ];
   const tsconfigRootDir = options.tsconfigRootDir;
 
   return [
