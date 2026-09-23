@@ -55,7 +55,7 @@ cp .env.example .env
 apps/web/        — Vite + React + Ant Design (см. apps/web/src ниже)
 apps/api/        — Express + MongoDB
 packages/linting — @llm/linting (ESLint + Prettier)
-docs/            — CONSTITUTION, MVP_PLAN, AGENT_PIPELINE
+docs/            — CONSTITUTION, MVP_PLAN
 ```
 
 `apps/web/src` (соглашения: стрелочные функции, импорты — [Frontend в CONSTITUTION](docs/CONSTITUTION.md#frontend-структура-и-соглашения)):
@@ -100,4 +100,3 @@ curl -X POST http://localhost:3001/api/plants/<plant-id>/assess-condition
 
 - `docs/CONSTITUTION.md` — стек, архитектура, структура frontend, формулы, лимиты
 - `docs/MVP_PLAN.md` — чеклист этапов 0–6 (**MVP закрыт**)
-- `docs/AGENT_PIPELINE.md` — контракт пайплайна агентов

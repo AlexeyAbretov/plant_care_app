@@ -100,8 +100,7 @@ plant_care_app/
 │   └── linting/      # @llm/linting (ESLint + Prettier)
 ├── docs/
 │   ├── CONSTITUTION.md
-│   ├── MVP_PLAN.md
-│   └── AGENT_PIPELINE.md
+│   └── MVP_PLAN.md
 ├── docker-compose.yml
 └── AGENTS.md
 ```
