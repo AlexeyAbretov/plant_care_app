@@ -1,7 +1,12 @@
-import { createPlant, plantImage, weatherSnapshot } from '@test/fixtures';
-import { pathname, renderUi } from '@test/render';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  createPlant,
+  pathname,
+  plantImage,
+  renderUi,
+  weatherSnapshot,
+} from '@test';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Plant, PlantSort, WeatherSnapshot } from '@types';

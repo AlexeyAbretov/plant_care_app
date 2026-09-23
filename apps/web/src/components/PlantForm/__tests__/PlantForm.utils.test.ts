@@ -1,5 +1,6 @@
-import { createPlant } from '@test/fixtures';
 import { describe, expect, it } from 'vitest';
+
+import { createPlant } from '@test';
 
 import type { PlantFormValues } from '../PlantForm.types';
 import {

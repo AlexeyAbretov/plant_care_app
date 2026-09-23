@@ -48,7 +48,7 @@ export default createConfig({
 
 ### Frontend
 
-`createWebConfig` из `@llm/linting/web` — базовый конфиг плюс правила только для frontend: `func-style: expression`, `no-restricted-imports` (без `.js` в относительных путях; у каждой папки в `src/` свой алиас, относительный путь к ней запрещён) и `eslint-plugin-storybook` (`flat/recommended`). Список папок читается из `src/` проекта. По умолчанию проверяет `src/**/*.ts` и `src/**/*.tsx`.
+`createWebConfig` из `@llm/linting/web` — базовый конфиг плюс правила только для frontend: `func-style: expression`, `no-restricted-imports` (без расширения в пути; у каждой папки в `src/` свой алиас, относительный путь к ней запрещён; снаружи папки только баррель `@features`, не `@features/location/File.tsx`) и `eslint-plugin-storybook` (`flat/recommended`). Список папок читается из `src/` проекта. По умолчанию проверяет `src/**/*.ts` и `src/**/*.tsx`. В `compilerOptions.paths` ключ и значение без `/*`: `createWebConfig` не стартует, если шаблон есть в `tsconfig*.json` проекта или в его относительном `extends`.
 
 ```js
 import { createWebConfig } from "@llm/linting/web";

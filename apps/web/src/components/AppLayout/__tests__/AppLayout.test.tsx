@@ -1,6 +1,6 @@
-import { pathname, renderUi } from '@test/render';
 import { describe, expect, it } from 'vitest';
 
+import { pathname, renderUi } from '@test';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

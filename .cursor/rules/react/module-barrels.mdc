@@ -1,6 +1,6 @@
 ---
 description: Любой подмодуль импортируют только через баррель папки или слоя
-globs: "**/*.{ts,tsx}"
+globs: "**/*.{ts,tsx},**/tsconfig*.json"
 alwaysApply: false
 ---
 
@@ -8,18 +8,27 @@ alwaysApply: false
 
 Правило не про вид папки. Компонент, `utils`, `providers`, `services`, `store` и любая другая папка с `index.ts` — подмодуль. Снаружи её импортируют через этот баррель, не через внутренний файл.
 
-- Другой слой — алиас слоя (`@utils`, `@services`, `@store`, `@components`, …). Не `@utils/date` и не `@components/Widget`.
+- Другой слой — только алиас папки (`@features`, `@utils`, `@components`). Не путь к файлу и не суффикс `.tsx`: `@features/location/LocationProvider.tsx`.
+- В `tsconfig` `paths` без `/*`. Алиас указывает на папку.
 - Сосед в том же слое — путь к папке (`../formatDate`, `../SessionStore`): это её `index.ts`. Не `../session/session.ts`.
 - Внутри папки — относительные `./`. Стори и тесты этой папки импортируют модуль относительно (`../Name`).
 
 ```tsx
 // ❌ BAD
-import { formatDate } from '@utils/date';
+import { LocationProvider } from '@features/location/LocationProvider.tsx';
 import { SessionStore } from '../session/session';
 
-// ✅ GOOD — другой слой
-import { formatDate } from '@utils';
+// ✅ GOOD — другой слой, баррель папки
+import { LocationProvider } from '@features';
 
 // ✅ GOOD — сосед в том же слое
 import { SessionStore } from '../session';
+```
+
+```json
+// ❌ BAD
+"@features/*": ["./src/features/*"]
+
+// ✅ GOOD
+"@features": ["./src/features"]
 ```

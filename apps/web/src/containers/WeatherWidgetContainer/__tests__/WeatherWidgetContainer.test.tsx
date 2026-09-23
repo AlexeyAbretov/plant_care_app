@@ -1,7 +1,6 @@
-import { weatherSnapshot } from '@test/fixtures';
-import { renderUi } from '@test/render';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { renderUi, weatherSnapshot } from '@test';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { WeatherSnapshot } from '@types';

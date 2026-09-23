@@ -1,7 +1,6 @@
-import { conditionResult, deferred } from '@test/fixtures';
-import { renderUi } from '@test/render';
 import { describe, expect, it, vi } from 'vitest';
 
+import { conditionResult, deferred, renderUi } from '@test';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

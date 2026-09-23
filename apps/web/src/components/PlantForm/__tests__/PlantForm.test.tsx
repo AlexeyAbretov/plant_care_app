@@ -1,7 +1,7 @@
-import { renderUi } from '@test/render';
 import { Form } from 'antd';
 import { describe, expect, it, vi } from 'vitest';
 
+import { renderUi } from '@test';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

@@ -1,7 +1,7 @@
-import { createPlant } from '@test/fixtures';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ApiError } from '@api';
+import { createPlant } from '@test';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ListPlantsParams } from '@types';
 

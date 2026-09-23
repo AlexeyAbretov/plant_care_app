@@ -1,15 +1,16 @@
-import {
-  createPlant,
-  deferred,
-  imageFile,
-  plantImage,
-  quietMessage,
-} from '@test/fixtures';
-import { pathname, renderUi } from '@test/render';
 import { message } from 'antd';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ApiError } from '@api';
+import {
+  createPlant,
+  deferred,
+  imageFile,
+  pathname,
+  plantImage,
+  quietMessage,
+  renderUi,
+} from '@test';
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Plant } from '@types';

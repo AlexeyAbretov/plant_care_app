@@ -1,5 +1,6 @@
-import { createPlant, imageFile, recognizeResult } from '@test/fixtures';
 import { describe, expect, it, vi } from 'vitest';
+
+import { createPlant, imageFile, recognizeResult } from '@test';
 
 import type { ApiClient } from '../../ApiClient';
 import { PlantsApi, plantsApi } from '../PlantsApi';

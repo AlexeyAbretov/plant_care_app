@@ -1,5 +1,6 @@
-import { imageFile } from '@test/fixtures';
 import { describe, expect, it } from 'vitest';
+
+import { imageFile } from '@test';
 
 import { MAX_IMAGE_SIZE_BYTES } from '../../ImageUpload';
 import { getImageValidationError } from '../PlantImageGallery.utils';

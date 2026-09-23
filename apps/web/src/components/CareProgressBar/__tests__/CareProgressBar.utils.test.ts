@@ -1,6 +1,6 @@
-import { createPlant } from '@test/fixtures';
 import { describe, expect, it } from 'vitest';
 
+import { createPlant } from '@test';
 import type { PlantLocationKind, WateringClimate } from '@types';
 
 import {

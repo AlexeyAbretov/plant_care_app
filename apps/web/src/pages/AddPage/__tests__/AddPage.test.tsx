@@ -1,14 +1,15 @@
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { ApiError } from '@api';
 import {
   conditionResult,
   createPlant,
   deferred,
   imageFile,
+  pathname,
   recognizeResult,
-} from '@test/fixtures';
-import { pathname, renderUi } from '@test/render';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { ApiError } from '@api';
+  renderUi,
+} from '@test';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

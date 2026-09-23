@@ -1,6 +1,6 @@
-import { renderUi } from '@test/render';
 import { describe, expect, it, vi } from 'vitest';
 
+import { renderUi } from '@test';
 import { fireEvent, screen } from '@testing-library/react';
 
 import { RetryAlert } from '../RetryAlert';
