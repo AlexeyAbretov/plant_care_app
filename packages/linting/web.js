@@ -59,10 +59,19 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+const relativeJsImportPattern = {
+  group: ["./*", "../*", "../../*", "../../../*"],
+  importNamePattern: "^.+\\.js$",
+  message: "Relative imports must not include the .js file extension.",
+};
+
 /**
  * @param {string} rootDir
+ * @param {{ sameDirectory?: boolean }} [options]
+ * `./types` inside `src/types/` is the sibling file `types.ts`.
+ * The same path from a file directly in `src/` is the folder.
  */
-function aliasImportPatterns(rootDir) {
+function aliasImportPatterns(rootDir, options = {}) {
   const names = srcRootNames(rootDir);
 
   if (names.length === 0) {
@@ -70,16 +79,21 @@ function aliasImportPatterns(rootDir) {
   }
 
   const group = names.map(escapeRegExp).join("|");
-
-  return [
+  const patterns = [
     {
       regex: `^(\\.\\./)+(${group})(/|$)`,
       message: aliasImportMessage,
     },
-    {
+  ];
+
+  if (options.sameDirectory) {
+    patterns.push({
       regex: `^\\./(${group})(/|$)`,
       message: aliasImportMessage,
-    },
+    });
+  }
+
+  patterns.push(
     {
       regex: `^@(${group})/.+`,
       message: barrelImportMessage,
@@ -87,6 +101,24 @@ function aliasImportPatterns(rootDir) {
     {
       regex: "\\.(tsx?|jsx?)$",
       message: extensionImportMessage,
+    },
+  );
+
+  return patterns;
+}
+
+/**
+ * @param {string} rootDir
+ * @param {{ sameDirectory?: boolean }} [options]
+ */
+function restrictedImports(rootDir, options) {
+  return [
+    "error",
+    {
+      patterns: [
+        relativeJsImportPattern,
+        ...aliasImportPatterns(rootDir, options),
+      ],
     },
   ];
 }
@@ -96,26 +128,23 @@ function aliasImportPatterns(rootDir) {
  * @param {string} rootDir
  */
 function createWebOverrides(files, rootDir) {
-  return {
-    files,
-    rules: {
-      "func-style": ["error", "expression"],
-      "no-restricted-imports": [
-        "error",
-        {
-          patterns: [
-            {
-              group: ["./*", "../*", "../../*", "../../../*"],
-              importNamePattern: "^.+\\.js$",
-              message:
-                "Relative imports must not include the .js file extension.",
-            },
-            ...aliasImportPatterns(rootDir),
-          ],
-        },
-      ],
+  return [
+    {
+      files,
+      rules: {
+        "func-style": ["error", "expression"],
+        "no-restricted-imports": restrictedImports(rootDir),
+      },
     },
-  };
+    {
+      files: ["src/*.{ts,tsx}"],
+      rules: {
+        "no-restricted-imports": restrictedImports(rootDir, {
+          sameDirectory: true,
+        }),
+      },
+    },
+  ];
 }
 
 /**
@@ -304,7 +333,7 @@ export function createWebConfig(options = {}) {
 
   return [
     ...createConfig({ ...options, files }),
-    createWebOverrides(files, rootDir),
+    ...createWebOverrides(files, rootDir),
     ...storybook.configs["flat/recommended"],
   ];
 }

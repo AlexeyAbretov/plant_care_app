@@ -11,7 +11,7 @@ alwaysApply: false
 - Другой слой — только алиас папки (`@features`, `@utils`, `@components`). Не путь к файлу и не суффикс `.tsx`: `@features/location/LocationProvider.tsx`.
 - В `tsconfig` `paths` без `/*`. Алиас указывает на папку.
 - Сосед в том же слое — путь к папке (`../formatDate`, `../SessionStore`): это её `index.ts`. Не `../session/session.ts`.
-- Внутри папки — относительные `./`. Стори и тесты этой папки импортируют модуль относительно (`../Name`).
+- Внутри папки — относительные `./`. `src/types/index.ts` → `./types` (файл `types.ts`), не `@types`. `./types` нельзя только из файла прямо в `src/`. Стори и тесты этой папки импортируют модуль относительно (`../Name`).
 
 ```tsx
 // ❌ BAD
