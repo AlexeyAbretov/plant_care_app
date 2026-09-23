@@ -1,0 +1,49 @@
+---
+description: Компоненты не импортируют контейнеры — только children или render prop
+globs: "**/components/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Контейнеры вне компонентов
+
+`components/` не импортирует `@containers` и не знает конкретный контейнер. Контейнер собирает страница или корень приложения и передаёт его в компонент.
+
+- `children` или именованный слот с типом `ReactNode` (`headerExtra`).
+- Render prop — функция, которая возвращает узел (`renderHeader`).
+
+```tsx
+// ❌ BAD
+import { SessionContainer } from '@containers';
+
+export const Shell = () => {
+  return (
+    <header>
+      <SessionContainer />
+    </header>
+  );
+};
+
+// ✅ GOOD — слот и children. Контейнер создаёт вызывающий код
+type ShellProps = {
+  children: React.ReactNode;
+  headerExtra?: React.ReactNode;
+};
+
+export const Shell = ({ children, headerExtra }: ShellProps) => {
+  return (
+    <div>
+      {headerExtra}
+      {children}
+    </div>
+  );
+};
+
+// ✅ GOOD — render prop
+type PanelProps = {
+  renderHeader: () => React.ReactNode;
+};
+
+export const Panel = ({ renderHeader }: PanelProps) => {
+  return <header>{renderHeader()}</header>;
+};
+```

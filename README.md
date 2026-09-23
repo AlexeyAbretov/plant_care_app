@@ -89,6 +89,14 @@ npm run lint
 npm run build
 ```
 
+Общие ESLint, Prettier, правила Cursor и шаблон frontend — пакет [`packages/linting`](packages/linting/README.md) (`@llm/linting`). Его можно поставить в другой репозиторий. Домен этого приложения (растения, погода, маршруты, env) — в [docs/CONSTITUTION.md](docs/CONSTITUTION.md) и [AGENTS.md](AGENTS.md).
+
+Синхронизация правил Cursor из пакета:
+
+```bash
+npm run sync-cursor
+```
+
 ## Структура
 
 ```
@@ -97,7 +105,7 @@ plant_care_app/
 │   ├── web/          # Frontend (Vite + React)
 │   └── api/          # Backend (Express)
 ├── packages/
-│   └── linting/      # @llm/linting (ESLint + Prettier)
+│   └── linting/      # @llm/linting (ESLint, Prettier, правила Cursor)
 ├── docs/
 │   ├── CONSTITUTION.md
 │   └── MVP_PLAN.md

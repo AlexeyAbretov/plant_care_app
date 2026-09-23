@@ -1,0 +1,41 @@
+---
+description: Во frontend именованные функции — стрелки (func-style expression)
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Функции frontend
+
+Во frontend именованные и экспортируемые функции — стрелки, в любом модуле: компонент, `utils`, `providers`, `services`, `store`. Не `function`. Вложенные обработчики — `const handleX = async () => {}`. Методы классов остаются методами.
+
+Там, где подключён только `createConfig`, действует `typescript-style`: именованные функции — `function`.
+
+Линтер: `createWebConfig` из `@llm/linting/web`. `createConfig` (API) оставляет `function`.
+
+```tsx
+// ❌ BAD
+export function formatDate(value: Date): string {
+  return value.toISOString();
+}
+
+export function Widget(): React.JSX.Element {
+  function handleSubmit(): void {
+    save();
+  }
+
+  return <div />;
+}
+
+// ✅ GOOD
+export const formatDate = (value: Date): string => {
+  return value.toISOString();
+};
+
+export const Widget = (): React.JSX.Element => {
+  const handleSubmit = (): void => {
+    save();
+  };
+
+  return <div />;
+};
+```

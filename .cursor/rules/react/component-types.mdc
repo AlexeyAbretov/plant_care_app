@@ -1,0 +1,33 @@
+---
+description: Колокация типов UI — ComponentName.types.ts / PageName.types.ts
+globs: "**/{components,pages,containers}/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Типы компонентов и страниц
+
+Пропсы и локальные типы компонента, страницы или контейнера лежат рядом с ним файлом `Name.types.ts` (как `Name.utils.ts` и `Name.css`).
+
+- Имя файла совпадает с папкой: `Widget.types.ts`, `EditPage.types.ts`, не общий `types.ts` внутри папки.
+- Внутри папки — относительный импорт (`./Name.types`). В баррель и `@components` реэкспортируют только типы, которые нужны снаружи. Пропсы в баррель не выносят.
+- Общие доменные модели остаются в `types/` (`@types`). Не дублировать их в `Name.types.ts`.
+- Пустой `.types.ts` не заводят: если своих типов нет, файла нет.
+- Вложенные компоненты той же папки делят файл типов родителя.
+
+```typescript
+// ❌ BAD — пропсы в том же файле, что разметка
+type WidgetProps = {
+  title: string;
+};
+
+export const Widget = ({ title }: WidgetProps) => {
+  return <div>{title}</div>;
+};
+
+// ✅ GOOD
+import type { WidgetProps } from './Widget.types';
+
+export const Widget = ({ title }: WidgetProps) => {
+  return <div>{title}</div>;
+};
+```

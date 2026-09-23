@@ -5,7 +5,7 @@
 - **Node.js** ≥ 22
 - **Docker** — для MongoDB в dev (`docker compose`); на Windows Docker Desktop должен быть **запущен** до `npm run dev`
 - **Ollama** — локальный провайдер по умолчанию (`LLM_PROVIDER=ollama`), модель: `ollama pull qwen2.5vl:7b`. Альтернативы: `openai`, `google`, `grok` (нужен `LLM_API_KEY`)
-- **@llm/linting** — workspace-пакет в `packages/linting` (см. [README](packages/linting/README.md))
+- **@llm/linting** — общий ESLint, Prettier, правила Cursor и шаблон frontend (`packages/linting`, см. [README](packages/linting/README.md))
 
 ## Установка
 
@@ -24,6 +24,7 @@ npm install
 | `npm test` | Unit-тесты web (Vitest): ветки ≥ 80%, без красных непокрытых строк |
 | `npm run build` | Сборка web + api |
 | `npm run storybook` | Storybook web (`:6006`); стори компонентов — `components/Name/__stories__/` |
+| `npm run sync-cursor` | Копирует `packages/linting/cursor/` в `.cursor/rules/`. Правила только этого репозитория не затирает |
 
 ## Переменные окружения
 
@@ -54,16 +55,16 @@ cp .env.example .env
 ```
 apps/web/        — Vite + React + Ant Design (см. apps/web/src ниже)
 apps/api/        — Express + MongoDB
-packages/linting — @llm/linting (ESLint + Prettier)
+packages/linting — @llm/linting (ESLint, Prettier, правила Cursor, шаблон frontend)
 docs/            — CONSTITUTION, MVP_PLAN
 ```
 
-`apps/web/src` (соглашения: стрелочные функции, импорты — [Frontend в CONSTITUTION](docs/CONSTITUTION.md#frontend-структура-и-соглашения)):
+`apps/web/src` — дерево и доменные правила: [Frontend в CONSTITUTION](docs/CONSTITUTION.md#frontend-структура-и-соглашения). Общий шаблон слоёв, стори и тестов: [frontend.md](packages/linting/docs/frontend.md).
 
 ```
-pages/       — CatalogPage, AddPage, EditPlantPage (+ index.ts); типы — `PageName.types.ts`
-components/  — AppLayout, RetryAlert, WeatherWidget, catalog/*, plant/* (+ index.ts); утилиты — `ComponentName.utils.ts`, типы — `ComponentName.types.ts`, стили — `ComponentName.css` рядом с компонентом; стори — `__stories__/ComponentName.stories.tsx` (обязательны для каждого компонента); тесты — `__tests__/ComponentName.test.tsx`; без `@api` (включая `ApiError`) — колбэки, готовые URL и `Error.message` снаружи (`pages/`, `hooks/`, `containers/`)
-containers/  — WeatherWidgetContainer (+ index.ts); алиас `@containers`
+pages/       — CatalogPage, AddPage, EditPlantPage
+components/  — папка на компонент (AppLayout, PlantCard, WeatherWidget, …)
+containers/  — WeatherWidgetContainer
 api/         — ApiClient, PlantsApi
 hooks/       — usePlantsCatalog, useWeather
 types/       — модель растения, погода
@@ -98,5 +99,6 @@ curl -X POST http://localhost:3001/api/plants/<plant-id>/assess-condition
 
 ## Документация
 
-- `docs/CONSTITUTION.md` — стек, архитектура, структура frontend, формулы, лимиты
+- `docs/CONSTITUTION.md` — стек, архитектура, дерево frontend, формулы, лимиты
+- `packages/linting/docs/frontend.md` — переносимый шаблон UI (слои, стори, тесты)
 - `docs/MVP_PLAN.md` — чеклист этапов 0–6 (**MVP закрыт**)

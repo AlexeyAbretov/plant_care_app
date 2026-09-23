@@ -4,6 +4,7 @@ export type {
   Plant,
   PlantConditionResult,
   PlantHealthLevel,
+  PlantImage,
   PlantLocationKind,
   PlantRecognizeResult,
   PlantSort,

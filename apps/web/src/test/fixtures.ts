@@ -3,11 +3,10 @@ import { message } from 'antd';
 import type {
   Plant,
   PlantConditionResult,
+  PlantImage,
   PlantRecognizeResult,
   WeatherSnapshot,
 } from '@types';
-
-import type { PlantImage } from '../types/plant';
 
 export const quietMessage = (): ReturnType<typeof message.error> => {
   return (() => {}) as ReturnType<typeof message.error>;

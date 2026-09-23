@@ -9,7 +9,7 @@
 | База данных | MongoDB (dev — Docker Compose) |
 | Файлы изображений | MongoDB GridFS |
 | LLM | Ollama, ChatGPT, Gemma или Grok (`LLM_PROVIDER`, server-side, без выбора в UI) |
-| Lint | ESLint 9 + Prettier через `@llm/linting` (in-repo, `packages/linting`) |
+| Lint | ESLint 9 + Prettier, правила Cursor и шаблон frontend — `@llm/linting` (`packages/linting`) |
 
 ## Архитектура
 
@@ -32,7 +32,7 @@ MongoDB (+ GridFS)    Ollama, ChatGPT, Gemma или Grok
 | Каталог | Назначение |
 |---------|------------|
 | `pages/` | Экраны маршрутов: каталог, добавление, редактирование |
-| `components/` | Переиспользуемый UI (`AppLayout`, `RetryAlert`, домены `catalog/`, `plant/`) |
+| `components/` | Переиспользуемый UI, папка на компонент (`AppLayout`, `PlantCard`, `WeatherWidget`, …) |
 | `containers/` | Контейнеры: данные и хуки, без собственной вёрстки (`WeatherWidgetContainer`) |
 | `api/` | HTTP-клиент (`ApiClient.ts`) и REST (`PlantsApi.ts`) |
 | `hooks/` | React-хуки (например, `usePlantsCatalog`) |
@@ -48,10 +48,10 @@ apps/web/src/
 ├── components/
 │   ├── index.ts          # публичный баррель UI
 │   ├── AppLayout/
-│   ├── RetryAlert/
+│   ├── PlantCard/
+│   ├── PlantForm/
 │   ├── WeatherWidget/
-│   ├── catalog/          # PlantCard, CatalogToolbar, CareProgressBar
-│   └── plant/            # PlantForm, ImageUpload, ConditionButton, …
+│   └── …                 # папка на компонент, вход — её index.ts
 ├── containers/
 │   ├── index.ts          # публичный баррель контейнеров
 │   └── WeatherWidgetContainer/
@@ -81,73 +81,18 @@ apps/web/src/
 
 Не добавляй npm-пакет, если ту же задачу закрывает стандартная библиотека JavaScript (`Date`, `Intl`, `URL`, `fetch` и т. п.). Календарная арифметика и даты формы — через `Date` и `Intl` (`src/utils/date.ts`, баррель `@utils`), в форме дата хранится строкой `YYYY-MM-DD`. Локаль интерфейса, включая `DatePicker`, задаёт `ConfigProvider locale={ruRU}`. `dayjs` не импортировать в страницах и стори: у `DatePicker` Ant Design значение внутри — `Dayjs`, перевод в строку живёт рядом с полем. Пакет ставит `antd`.
 
-**Функции:**
+**Соглашения UI** (стрелки, алиасы, контейнеры, запрет API в `components/`, колокация `Name.utils.ts` / `Name.types.ts` / `Name.css`, Storybook, Vitest) — в [`packages/linting/docs/frontend.md`](../packages/linting/docs/frontend.md). Ниже — только этот проект.
 
-Именованные и экспортируемые функции — стрелочные (`export const PlantCard = () => {}`), не `function declaration`. Вложенные обработчики — `const handleX = async () => {}`. Методы классов в `api/` (`ApiClient`, `PlantsApi`) остаются методами. Линтер: `func-style: expression` в `apps/web/eslint.config.js` поверх `@llm/linting` (там для API по умолчанию `function`).
+**Этот проект:**
 
-**Импорты:**
+Алиасы объявлены в `tsconfig.app.json` и `vite.config.ts`.
 
-Алиасы (`tsconfig.app.json`, `vite.config.ts`): `@api`, `@components`, `@config`, `@containers`, `@hooks`, `@pages`, `@types`, `@utils` → соответствующие каталоги (или `config.ts`) в `src/`.
+- Страницы забирают из барреля `PlantForm.utils.ts` (`mapFormValuesToPayload`, `mapPlantToFormValues`) и тип `PlantFormValues`. `CareProgressBar.utils.ts` остаётся внутри компонента. `WeatherTriggerProps` лежит в `WeatherWidget.types.ts`. Модели `Plant` и `WeatherSnapshot` — в `src/types/`.
+- `WeatherWidgetContainer` передаётся в `AppLayout` пропом `headerExtra` (`App.tsx`). Погода одна на приложение (`WeatherProvider`).
 
-- Между корневыми каталогами `src` — только алиасы, не `../../api` и не `./components`.
-- Внутри одной папки/фичи — относительные `./` и `../` (соседи в `plant/`, `catalog/` и т. п.).
-- Страницы и код вне `components/plant/**` и `components/catalog/**` импортируют UI только из барреля `@components`, а не из подпутей `plant/` и `catalog/` (ESLint `no-restricted-imports` в `apps/web/eslint.config.js`).
-- Контейнеры — из барреля `@containers`, не из подпутей `containers/`.
-- Реэкспорт доменов — через `components/index.ts`; контейнеры — `containers/index.ts`; страницы маршрутов — баррель `@pages`.
-- Относительные импорты **без** суффикса `.js` (отдельное ограничение ESLint для web).
+**Тесты этого репозитория:**
 
-**Контейнеры:**
-
-Папка и баррель — как у компонентов: `containers/Name/Name.tsx` + `index.ts`, публичный реэкспорт через `containers/index.ts`.
-
-Контейнер подключает хуки и передаёт пропсы в UI-компонент. `AppLayout` не знает про конкретные контейнеры: слот хеадера — проп `headerExtra` (см. `App.tsx`).
-
-**Компоненты не вызывают API:**
-
-Каталог `components/` не обращается к backend, не собирает его URL и не импортирует `@api`, включая `ApiError`. Вызовы REST, `apiClient.url` и разбор `ApiError` живут в `pages/`, `hooks/` и `containers/`. Компонент получает результат снаружи:
-
-- действие — колбэк (`onWater`, `onDelete`, `onAssess`);
-- адрес картинки — готовая строка (`imageSrc`, `previewSrc`);
-- текст сбоя колбэка — `Error.message`, иначе своя заглушка компонента.
-
-**Колокация утилит компонента:**
-
-Чистые функции, которые относятся к одному компоненту, лежат в папке этого компонента файлом `ComponentName.utils.ts`.
-
-- Если их вызывает только сам компонент — относительный импорт (`./ComponentName.utils`), в баррель не реэкспортируют. Пример: `CareProgressBar.utils.ts`.
-- Если их вызывают страницы — реэкспорт через баррель компонента и `@components` (страницы не импортируют `plant/` / `catalog/` напрямую). Пример: `PlantForm.utils.ts` (`mapFormValuesToPayload`, `mapPlantToFormValues`).
-
-**Колокация типов компонента и страницы:**
-
-Пропсы и локальные типы лежат рядом файлом `Name.types.ts` (как utils и css).
-
-- Внутри папки — относительный импорт (`./Name.types`). В баррель и `@components` реэкспортируют только типы, которые нужны снаружи (пример: `PlantFormValues`). Пропсы в баррель не выносят.
-- Вложенные компоненты той же папки делят файл типов родителя (пример: `WeatherTriggerProps` в `WeatherWidget.types.ts`).
-- Общие доменные модели (`Plant`, `WeatherSnapshot`) остаются в `src/types/` (`@types`).
-- Пустой `.types.ts` не заводят.
-
-Стили одного компонента — `ComponentName.css` рядом с ним (пример: `WeatherWidget.css`). Глобальный `index.css` — только сброс страницы (`body`, `#root`).
-
-**Стори (Storybook):**
-
-У каждого компонента в `components/` есть стори. Файл лежит в каталоге `__stories__` этой папки: `ComponentName/__stories__/ComponentName.stories.tsx` (пример: `PlantCard/__stories__/PlantCard.stories.tsx`).
-
-- Импорт компонента — относительный (`../ComponentName`). В баррель (`index.ts`, `@components`) стори не реэкспортируют.
-- Формат CSF3: `satisfies Meta<typeof Component>`, каждая стори — именованный экспорт. `title` — `Components/ComponentName`, чтобы каталог `__stories__` не попадал в сайдбар.
-- Минимум одна стори. Отличимые состояния UI — отдельные стори.
-- Общие провайдеры (локаль Ant Design, роутер) задаются в `apps/web/.storybook/preview.tsx`.
-- Запуск из корня: `npm run storybook` (порт `6006`).
-
-**Unit-тесты (Vitest):**
-
-Тесты лежат в подпапке `__tests__` того артефакта, который проверяют: `PlantCard/__tests__/PlantCard.test.tsx`, `api/PlantsApi/__tests__/PlantsApi.test.ts`, `utils/__tests__/date.test.ts`. В баррель тесты не реэкспортируют. Импорт проверяемого модуля — относительный, как в стори.
-
-- Раннер — Vitest (`jsdom`), запросы к DOM — Testing Library. Общая подготовка — `apps/web/src/test/setup.ts` (календарная дата зафиксирована на 2026-09-22, сериализатор снапшотов стабилизирует id и классы анимации Ant Design). Рендер с локалью `ru_RU` и роутером — `renderUi` из `apps/web/src/test/render.tsx`.
-- Отображение компонентов, контейнеров и страниц проверяется снапшотами (`toMatchSnapshot`). Клиенты API, хуки и утилиты — утверждениями на вызовы и возвращаемые значения.
-- В покрытие входят `src/api`, `src/components`, `src/containers`, `src/hooks`, `src/pages`, `src/utils`. Не входят `*.types.ts`, баррели `index.ts`, `__stories__` и `__tests__`. Порог веток — 80%. Строки, операторы и функции — 100%: в HTML-отчёте не должно оставаться красных непокрытых строк. Жёлтым могут оставаться частично покрытые ветки (`apps/web/vite.config.ts`).
-- Из корня: `npm test`. Режим наблюдения: `npm run test:watch -w @plant-care/web`. В режиме `test` `VITE_API_BASE_URL` фиксируется как `http://localhost:3001`.
-
-Каталог `src/utils/` — для кода с несколькими независимыми потребителями вне одного компонента. Календарные даты — `utils/date.ts`.
+Подготовка — `apps/web/src/test/setup.ts` (календарная дата зафиксирована на 2026-09-22, сериализатор снапшотов стабилизирует id и классы анимации Ant Design). Рендер с локалью `ru_RU` и роутером — `renderUi` из `apps/web/src/test/render.tsx`. Пороги покрытия и раскладка `__tests__` — в шаблоне frontend. Жёлтым могут оставаться частично покрытые ветки (`apps/web/vite.config.ts`). Режим наблюдения: `npm run test:watch -w @plant-care/web`. В режиме `test` `VITE_API_BASE_URL` фиксируется как `http://localhost:3001`.
 
 Прогресс полива/подкормки в UI считается в `components/CareProgressBar/CareProgressBar.utils.ts` по тем же правилам, что в разделе «Прогресс-бар ухода» ниже. Для полива в каталоге в `intervalDays` подставляется **эффективный** интервал (см. «Полив и погода»).
 

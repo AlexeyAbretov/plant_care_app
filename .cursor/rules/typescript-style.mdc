@@ -1,0 +1,58 @@
+---
+description: Стиль TypeScript из @llm/linting — function, скобки, Elvis, импорты, 80 символов
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Стиль TypeScript
+
+Именованные функции — `function`, как `func-style: declaration` в `createConfig`. Стрелки — для колбэков и во frontend, где подключён `createWebConfig` (`func-style: expression`).
+
+Скобка `{` на той же строке (1tbs). У `if` / `for` / `while` всегда `{}`. Пустая строка между логическими блоками (объявления, ветвление, `return`). Не вставляй пустые строки в начало и конец блока. Отступ 2 пробела. Строка ≤ 80 символов.
+
+Геттеры — существительные (`ownerRepo`), не глаголы. Обращение без скобок.
+
+Вложенные поля и «нет значения → дефолт» — через `?.` и `??`. Не через `"x" in obj`, цепочки `&&` и тернарники. Пустую строку и `0` как «нет значения» обрабатывай через `||`.
+
+Импорты — группы через пустую строку, сверху вниз: `node:` → npm (включая scoped `@org/pkg`) → локальные алиасы `tsconfig` → `./` → `../`. Алиасы — отдельная группа после внешних.
+
+Проверка: `npm run lint`. Автоправка: `eslint --fix` (сортирует импорты и переносит строки, Prettier `printWidth: 80`).
+
+```typescript
+// ❌ BAD — стрелка вместо function, нет скобок, нет пустой строки
+export const parseOwnerRepo = (repo: string) => {
+  const [owner, name] = repo.split('/');
+  if (!owner || !name) return null;
+  return { owner, repo: name };
+};
+
+// ❌ BAD — проверка через in и тернарник
+const stdout =
+  err && typeof err === 'object' && 'stdout' in err
+    ? String((err as { stdout: unknown }).stdout)
+    : '';
+
+// ❌ BAD — алиас в одной группе с npm
+import type { Config } from '@config';
+import Fastify from 'fastify';
+
+// ✅ GOOD
+export function parseOwnerRepo(repo: string) {
+  const [owner, name] = repo.split('/');
+
+  if (!owner || !name) {
+    return null;
+  }
+
+  return { owner, repo: name };
+}
+
+const stdout = String((err as { stdout?: unknown })?.stdout ?? '');
+
+// ✅ GOOD — npm, затем алиас, затем относительный
+import Fastify from 'fastify';
+
+import type { Config } from '@config';
+
+import { JobStore } from './jobs';
+```

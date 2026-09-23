@@ -12,7 +12,8 @@
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "storybook": "npm run storybook -w @plant-care/web"
+    "storybook": "npm run storybook -w @plant-care/web",
+    "sync-cursor": "node packages/linting/scripts/sync-cursor.js"
   },
   "devDependencies": {
     "@llm/linting": "workspace:*",

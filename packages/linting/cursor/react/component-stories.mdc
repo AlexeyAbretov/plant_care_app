@@ -1,0 +1,40 @@
+---
+description: У каждого UI-компонента есть Storybook-стори в __stories__
+globs: "**/components/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Стори компонентов
+
+У каждого компонента в `components/<Name>/` есть стори Storybook. Файл — `__stories__/<Name>.stories.tsx` внутри папки компонента. Вложенные модули той же папки отдельных стори не получают: их покрывают стори родителя.
+
+- Импорт компонента — относительный (`../Name`). В `index.ts` и `@components` стори не реэкспортируют.
+- CSF3: `satisfies Meta<typeof Name>`, стори — именованные экспорты. `title` — `Components/Name`, чтобы каталог `__stories__` не попадал в сайдбар.
+- Минимум одна стори. Отличимые состояния UI — отдельные стори.
+- Колбэки — `fn()` из `storybook/test`.
+- Общие провайдеры (локаль, роутер) задаются в `.storybook/preview.tsx` рядом с исходниками frontend. В стори их не дублировать.
+
+```tsx
+// ❌ BAD — стори рядом с компонентом или в общем src/stories
+// components/Widget/Widget.stories.tsx
+
+// ✅ GOOD — components/Widget/__stories__/Widget.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { fn } from 'storybook/test';
+
+import { Widget } from '../Widget';
+
+const meta = {
+  title: 'Components/Widget',
+  component: Widget,
+  args: {
+    onSave: fn(async () => {}),
+  },
+} satisfies Meta<typeof Widget>;
+
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};
+```

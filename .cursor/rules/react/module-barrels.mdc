@@ -1,0 +1,25 @@
+---
+description: Любой подмодуль импортируют только через баррель папки или слоя
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Баррели подмодулей
+
+Правило не про вид папки. Компонент, `utils`, `providers`, `services`, `store` и любая другая папка с `index.ts` — подмодуль. Снаружи её импортируют через этот баррель, не через внутренний файл.
+
+- Другой слой — алиас слоя (`@utils`, `@services`, `@store`, `@components`, …). Не `@utils/date` и не `@components/Widget`.
+- Сосед в том же слое — путь к папке (`../formatDate`, `../SessionStore`): это её `index.ts`. Не `../session/session.ts`.
+- Внутри папки — относительные `./`. Стори и тесты этой папки импортируют модуль относительно (`../Name`).
+
+```tsx
+// ❌ BAD
+import { formatDate } from '@utils/date';
+import { SessionStore } from '../session/session';
+
+// ✅ GOOD — другой слой
+import { formatDate } from '@utils';
+
+// ✅ GOOD — сосед в том же слое
+import { SessionStore } from '../session';
+```
