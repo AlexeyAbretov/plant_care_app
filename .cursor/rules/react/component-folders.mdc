@@ -1,0 +1,23 @@
+---
+description: Каждый компонент в своей папке; частный — в папке родителя
+globs: "**/components/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Папка на компонент
+
+У каждого компонента своя папка. Файл не кладут прямо в `components/`. В папке один публичный компонент: `components/Widget/Widget.tsx` и её `index.ts`.
+
+Частный модуль, который нужен только родителю, остаётся в папке родителя и своей папки не получает. Его не реэкспортируют из `components/index.ts`.
+
+```text
+// ❌ BAD — файл без папки или чужой компонент внутри чужой папки
+components/Widget.tsx
+components/Widget/SaveButton.tsx
+
+// ✅ GOOD — свой компонент и частные части родителя
+components/Widget/Widget.tsx
+components/Widget/index.ts
+components/Widget/WidgetTrigger.tsx
+components/SaveButton/SaveButton.tsx
+```

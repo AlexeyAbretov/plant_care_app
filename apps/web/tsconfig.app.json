@@ -13,6 +13,8 @@
       "@hooks/*": ["./src/hooks/*"],
       "@pages": ["./src/pages"],
       "@pages/*": ["./src/pages/*"],
+      "@test": ["./src/test"],
+      "@test/*": ["./src/test/*"],
       "@types": ["./src/types"],
       "@types/*": ["./src/types/*"],
       "@utils": ["./src/utils"],

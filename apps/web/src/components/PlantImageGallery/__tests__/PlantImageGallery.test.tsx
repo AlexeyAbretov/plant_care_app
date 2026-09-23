@@ -1,16 +1,16 @@
+import {
+  conditionResult,
+  deferred,
+  imageFile,
+  quietMessage,
+} from '@test/fixtures';
+import { renderUi } from '@test/render';
 import { message } from 'antd';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import {
-  conditionResult,
-  deferred,
-  imageFile,
-  quietMessage,
-} from '../../../test/fixtures';
-import { renderUi } from '../../../test/render';
 import { PlantImageGallery } from '../PlantImageGallery';
 
 const image = (

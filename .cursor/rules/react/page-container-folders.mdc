@@ -1,0 +1,25 @@
+---
+description: Каждая страница и каждый контейнер лежат в своей папке
+globs: "**/{pages,containers}/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Папка на страницу и контейнер
+
+У каждой страницы и каждого контейнера своя папка. В одной папке один такой модуль. Файл страницы или контейнера не кладут прямо в `pages/` или `containers/`.
+
+Рядом — `index.ts` этой папки. Общий баррель слоя (`pages/index.ts`, `containers/index.ts`) только реэкспортирует папки.
+
+```text
+// ❌ BAD — файл слоя без своей папки или два модуля в одной
+pages/EditPage.tsx
+pages/catalog/ListPage.tsx
+pages/catalog/EditPage.tsx
+containers/SessionPanel.tsx
+
+// ✅ GOOD
+pages/EditPage/EditPage.tsx
+pages/EditPage/index.ts
+containers/SessionPanel/SessionPanel.tsx
+containers/SessionPanel/index.ts
+```

@@ -1,0 +1,31 @@
+---
+description: Хук, сервис, провайдер и API-клиент — своя папка и имя с большой буквы
+globs: "**/{hooks,providers,services}/**/*.{ts,tsx},**/src/api/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Папки хуков, сервисов, провайдеров и API
+
+Каждый хук, сервис, провайдер и API-клиент лежит в своей папке. Файл не кладут прямо в `hooks/`, `services/`, `providers/` или `api/`. Имя папки совпадает с основным файлом. Рядом — `index.ts` папки. Баррель слоя только реэкспортирует папки.
+
+Имя с большой буквы:
+
+- API, сервис, провайдер — PascalCase: `PlantsApi/PlantsApi.ts`, `SessionService/SessionService.ts`, `WeatherProvider/WeatherProvider.tsx`.
+- Хук — префикс `use` со строчной и дальше большая буква: `useWeather/useWeather.ts`. Не `UseWeather` и не `useweather`.
+
+`index.ts` и `__tests__` с большой буквы не называют. Каталог backend `apps/api` этим правилом не переименовывают.
+
+```text
+// ❌ BAD
+hooks/useWeather.ts
+api/plantsApi.ts
+services/session.ts
+providers/weatherProvider.tsx
+
+// ✅ GOOD
+hooks/useWeather/useWeather.ts
+hooks/useWeather/index.ts
+api/PlantsApi/PlantsApi.ts
+services/SessionService/SessionService.ts
+providers/WeatherProvider/WeatherProvider.tsx
+```

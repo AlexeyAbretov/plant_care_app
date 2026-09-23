@@ -1,8 +1,8 @@
+import { createPlant } from '@test/fixtures';
 import { describe, expect, it } from 'vitest';
 
 import type { PlantLocationKind, WateringClimate } from '@types';
 
-import { createPlant } from '../../../test/fixtures';
 import {
   calculateCareProgress,
   comparePlantsByWateringDue,

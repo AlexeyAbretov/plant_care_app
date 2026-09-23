@@ -1,9 +1,9 @@
+import { renderUi } from '@test/render';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { renderUi } from '../../../test/render';
 import { CategoryCloudDrawer } from '../CategoryCloudDrawer';
 
 const options = ['Алоэ', 'Пальмы'];

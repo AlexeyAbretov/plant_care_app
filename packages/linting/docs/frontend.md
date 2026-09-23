@@ -14,7 +14,7 @@ npm run sync-cursor
 node node_modules/@llm/linting/scripts/sync-cursor.js
 ```
 
-`globs` стори, типов, запрета API и запрета импорта контейнеров в `components/` ищут `components/`, `pages/`, `containers/` и `hooks/` на любой глубине. Стрелки и баррели действуют на любые `*.ts` и `*.tsx`. Каталог `apps/web` не требуется.
+`globs` стори, типов, имён и отдельных папок модулей ищут `components/`, `pages/`, `containers/`, `hooks/`, `api/`, `services/` и `providers/` на любой глубине. Там же — запрет API и запрет импорта контейнеров в `components/`. Стрелки и баррели действуют на любые `*.ts` и `*.tsx`. Каталог `apps/web` не требуется.
 
 ## Слои
 
@@ -30,6 +30,18 @@ node node_modules/@llm/linting/scripts/sync-cursor.js
 
 Баррель слоя — `index.ts` в корне каталога (`components/`, `utils/`, `services/`, `store/` и любого другого). У каждого подмодуля свой `index.ts`.
 
+## Имена
+
+Папка компонента, страницы и контейнера и файлы внутри неё начинаются с большой буквы. Имя папки совпадает с основным файлом: `Widget/Widget.tsx`, `EditPage/EditPage.tsx`, `SessionPanel/SessionPanel.tsx`. Так же называются `Widget.types.ts`, `Widget.utils.ts`, `Widget.css` и вложенный модуль той же папки.
+
+`index.ts`, `__stories__` и `__tests__` с большой буквы не называют.
+
+Каждая страница и каждый контейнер лежат в своей папке: `pages/EditPage/EditPage.tsx`, `containers/SessionPanel/SessionPanel.tsx`. Два таких модуля в одну папку не кладут, и файл не оставляют прямо в `pages/` или `containers/`.
+
+Компонент тоже лежит в своей папке: `components/Widget/Widget.tsx`. Частный модуль, который рисует только родитель, остаётся в папке родителя (`Widget/WidgetTrigger.tsx`) и в баррель `components/` не выходит.
+
+Хук, сервис, провайдер и API-клиент — тоже по одному на папку. API, сервис и провайдер называются с большой буквы: `PlantsApi/PlantsApi.ts`, `SessionService/SessionService.ts`, `WeatherProvider/WeatherProvider.tsx`. Хук — `use` со строчной и дальше большая буква: `useWeather/useWeather.ts`. Backend `apps/api` так не называют.
+
 ## Функции
 
 Именованные и экспортируемые функции — стрелочные в любом модуле (`utils`, `services`, `store`, компоненты). Вложенные обработчики — `const handleX = async () => {}`. Методы классов остаются методами.
@@ -38,16 +50,16 @@ node node_modules/@llm/linting/scripts/sync-cursor.js
 
 ## Импорты
 
-Алиасы (`tsconfig`, Vite): `@api`, `@components`, `@config`, `@containers`, `@hooks`, `@pages`, `@types`, `@utils` → соответствующие каталоги в `src/` (или `config.ts`).
+У каждой папки прямо в `src/` есть алиас `@<имя>` (`@api`, `@hooks`, `@services`, …). Корневой модуль `config.ts` — `@config`. Алиасы объявляют в `tsconfig` и в Vite.
 
-- Между корневыми каталогами `src` — только алиасы.
+- Между этими папками — только алиасы, не `../`.
 - Подмодуль снаружи его папки импортируют только через баррель — любой каталог, не только UI: `utils`, `providers`, `services`, `store` и остальные. Другой слой — алиас слоя (`@utils`, `@services`, …), не `@utils/date`. Сосед в том же слое — путь к папке (`../session`), это её `index.ts`, не внутренний файл.
 - Внутри папки — относительные `./`. Стори и тесты этой папки импортируют модуль относительно (`../Name`).
 - Относительные импорты без суффикса `.js`.
 
 ## Контейнеры
 
-`containers/Name/Name.tsx` + `index.ts`, публичный реэкспорт через `containers/index.ts`.
+Один контейнер — одна папка: `containers/Name/Name.tsx` + `index.ts`, публичный реэкспорт через `containers/index.ts`.
 
 Контейнер подключает хуки и передаёт пропсы в UI-компонент. `components/` не импортирует `@containers`. Контейнер передают снаружи через `children`, слот `ReactNode` (`headerExtra`) или render prop (`renderHeader`). Собирает его страница или корень приложения.
 

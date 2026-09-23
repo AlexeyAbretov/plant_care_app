@@ -1,0 +1,28 @@
+---
+description: Папки и файлы компонентов, страниц и контейнеров — с большой буквы
+globs: "**/{components,pages,containers}/**/*.{ts,tsx,css}"
+alwaysApply: false
+---
+
+# Имена компонентов, страниц и контейнеров
+
+Папка модуля и её файлы начинаются с большой буквы (PascalCase). Имя папки совпадает с основным файлом.
+
+- Компонент: `components/Widget/Widget.tsx`
+- Страница: `pages/EditPage/EditPage.tsx`
+- Контейнер: `containers/SessionPanel/SessionPanel.tsx`
+- Рядом с ним так же: `Widget.types.ts`, `Widget.utils.ts`, `Widget.css`. Вложенный модуль той же папки тоже с большой буквы (`WeatherTrigger.tsx`).
+
+`index.ts`, каталоги `__stories__` и `__tests__` с большой буквы не называют.
+
+```text
+// ❌ BAD
+components/widget/widget.tsx
+components/plant-card/plantCard.tsx
+
+// ✅ GOOD
+components/Widget/Widget.tsx
+components/Widget/Widget.types.ts
+pages/EditPage/EditPage.tsx
+containers/SessionPanel/SessionPanel.tsx
+```

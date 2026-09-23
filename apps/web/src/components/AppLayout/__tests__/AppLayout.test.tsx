@@ -1,9 +1,9 @@
+import { pathname, renderUi } from '@test/render';
 import { describe, expect, it } from 'vitest';
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { pathname, renderUi } from '../../../test/render';
 import { AppLayout } from '../AppLayout';
 
 describe('AppLayout', () => {

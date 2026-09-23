@@ -1,10 +1,10 @@
+import { createPlant, deferred } from '@test/fixtures';
+import { renderUi } from '@test/render';
 import { describe, expect, it, vi } from 'vitest';
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { createPlant, deferred } from '../../../test/fixtures';
-import { renderUi } from '../../../test/render';
 import { PlantCard } from '../PlantCard';
 
 const asyncNoop = (): Promise<void> => Promise.resolve();

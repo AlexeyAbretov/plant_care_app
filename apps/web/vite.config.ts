@@ -31,6 +31,7 @@ export default defineConfig(({ mode }) => {
         "@containers": path.resolve(srcDir, "containers"),
         "@hooks": path.resolve(srcDir, "hooks"),
         "@pages": path.resolve(srcDir, "pages"),
+        "@test": path.resolve(srcDir, "test"),
         "@types": path.resolve(srcDir, "types"),
         "@utils": path.resolve(srcDir, "utils"),
       },

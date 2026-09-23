@@ -1,6 +1,6 @@
+import { renderUi } from '@test/render';
 import { describe, expect, it } from 'vitest';
 
-import { renderUi } from '../../../test/render';
 import { CareProgressTrack } from '../CareProgressBar';
 
 describe('CareProgressTrack', () => {

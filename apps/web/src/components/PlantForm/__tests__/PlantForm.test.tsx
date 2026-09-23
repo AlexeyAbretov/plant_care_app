@@ -1,10 +1,10 @@
+import { renderUi } from '@test/render';
 import { Form } from 'antd';
 import { describe, expect, it, vi } from 'vitest';
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { renderUi } from '../../../test/render';
 import { PlantDateField } from '../PlantDateField';
 import { PlantForm } from '../PlantForm';
 

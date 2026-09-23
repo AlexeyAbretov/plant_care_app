@@ -1,10 +1,10 @@
+import { imageFile, quietMessage } from '@test/fixtures';
+import { renderUi } from '@test/render';
 import { message } from 'antd';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import userEvent from '@testing-library/user-event';
 
-import { imageFile, quietMessage } from '../../../test/fixtures';
-import { renderUi } from '../../../test/render';
 import { ImageUpload, MAX_IMAGE_SIZE_BYTES } from '../ImageUpload';
 
 const fileInput = (): HTMLInputElement => {

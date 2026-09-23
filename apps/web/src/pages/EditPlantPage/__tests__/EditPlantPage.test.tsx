@@ -1,3 +1,11 @@
+import {
+  createPlant,
+  deferred,
+  imageFile,
+  plantImage,
+  quietMessage,
+} from '@test/fixtures';
+import { pathname, renderUi } from '@test/render';
 import { message } from 'antd';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -6,14 +14,6 @@ import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Plant } from '@types';
 
-import {
-  createPlant,
-  deferred,
-  imageFile,
-  plantImage,
-  quietMessage,
-} from '../../../test/fixtures';
-import { pathname, renderUi } from '../../../test/render';
 import { EditPlantPage } from '../EditPlantPage';
 
 const api = vi.hoisted(() => ({

@@ -1,8 +1,8 @@
+import { renderUi } from '@test/render';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fireEvent, screen } from '@testing-library/react';
 
-import { renderUi } from '../../../test/render';
 import { RetryAlert } from '../RetryAlert';
 
 describe('RetryAlert', () => {

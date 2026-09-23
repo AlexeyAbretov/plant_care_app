@@ -1,17 +1,17 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-import { ApiError } from '@api';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-
 import {
   conditionResult,
   createPlant,
   deferred,
   imageFile,
   recognizeResult,
-} from '../../../test/fixtures';
-import { pathname, renderUi } from '../../../test/render';
+} from '@test/fixtures';
+import { pathname, renderUi } from '@test/render';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { ApiError } from '@api';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
 import { AddPage } from '../AddPage';
 
 const api = vi.hoisted(() => ({

@@ -1,10 +1,10 @@
+import { deferred } from '@test/fixtures';
+import { renderUi } from '@test/render';
 import { describe, expect, it, vi } from 'vitest';
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { deferred } from '../../../test/fixtures';
-import { renderUi } from '../../../test/render';
 import { DeletePlantButton } from '../DeletePlantButton';
 
 describe('DeletePlantButton', () => {

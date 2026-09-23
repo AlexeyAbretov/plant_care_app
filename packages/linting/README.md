@@ -48,7 +48,7 @@ export default createConfig({
 
 ### Frontend
 
-`createWebConfig` из `@llm/linting/web` — базовый конфиг плюс правила только для frontend: `func-style: expression`, `no-restricted-imports` (без `.js` в относительных путях; между корневыми каталогами `src` — алиасы `@api`, `@components`, `@containers`, `@hooks`, `@pages`, `@types`, `@utils`, `@config`) и `eslint-plugin-storybook` (`flat/recommended`). По умолчанию проверяет `src/**/*.ts` и `src/**/*.tsx`.
+`createWebConfig` из `@llm/linting/web` — базовый конфиг плюс правила только для frontend: `func-style: expression`, `no-restricted-imports` (без `.js` в относительных путях; у каждой папки в `src/` свой алиас, относительный путь к ней запрещён) и `eslint-plugin-storybook` (`flat/recommended`). Список папок читается из `src/` проекта. По умолчанию проверяет `src/**/*.ts` и `src/**/*.tsx`.
 
 ```js
 import { createWebConfig } from "@llm/linting/web";
@@ -103,4 +103,4 @@ node node_modules/@llm/linting/scripts/sync-cursor.js
 
 Команда копирует `cursor/` в `.cursor/rules/` и перезаписывает только эти файлы. Правила, которых нет в пакете, остаются на месте.
 
-Править общие правила в `packages/linting/cursor/`, затем снова запустить синхронизацию. Стори, типы, запрет API и запрет импорта контейнеров в `components/` ищут `components/`, `pages/`, `containers/` и `hooks/` на любой глубине. Стрелки (`frontend-functions.mdc`) и баррели (`module-barrels.mdc`) — любые `*.ts` и `*.tsx`. Шаблон слоёв — [docs/frontend.md](docs/frontend.md).
+Править общие правила в `packages/linting/cursor/`, затем снова запустить синхронизацию. Стори, типы, имена и отдельные папки модулей ищут `components/`, `pages/`, `containers/`, `hooks/`, `api/`, `services/` и `providers/` на любой глубине. Там же — запрет API и запрет импорта контейнеров в `components/`. Стрелки (`frontend-functions.mdc`) и баррели (`module-barrels.mdc`) — любые `*.ts` и `*.tsx`. Шаблон слоёв — [docs/frontend.md](docs/frontend.md).

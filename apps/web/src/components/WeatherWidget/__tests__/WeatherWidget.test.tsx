@@ -1,10 +1,10 @@
+import { weatherSnapshot } from '@test/fixtures';
+import { renderUi } from '@test/render';
 import { describe, expect, it, vi } from 'vitest';
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { weatherSnapshot } from '../../../test/fixtures';
-import { renderUi } from '../../../test/render';
 import { ForecastDayRow } from '../ForecastDayRow';
 import { WeatherPopoverContent } from '../WeatherPopoverContent';
 import { WeatherTrigger } from '../WeatherTrigger';
