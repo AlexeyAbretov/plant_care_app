@@ -1,0 +1,41 @@
+---
+description: Компоненты не вызывают хуки с данными — только пропсы
+globs: "**/components/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Хуки с данными вне компонентов
+
+`components/` не импортирует `@hooks` и не вызывает хук, который загружает или хранит данные приложения. Такой хук живёт в `hooks/` и вызывается из `pages/` или `containers/`. В компонент приходят пропсы. Это тот же запрет, что и на вызов API.
+
+Локальное состояние интерфейса в компоненте остаётся: `useState`, `useEffect`, `useRef`, `useMemo`, `useCallback`, а также хуки маршрута и темы (`useLocation`, `theme.useToken`).
+
+```tsx
+// ❌ BAD
+import { useSession } from '@hooks';
+
+export const SessionCard = () => {
+  const { loading, session } = useSession();
+
+  return <span>{session?.name}</span>;
+};
+
+// ✅ GOOD — данные приходят снаружи
+type SessionCardProps = {
+  loading: boolean;
+  name: string;
+};
+
+export const SessionCard = ({ loading, name }: SessionCardProps) => {
+  return <span>{loading ? '…' : name}</span>;
+};
+
+// ✅ GOOD — хук вызывает страница или контейнер
+import { useSession } from '@hooks';
+
+export const SessionPage = () => {
+  const { loading, session } = useSession();
+
+  return <SessionCard loading={loading} name={session.name} />;
+};
+```

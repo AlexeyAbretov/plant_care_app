@@ -1,0 +1,50 @@
+---
+description: dayjs только у DatePicker Ant Design, локаль через ConfigProvider
+globs: "**/{components,containers,hooks,pages,services,utils}/**/*.{ts,tsx},**/__stories__/**/*.{ts,tsx},**/src/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# dayjs
+
+`dayjs` — адаптер `DatePicker` из Ant Design. Календарь, сравнение и текст даты считают `Date` и `Intl`. Пакет отдельно не ставят: его приносит `antd`.
+
+- Импорт `dayjs` только в компоненте, который рисует `DatePicker`. Страницы, стори, хуки, сервисы, утилиты и контейнеры его не импортируют.
+- Наружу из поля уходит своя модель (строка `YYYY-MM-DD` или поля года, месяца и дня). Тип `Dayjs` из компонента не выходит. `dayjs(value)` и `date.format(...)` живут рядом с пикером.
+- Локаль UI задаёт `ConfigProvider`. Не вызывать `dayjs.locale` и не импортировать `dayjs/locale/*`.
+
+```tsx
+// ❌ BAD
+import 'dayjs/locale/ru';
+import dayjs from 'dayjs';
+
+dayjs.locale('ru');
+
+const today = dayjs().format('YYYY-MM-DD');
+
+// ✅ GOOD — календарь через Date и Intl
+import { todayIsoDate } from '@utils';
+
+const today = todayIsoDate();
+
+// ✅ GOOD — dayjs только у пикера, наружу строка
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+
+export const DateField = ({
+  onChange,
+  value,
+}: {
+  onChange?: (value: string) => void;
+  value?: string;
+}) => {
+  return (
+    <DatePicker
+      format="DD.MM.YYYY"
+      onChange={(date) => {
+        onChange?.(date === null ? '' : date.format('YYYY-MM-DD'));
+      }}
+      value={value ? dayjs(value) : null}
+    />
+  );
+};
+```

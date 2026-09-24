@@ -32,15 +32,15 @@ node node_modules/@llm/linting/scripts/sync-cursor.js
 
 ## Имена
 
-Папка компонента, страницы и контейнера и файлы внутри неё начинаются с большой буквы. Имя папки совпадает с основным файлом: `Widget/Widget.tsx`, `EditPage/EditPage.tsx`, `SessionPanel/SessionPanel.tsx`. Так же называются `Widget.types.ts`, `Widget.utils.ts`, `Widget.css` и вложенный модуль той же папки.
+Папка компонента, страницы и контейнера и файлы внутри неё начинаются с большой буквы. Имя папки совпадает с основным файлом: `Widget/Widget.tsx`, `EditPage/EditPage.tsx`, `SessionPanelContainer/SessionPanelContainer.tsx`. Так же называются `Widget.types.ts`, `Widget.utils.ts`, `Widget.css` и вложенный модуль той же папки.
 
 `index.ts`, `__stories__` и `__tests__` с большой буквы не называют.
 
-Каждая страница и каждый контейнер лежат в своей папке: `pages/EditPage/EditPage.tsx`, `containers/SessionPanel/SessionPanel.tsx`. Два таких модуля в одну папку не кладут, и файл не оставляют прямо в `pages/` или `containers/`.
+Каждая страница и каждый контейнер лежат в своей папке. Имя папки и основного файла заканчивается на роль: `pages/EditPage/EditPage.tsx`, `containers/SessionPanelContainer/SessionPanelContainer.tsx`. Два таких модуля в одну папку не кладут, и файл не оставляют прямо в `pages/` или `containers/`.
 
 Компонент тоже лежит в своей папке: `components/Widget/Widget.tsx`. Частный модуль, который рисует только родитель, остаётся в папке родителя (`Widget/WidgetTrigger.tsx`) и в баррель `components/` не выходит.
 
-Хук, сервис, провайдер и API-клиент — тоже по одному на папку. API, сервис и провайдер называются с большой буквы: `PlantsApi/PlantsApi.ts`, `SessionService/SessionService.ts`, `WeatherProvider/WeatherProvider.tsx`. Хук — `use` со строчной и дальше большая буква: `useWeather/useWeather.ts`. Backend `apps/api` так не называют.
+Хук, сервис, провайдер и API-клиент — тоже по одному на папку. Папка и основной файл заканчиваются на роль: `PlantsApi/PlantsApi.ts`, `SessionService/SessionService.ts`, `WeatherProvider/WeatherProvider.tsx`. Хук — `use` со строчной и дальше большая буква, без этого суффикса: `useWeather/useWeather.ts`. Backend `apps/api` так не называют.
 
 ## Функции
 
@@ -57,6 +57,12 @@ node node_modules/@llm/linting/scripts/sync-cursor.js
 - Внутри папки — относительные `./`. Файл с именем папки тоже: `src/types/index.ts` импортирует `./types`, это `types.ts`, не алиас `@types`. `./types` запрещён только из файла прямо в `src/` (`src/main.tsx`). Стори и тесты этой папки импортируют модуль относительно (`../Name`).
 - Относительные импорты без суффикса `.js`.
 
+## dayjs
+
+`dayjs` только в компоненте с `DatePicker` Ant Design. Отдельно пакет не ставят: его приносит `antd`. Календарная арифметика и текст даты — `Date` и `Intl`.
+
+Наружу из поля уходит своя модель, не `Dayjs`. Локаль UI задаёт `ConfigProvider`: без `dayjs.locale` и без `dayjs/locale/*`. Страницы, стори, хуки, сервисы, утилиты и контейнеры `dayjs` не импортируют.
+
 ## Контейнеры
 
 Один контейнер — одна папка: `containers/Name/Name.tsx` + `index.ts`, публичный реэкспорт через `containers/index.ts`.
@@ -70,6 +76,12 @@ node node_modules/@llm/linting/scripts/sync-cursor.js
 - действие — колбэк;
 - адрес картинки — готовая строка;
 - текст сбоя колбэка — `Error.message`, иначе своя заглушка.
+
+## Компоненты не вызывают хуки с данными
+
+`components/` не импортирует `@hooks`. Хук, который загружает или хранит данные приложения, вызывают `pages/` и `containers/` и передают результат пропсами. Это тот же запрет, что и на API.
+
+В компоненте остаются хуки интерфейса: `useState`, `useEffect`, `useRef`, `useMemo`, `useCallback`, `useLocation`, `theme.useToken`.
 
 ## Колокация
 

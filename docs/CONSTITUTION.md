@@ -79,7 +79,7 @@ apps/web/src/
 
 **Зависимости:**
 
-Не добавляй npm-пакет, если ту же задачу закрывает стандартная библиотека JavaScript (`Date`, `Intl`, `URL`, `fetch` и т. п.). Календарная арифметика и даты формы — через `Date` и `Intl` (`src/utils/date.ts`, баррель `@utils`), в форме дата хранится строкой `YYYY-MM-DD`. Локаль интерфейса, включая `DatePicker`, задаёт `ConfigProvider locale={ruRU}`. `dayjs` не импортировать в страницах и стори: у `DatePicker` Ant Design значение внутри — `Dayjs`, перевод в строку живёт рядом с полем. Пакет ставит `antd`.
+Не добавляй npm-пакет, если ту же задачу закрывает стандартная библиотека JavaScript (`Date`, `Intl`, `URL`, `fetch` и т. п.). Даты формы — строка `YYYY-MM-DD`, арифметика в `src/utils/date.ts` (баррель `@utils`). Локаль Ant Design — `ConfigProvider locale={ruRU}`. `dayjs` только у `DatePicker`, см. шаблон frontend.
 
 **Соглашения UI** (стрелки, алиасы, контейнеры, запрет API в `components/`, колокация `Name.utils.ts` / `Name.types.ts` / `Name.css`, Storybook, Vitest) — в [`packages/linting/docs/frontend.md`](../packages/linting/docs/frontend.md). Ниже — только этот проект.
 

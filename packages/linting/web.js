@@ -14,6 +14,40 @@ const barrelImportMessage =
 const extensionImportMessage =
   "Do not include a file extension in the import path.";
 
+const dayjsImportMessage =
+  "Import dayjs only beside an Ant Design DatePicker. Use Date and Intl elsewhere.";
+
+const dayjsLocaleMessage =
+  "Do not set a dayjs locale. The UI locale comes from ConfigProvider.";
+
+const dayjsLocaleRules = [
+  {
+    selector: "ImportDeclaration[source.value=/^dayjs\\/locale(\\/|$)/]",
+    message: dayjsLocaleMessage,
+  },
+  {
+    selector:
+      "CallExpression[callee.object.name='dayjs'][callee.property.name='locale']",
+    message: dayjsLocaleMessage,
+  },
+];
+
+const dayjsOutsidePickerFiles = [
+  "src/*.{ts,tsx}",
+  "src/**/{containers,hooks,pages,services,utils}/**/*.{ts,tsx}",
+  "src/**/__stories__/**/*.{ts,tsx}",
+];
+
+const dataHookImportMessage =
+  "Do not use data hooks in components. Call them from a page or container and pass props.";
+
+const dataHookImportRules = [
+  {
+    selector: "ImportDeclaration[source.value=/^@hooks(\\/|$)/]",
+    message: dataHookImportMessage,
+  },
+];
+
 /**
  * Directories in `src` plus root `*.ts` modules (`config.ts` → `config`).
  *
@@ -142,6 +176,49 @@ function createWebOverrides(files, rootDir) {
         "no-restricted-imports": restrictedImports(rootDir, {
           sameDirectory: true,
         }),
+      },
+    },
+    {
+      files: ["src/**/*.{ts,tsx}"],
+      rules: {
+        "no-restricted-syntax": ["error", ...dayjsLocaleRules],
+      },
+    },
+    {
+      files: dayjsOutsidePickerFiles,
+      rules: {
+        "no-restricted-syntax": [
+          "error",
+          {
+            selector: "ImportDeclaration[source.value='dayjs']",
+            message: dayjsImportMessage,
+          },
+          ...dayjsLocaleRules,
+        ],
+      },
+    },
+    {
+      files: ["src/**/components/**/*.{ts,tsx}"],
+      rules: {
+        "no-restricted-syntax": [
+          "error",
+          ...dayjsLocaleRules,
+          ...dataHookImportRules,
+        ],
+      },
+    },
+    {
+      files: ["src/**/components/**/__stories__/**/*.{ts,tsx}"],
+      rules: {
+        "no-restricted-syntax": [
+          "error",
+          {
+            selector: "ImportDeclaration[source.value='dayjs']",
+            message: dayjsImportMessage,
+          },
+          ...dayjsLocaleRules,
+          ...dataHookImportRules,
+        ],
       },
     },
   ];

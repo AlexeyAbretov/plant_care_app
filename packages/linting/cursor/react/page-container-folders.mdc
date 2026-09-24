@@ -8,18 +8,21 @@ alwaysApply: false
 
 У каждой страницы и каждого контейнера своя папка. В одной папке один такой модуль. Файл страницы или контейнера не кладут прямо в `pages/` или `containers/`.
 
+Имя папки и основного файла заканчивается на роль: страница — `Page`, контейнер — `Container`. Соседние файлы повторяют это имя: `EditPage.types.ts`.
+
 Рядом — `index.ts` этой папки. Общий баррель слоя (`pages/index.ts`, `containers/index.ts`) только реэкспортирует папки.
 
 ```text
-// ❌ BAD — файл слоя без своей папки или два модуля в одной
-pages/EditPage.tsx
+// ❌ BAD — файл без папки, без суффикса или два модуля в одной
+pages/Edit.tsx
+pages/Edit/Edit.tsx
 pages/catalog/ListPage.tsx
-pages/catalog/EditPage.tsx
-containers/SessionPanel.tsx
+containers/SessionPanel/SessionPanel.tsx
 
 // ✅ GOOD
 pages/EditPage/EditPage.tsx
+pages/EditPage/EditPage.types.ts
 pages/EditPage/index.ts
-containers/SessionPanel/SessionPanel.tsx
-containers/SessionPanel/index.ts
+containers/SessionPanelContainer/SessionPanelContainer.tsx
+containers/SessionPanelContainer/index.ts
 ```

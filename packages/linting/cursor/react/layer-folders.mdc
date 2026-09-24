@@ -8,19 +8,23 @@ alwaysApply: false
 
 Каждый хук, сервис, провайдер и API-клиент лежит в своей папке. Файл не кладут прямо в `hooks/`, `services/`, `providers/` или `api/`. Имя папки совпадает с основным файлом. Рядом — `index.ts` папки. Баррель слоя только реэкспортирует папки.
 
-Имя с большой буквы:
+Имя с большой буквы. Папка и основной файл заканчиваются на роль:
 
-- API, сервис, провайдер — PascalCase: `PlantsApi/PlantsApi.ts`, `SessionService/SessionService.ts`, `WeatherProvider/WeatherProvider.tsx`.
-- Хук — префикс `use` со строчной и дальше большая буква: `useWeather/useWeather.ts`. Не `UseWeather` и не `useweather`.
+- API — `Api`: `PlantsApi/PlantsApi.ts`
+- Сервис — `Service`: `SessionService/SessionService.ts`
+- Провайдер — `Provider`: `WeatherProvider/WeatherProvider.tsx`
+- Хук — префикс `use` со строчной и дальше большая буква, без суффикса роли: `useWeather/useWeather.ts`. Не `UseWeather` и не `useweather`.
+
+Соседние файлы повторяют это имя: `PlantsApi.types.ts`. Частный файл внутри папки суффикс роли не получает.
 
 `index.ts` и `__tests__` с большой буквы не называют. Каталог backend `apps/api` этим правилом не переименовывают.
 
 ```text
 // ❌ BAD
 hooks/useWeather.ts
-api/plantsApi.ts
-services/session.ts
-providers/weatherProvider.tsx
+api/Plants/Plants.ts
+services/Session/Session.ts
+providers/Weather/Weather.tsx
 
 // ✅ GOOD
 hooks/useWeather/useWeather.ts
