@@ -1,0 +1,39 @@
+---
+description: Снапшот теста уже проверяет текст, класс и разметку
+globs: "**/__tests__/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Снапшот вместо проверки разметки
+
+Если тест снимает снапшот, наличие текста, класса или разметки отдельно не проверяют. Снапшот это уже фиксирует. Не добавлять `toBeInTheDocument`, `toHaveTextContent` и `toHaveClass` в тот же тест.
+
+Элемент можно найти, чтобы нажать или ввести текст. Поведение проверяют отдельно: вызов колбэка, переход, возвращённое значение.
+
+```tsx
+// ❌ BAD
+it('рисует карточку', () => {
+  const view = renderUi(<Card title="Монстера" />);
+
+  expect(view.container).toMatchSnapshot();
+  expect(screen.getByText('Монстера')).toBeInTheDocument();
+  expect(screen.getByRole('button')).toHaveClass('ant-btn');
+});
+
+// ✅ GOOD — вид фиксирует снапшот
+it('рисует карточку', () => {
+  const view = renderUi(<Card title="Монстера" />);
+
+  expect(view.container).toMatchSnapshot();
+});
+
+// ✅ GOOD — клик и поведение рядом со снапшотом
+it('удаляет по кнопке', async () => {
+  const onDelete = vi.fn();
+  const view = renderUi(<Card onDelete={onDelete} />);
+
+  expect(view.container).toMatchSnapshot();
+  await user.click(screen.getByRole('button', { name: 'Удалить' }));
+  expect(onDelete).toHaveBeenCalledOnce();
+});
+```
