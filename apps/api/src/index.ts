@@ -22,6 +22,7 @@ async function main(): Promise<void> {
   app.listen(config.port, () => {
     console.log(`API: http://localhost:${config.port}`);
     console.log(`LLM: ${config.llmProvider} (${activeLlmModel()})`);
+    console.log(`LLM log: ${config.llmLogDir}`);
   });
 }
 

@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootEnv = path.resolve(__dirname, '../../../.env');
+const repoRoot = path.resolve(__dirname, '../../..');
+const rootEnv = path.join(repoRoot, '.env');
 const localEnv = path.resolve(__dirname, '../.env');
 
 dotenv.config({ path: rootEnv, override: true });
@@ -19,6 +20,16 @@ function readEnv(name: string, fallback = ''): string {
 
 function readLlmProvider(): string {
   return readEnv('LLM_PROVIDER', 'ollama').toLowerCase();
+}
+
+function readLlmLogDir(): string {
+  const configured = readEnv('LLM_LOG_DIR', 'logs/llm');
+
+  if (path.isAbsolute(configured)) {
+    return configured;
+  }
+
+  return path.resolve(repoRoot, configured);
 }
 
 function readTimeoutMs(): number {
@@ -39,5 +50,6 @@ export const config = {
   llmApiKey: readEnv('LLM_API_KEY'),
   llmModel: readEnv('LLM_MODEL'),
   llmBaseUrl: readEnv('LLM_BASE_URL').replace(/\/$/, ''),
+  llmLogDir: readLlmLogDir(),
   weatherDefaultCity: process.env.WEATHER_DEFAULT_CITY ?? 'Москва',
 };

@@ -1,5 +1,6 @@
 import { LlmTimeoutError, LlmUnavailableError } from './llm.errors.js';
-import type { ChatWithImageOptions } from './llm.types.js';
+import { parseToolArguments, toFunctionTools } from './llm.protocol.js';
+import type { ChatRound, ChatRoundOptions, ToolCall } from './llm.types.js';
 
 import { config } from '../config.js';
 
@@ -17,13 +18,24 @@ export class OllamaTimeoutError extends LlmTimeoutError {
   }
 }
 
-interface OllamaChatResponse {
-  message?: {
-    content?: string;
+interface OllamaToolCall {
+  function?: {
+    name?: string;
+    arguments?: unknown;
   };
 }
 
-export async function chat(options: ChatWithImageOptions): Promise<string> {
+interface OllamaMessage {
+  role?: string;
+  content?: string;
+  tool_calls?: OllamaToolCall[];
+}
+
+interface OllamaChatResponse {
+  message?: OllamaMessage;
+}
+
+export async function chat(options: ChatRoundOptions): Promise<ChatRound> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => {
     controller.abort();
@@ -33,19 +45,7 @@ export async function chat(options: ChatWithImageOptions): Promise<string> {
     const response = await fetch(`${config.llmBaseUrl}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: config.llmModel,
-        stream: false,
-        format: 'json',
-        messages: [
-          { role: 'system', content: options.systemPrompt },
-          {
-            role: 'user',
-            content: options.userPrompt,
-            images: [options.imageBase64],
-          },
-        ],
-      }),
+      body: JSON.stringify(ollamaBody(options)),
       signal: controller.signal,
     });
 
@@ -54,13 +54,8 @@ export async function chat(options: ChatWithImageOptions): Promise<string> {
     }
 
     const data = (await response.json()) as OllamaChatResponse;
-    const content = data.message?.content?.trim();
 
-    if (!content) {
-      throw new OllamaUnavailableError('Пустой ответ Ollama');
-    }
-
-    return content;
+    return readOllamaRound(data.message);
   } catch (error: unknown) {
     if (error instanceof LlmUnavailableError) {
       throw error;
@@ -90,4 +85,83 @@ export async function checkHealth(): Promise<'ok' | 'unavailable'> {
   } catch {
     return 'unavailable';
   }
+}
+
+function ollamaBody(options: ChatRoundOptions): Record<string, unknown> {
+  const tools = options.tools ?? [];
+  const body: Record<string, unknown> = {
+    model: config.llmModel,
+    stream: false,
+    messages: ollamaMessages(options),
+  };
+
+  if (tools.length === 0) {
+    body.format = 'json';
+
+    return body;
+  }
+
+  body.tools = toFunctionTools(tools);
+
+  return body;
+}
+
+function ollamaMessages(options: ChatRoundOptions): unknown[] {
+  const messages: unknown[] = [
+    { role: 'system', content: options.systemPrompt },
+    {
+      role: 'user',
+      content: options.userPrompt,
+      images: [options.imageBase64],
+    },
+  ];
+
+  for (const turn of options.turns ?? []) {
+    if (turn.role === 'assistant') {
+      messages.push(turn.message);
+      continue;
+    }
+
+    messages.push({
+      role: 'tool',
+      tool_name: turn.name,
+      content: turn.content,
+    });
+  }
+
+  return messages;
+}
+
+function readOllamaRound(message: OllamaMessage | undefined): ChatRound {
+  const rawCalls = message?.tool_calls ?? [];
+
+  if (rawCalls.length > 0) {
+    return {
+      kind: 'tool_calls',
+      calls: rawCalls.map(readOllamaCall),
+      message,
+    };
+  }
+
+  const content = message?.content?.trim() ?? '';
+
+  if (content === '') {
+    throw new OllamaUnavailableError('Пустой ответ Ollama');
+  }
+
+  return { kind: 'text', content };
+}
+
+function readOllamaCall(raw: OllamaToolCall): ToolCall {
+  const name = raw.function?.name?.trim() ?? '';
+
+  if (name === '') {
+    throw new OllamaUnavailableError('Модель вернула вызов без имени');
+  }
+
+  return {
+    id: crypto.randomUUID(),
+    name,
+    arguments: parseToolArguments(raw.function?.arguments),
+  };
 }

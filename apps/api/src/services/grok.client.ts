@@ -1,17 +1,21 @@
 import { LlmTimeoutError, LlmUnavailableError } from './llm.errors.js';
-import type { ChatWithImageOptions } from './llm.types.js';
+import {
+  type OpenAiAssistantMessage,
+  openAiBodyExtras,
+  openAiMessages,
+  readOpenAiRound,
+} from './llm.protocol.js';
+import type { ChatRound, ChatRoundOptions } from './llm.types.js';
 
 import { config } from '../config.js';
 
 interface GrokChatResponse {
   choices?: Array<{
-    message?: {
-      content?: string | null;
-    };
+    message?: OpenAiAssistantMessage;
   }>;
 }
 
-export async function chat(options: ChatWithImageOptions): Promise<string> {
+export async function chat(options: ChatRoundOptions): Promise<ChatRound> {
   if (!config.llmApiKey) {
     throw new LlmUnavailableError('Не задан LLM_API_KEY');
   }
@@ -31,20 +35,8 @@ export async function chat(options: ChatWithImageOptions): Promise<string> {
       },
       body: JSON.stringify({
         model: config.llmModel,
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: options.systemPrompt },
-          {
-            role: 'user',
-            content: [
-              { type: 'text', text: options.userPrompt },
-              {
-                type: 'image_url',
-                image_url: { url: imageUrl },
-              },
-            ],
-          },
-        ],
+        messages: openAiMessages(options, imageUrl),
+        ...openAiBodyExtras(options.tools),
       }),
       signal: controller.signal,
     });
@@ -54,13 +46,8 @@ export async function chat(options: ChatWithImageOptions): Promise<string> {
     }
 
     const data = (await response.json()) as GrokChatResponse;
-    const content = data.choices?.[0]?.message?.content?.trim();
 
-    if (!content) {
-      throw new LlmUnavailableError('Пустой ответ Grok');
-    }
-
-    return content;
+    return readOpenAiRound(data.choices?.[0]?.message, 'Пустой ответ Grok');
   } catch (error: unknown) {
     if (error instanceof LlmUnavailableError) {
       throw error;

@@ -12,3 +12,4 @@ dev-dist
 *storybook.log
 storybook-static
 coverage
+logs
