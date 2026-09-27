@@ -50,7 +50,12 @@ export async function chat(options: ChatRoundOptions): Promise<ChatRound> {
     });
 
     if (!response.ok) {
-      throw new OllamaUnavailableError();
+      const detail = await readOllamaError(response);
+      const suffix = detail ? `: ${detail}` : '';
+
+      throw new OllamaUnavailableError(
+        `Ollama недоступен (${response.status})${suffix}`,
+      );
     }
 
     const data = (await response.json()) as OllamaChatResponse;
@@ -65,7 +70,10 @@ export async function chat(options: ChatRoundOptions): Promise<ChatRound> {
       throw new OllamaTimeoutError();
     }
 
-    throw new OllamaUnavailableError();
+    const detail = error instanceof Error ? error.message.trim() : '';
+    const suffix = detail ? `: ${detail.slice(0, 180)}` : '';
+
+    throw new OllamaUnavailableError(`Ollama недоступен${suffix}`);
   } finally {
     clearTimeout(timeoutId);
   }
@@ -85,6 +93,21 @@ export async function checkHealth(): Promise<'ok' | 'unavailable'> {
   } catch {
     return 'unavailable';
   }
+}
+
+async function readOllamaError(response: Response): Promise<string> {
+  try {
+    const data = (await response.json()) as { error?: unknown };
+    const message = typeof data.error === 'string' ? data.error.trim() : '';
+
+    if (message !== '') {
+      return message.slice(0, 180);
+    }
+  } catch {
+    return '';
+  }
+
+  return '';
 }
 
 function ollamaBody(options: ChatRoundOptions): Record<string, unknown> {

@@ -119,14 +119,21 @@ export async function chatWithTools(
   try {
     const client = await loadClient();
     const turns: LlmTurn[] = [];
+    const toolResults: string[] = [];
 
     for (let round = 0; round < MAX_TOOL_ROUNDS; round += 1) {
       const result = await client.chat(roundOptions(options, turns));
 
       if (result.kind === 'text') {
-        events.push({ kind: 'assistant', content: result.content });
+        const content = await reviseAnswer(
+          options,
+          result.content,
+          toolResults,
+        );
 
-        return result.content;
+        events.push({ kind: 'assistant', content });
+
+        return content;
       }
 
       events.push({ kind: 'tool_calls', calls: result.calls });
@@ -146,6 +153,7 @@ export async function chatWithTools(
       for (const call of result.calls) {
         const content = await options.executeTool(call);
 
+        toolResults.push(content);
         events.push({
           kind: 'tool_result',
           name: call.name,
@@ -168,6 +176,18 @@ export async function chatWithTools(
   } finally {
     await writeLlmChatLog(logInput(options, events, options.tools));
   }
+}
+
+async function reviseAnswer(
+  options: ChatWithToolsOptions,
+  content: string,
+  toolResults: string[],
+): Promise<string> {
+  if (options.reviseAnswer === undefined) {
+    return content;
+  }
+
+  return options.reviseAnswer(content, toolResults);
 }
 
 function logInput(

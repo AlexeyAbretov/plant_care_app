@@ -43,6 +43,8 @@ cp .env.example .env
 | API | `LLM_API_KEY` | — (для Ollama не нужен) |
 | API | `LLM_MODEL` | `qwen2.5vl:7b` в `.env.example` |
 | API | `LLM_BASE_URL` | `http://localhost:11434` в `.env.example` |
+| API | `LLM_LOG_DIR` | `logs/llm` — отдельный файл на каждый чат |
+| API | `PERENUAL_API_KEY` | — (описание вида при распознавании) |
 | API | `WEATHER_DEFAULT_CITY` | `Москва` |
 | Web | `WEB_PORT` | `5173` |
 | Web | `VITE_API_BASE_URL` | `http://localhost:3001` |

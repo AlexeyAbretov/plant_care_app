@@ -51,5 +51,6 @@ export const config = {
   llmModel: readEnv('LLM_MODEL'),
   llmBaseUrl: readEnv('LLM_BASE_URL').replace(/\/$/, ''),
   llmLogDir: readLlmLogDir(),
+  perenualApiKey: readEnv('PERENUAL_API_KEY'),
   weatherDefaultCity: process.env.WEATHER_DEFAULT_CITY ?? 'Москва',
 };

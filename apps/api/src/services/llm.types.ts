@@ -38,6 +38,7 @@ export type ChatRound =
 export interface ChatWithToolsOptions extends ChatWithImageOptions {
   tools: LlmTool[];
   executeTool: (call: ToolCall) => Promise<string>;
+  reviseAnswer?: (content: string, toolResults: string[]) => Promise<string>;
 }
 
 export interface LlmClient {
