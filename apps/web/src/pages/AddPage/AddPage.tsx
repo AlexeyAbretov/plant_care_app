@@ -53,6 +53,7 @@ export const AddPage = (): React.JSX.Element => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [recognizeError, setRecognizeError] = useState<string | null>(null);
+  const [recognized, setRecognized] = useState(false);
   const [recognizeWithName, setRecognizeWithName] = useState(false);
   const [isRecognizing, setIsRecognizing] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -89,6 +90,7 @@ export const AddPage = (): React.JSX.Element => {
       const result = await plantsApi.recognize(file);
 
       form.setFieldsValue(mapRecognizeToFormValues(result));
+      setRecognized(true);
       setStep('form');
     } catch (error: unknown) {
       const errorMessage =
@@ -98,6 +100,7 @@ export const AddPage = (): React.JSX.Element => {
 
       setRecognizeError(errorMessage);
       form.setFieldsValue(getDefaultFormValues());
+      setRecognized(true);
       setStep('form');
     }
   };
@@ -119,6 +122,7 @@ export const AddPage = (): React.JSX.Element => {
         lastWateredAt: current.lastWateredAt || todayIsoDate(),
         locationKind: current.locationKind ?? 'indoor',
       });
+      setRecognized(true);
     } catch (error: unknown) {
       const errorMessage =
         error instanceof ApiError
@@ -126,6 +130,7 @@ export const AddPage = (): React.JSX.Element => {
           : 'Не удалось распознать растение';
 
       setRecognizeError(errorMessage);
+      setRecognized(true);
     } finally {
       setIsRecognizing(false);
     }
@@ -155,6 +160,17 @@ export const AddPage = (): React.JSX.Element => {
 
   const isBusy = step === 'recognizing' || step === 'saving' || isRecognizing;
   const formLocked = step === 'saving' || isRecognizing;
+  const formImage =
+    imageFile !== null && (step === 'form' || step === 'saving')
+      ? imageFile
+      : null;
+
+  const chooseAnotherPhoto = (): void => {
+    setRecognized(false);
+    setRecognizeError(null);
+    setSaveError(null);
+    setStep('upload');
+  };
 
   return (
     <Spin
@@ -173,6 +189,12 @@ export const AddPage = (): React.JSX.Element => {
           previewOriginalUrl={previewUrl}
           previewUrl={previewUrl}
         />
+
+        {recognized && formImage !== null ? (
+          <Button disabled={formLocked} onClick={chooseAnotherPhoto}>
+            Выбрать другое фото
+          </Button>
+        ) : null}
 
         {step === 'upload' ? (
           <Space wrap>
@@ -195,7 +217,7 @@ export const AddPage = (): React.JSX.Element => {
           </Space>
         ) : null}
 
-        {imageFile !== null && (step === 'form' || step === 'saving') ? (
+        {formImage !== null ? (
           <>
             {recognizeError !== null ? (
               <RetryAlert
@@ -209,12 +231,12 @@ export const AddPage = (): React.JSX.Element => {
                 }}
                 onRetry={() => {
                   if (recognizeWithName) {
-                    void recognizeByName(imageFile);
+                    void recognizeByName(formImage);
 
                     return;
                   }
 
-                  void handleRecognize(imageFile);
+                  void handleRecognize(formImage);
                 }}
                 retryDisabled={step === 'saving'}
                 showIcon
@@ -243,13 +265,13 @@ export const AddPage = (): React.JSX.Element => {
               form={form}
               layout="vertical"
               onFinish={(values) => {
-                void handleSubmit(imageFile, values);
+                void handleSubmit(formImage, values);
               }}
             >
               <PlantForm
                 disabled={formLocked}
                 onRecognize={() => {
-                  void recognizeByName(imageFile);
+                  void recognizeByName(formImage);
                 }}
                 recognizeLoading={isRecognizing}
               />
@@ -263,17 +285,10 @@ export const AddPage = (): React.JSX.Element => {
                   Сохранить
                 </Button>
                 <PlantConditionButton
-                  assess={() => plantsApi.assessCondition(imageFile)}
+                  assess={() => plantsApi.assessCondition(formImage)}
                   disabled={formLocked}
                 />
-                <Button
-                  disabled={formLocked}
-                  onClick={() => {
-                    setStep('upload');
-                    setRecognizeError(null);
-                    setSaveError(null);
-                  }}
-                >
+                <Button disabled={formLocked} onClick={chooseAnotherPhoto}>
                   Выбрать другое фото
                 </Button>
               </Space>

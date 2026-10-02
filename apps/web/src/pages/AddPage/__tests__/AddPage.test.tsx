@@ -104,10 +104,16 @@ describe('AddPage', () => {
     expect(close).toBeInstanceOf(HTMLElement);
     await user.click(close as HTMLElement);
 
-    await user.click(
-      screen.getByRole('button', { name: 'Выбрать другое фото' }),
-    );
+    const changePhoto = screen.getAllByRole('button', {
+      name: 'Выбрать другое фото',
+    });
+
+    expect(changePhoto).toHaveLength(2);
+    await user.click(changePhoto[0]);
     await user.click(screen.getByRole('button', { name: 'Заполнить вручную' }));
+    expect(
+      screen.getAllByRole('button', { name: 'Выбрать другое фото' }),
+    ).toHaveLength(1);
     expect(screen.getByRole('button', { name: 'Сохранить' })).toBeTruthy();
   });
 
@@ -152,6 +158,9 @@ describe('AddPage', () => {
     const recognize = screen.getByRole('button', { name: 'Распознать' });
 
     expect(recognize).toBeDisabled();
+    expect(
+      screen.getAllByRole('button', { name: 'Выбрать другое фото' }),
+    ).toHaveLength(1);
 
     await user.click(screen.getByRole('radio', { name: 'На улице / балконе' }));
     await user.click(screen.getAllByPlaceholderText('Выберите дату')[0]);
@@ -171,6 +180,9 @@ describe('AddPage', () => {
       screen.getByRole('radio', { name: 'На улице / балконе' }),
     ).toBeChecked();
     expect(api.recognize).toHaveBeenCalledWith(expect.any(File), 'Монстера');
+    expect(
+      screen.getAllByRole('button', { name: 'Выбрать другое фото' }),
+    ).toHaveLength(2);
   });
 
   it('оставляет поля, если распознавание по имени не удалось', async () => {
