@@ -9,7 +9,7 @@ Monorepo для учёта домашних растений: загрузка �
 - **Frontend:** React, TypeScript, Vite, Ant Design (`ru_RU`)
 - **Backend:** Node.js, TypeScript, Express
 - **БД:** MongoDB (+ GridFS для изображений)
-- **LLM:** провайдер из `LLM_PROVIDER` (`ollama`, `openai`, `google`, `grok`). По умолчанию Ollama `qwen2.5vl:7b`
+- **LLM:** провайдер из `LLM_PROVIDER` (`ollama`, `openai`, `google`, `grok`). По умолчанию Ollama `qwen3-vl:8b-instruct` (`qwen2.5vl` инструменты не вызывает)
 
 ## Требования
 
@@ -18,7 +18,7 @@ Monorepo для учёта домашних растений: загрузка �
 - Ollama — локальный провайдер по умолчанию (`LLM_PROVIDER=ollama`):
 
 ```bash
-ollama pull qwen2.5vl:7b
+ollama pull qwen3-vl:8b-instruct
 ```
 
 Облачные провайдеры (`openai`, `google`, `grok`) задаются тем же `LLM_PROVIDER` и переменными `LLM_API_KEY`, `LLM_MODEL`, `LLM_BASE_URL`.
@@ -75,18 +75,22 @@ cp .env.example .env
 | `LLM_PROVIDER` | API | `ollama` (`ollama`, `openai`, `google`, `grok` — файл `services/<имя>.client.ts`) |
 | `LLM_TIMEOUT_MS` | API | `120000` |
 | `LLM_API_KEY` | API | — (для Ollama не нужен) |
-| `LLM_MODEL` | API | `qwen2.5vl:7b` в `.env.example` |
+| `LLM_MODEL` | API | `qwen3-vl:8b-instruct` в `.env.example` |
 | `LLM_BASE_URL` | API | `http://localhost:11434` в `.env.example` |
+| `LLM_LOG_DIR` | API | `logs/llm` — отдельный файл на каждый чат |
+| `PERENUAL_API_KEY` | API | — (описание вида при распознавании) |
 | `WEATHER_DEFAULT_CITY` | API | `Москва` |
 | `VITE_API_BASE_URL` | Web | `http://localhost:3001` |
 
 При смене `MONGO_PORT` обновите также порт в `MONGODB_URI`.
 
-## Lint и сборка
+## Lint, тесты и сборка
 
 ```bash
 npm run lint
+npm test
 npm run build
+npm run storybook
 ```
 
 Общие ESLint, Prettier, правила Cursor и шаблон frontend — пакет [`packages/linting`](packages/linting/README.md) (`@llm/linting`). Его можно поставить в другой репозиторий. Домен этого приложения (растения, погода, маршруты, env) — в [docs/CONSTITUTION.md](docs/CONSTITUTION.md) и [AGENTS.md](AGENTS.md).

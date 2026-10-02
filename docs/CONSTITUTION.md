@@ -8,7 +8,7 @@
 | Backend | Node.js ≥ 22, TypeScript, Express |
 | База данных | MongoDB (dev — Docker Compose) |
 | Файлы изображений | MongoDB GridFS |
-| LLM | Ollama, ChatGPT, Gemma или Grok (`LLM_PROVIDER`, server-side, без выбора в UI) |
+| LLM | `LLM_PROVIDER`: `ollama`, `openai`, `google` (Gemma), `grok`. Server-side, без выбора в UI |
 | Lint | ESLint 9 + Prettier, правила Cursor и шаблон frontend — `@llm/linting` (`packages/linting`) |
 
 ## Архитектура
@@ -18,7 +18,7 @@
     ↓ REST API
 Backend (Express)
     ↓                    ↓
-MongoDB (+ GridFS)    Ollama, ChatGPT, Gemma или Grok
+MongoDB (+ GridFS)    ollama, openai, google (Gemma), grok
 ```
 
 - Frontend обращается только к backend REST API.
@@ -34,8 +34,8 @@ MongoDB (+ GridFS)    Ollama, ChatGPT, Gemma или Grok
 | `pages/` | Экраны маршрутов: каталог, добавление, редактирование |
 | `components/` | Переиспользуемый UI, папка на компонент (`AppLayout`, `PlantCard`, `WeatherWidget`, …) |
 | `containers/` | Контейнеры: данные и хуки, без собственной вёрстки (`WeatherWidgetContainer`) |
-| `api/` | HTTP-клиент (`ApiClient.ts`) и REST (`PlantsApi.ts`) |
-| `hooks/` | React-хуки (например, `usePlantsCatalog`) |
+| `api/` | Папка на клиент: `ApiClient`, `PlantsApi`, `WeatherApi` |
+| `hooks/` | `usePlantsCatalog`, `useWeather` (`WeatherProvider`) |
 | `types/` | Общие TypeScript-типы (модель растения и т. п.) |
 | `config.ts` | Конфигурация из `import.meta.env` |
 
@@ -45,17 +45,23 @@ MongoDB (+ GridFS)    Ollama, ChatGPT, Gemma или Grok
 apps/web/src/
 ├── App.tsx, main.tsx
 ├── api/
+│   ├── ApiClient/
+│   ├── PlantsApi/
+│   └── WeatherApi/
 ├── components/
 │   ├── index.ts          # публичный баррель UI
 │   ├── AppLayout/
 │   ├── PlantCard/
 │   ├── PlantForm/
+│   ├── PlantImageGallery/
 │   ├── WeatherWidget/
 │   └── …                 # папка на компонент, вход — её index.ts
 ├── containers/
 │   ├── index.ts          # публичный баррель контейнеров
 │   └── WeatherWidgetContainer/
 ├── hooks/
+│   ├── usePlantsCatalog/
+│   └── useWeather/
 ├── pages/
 │   ├── index.ts
 │   ├── CatalogPage/
@@ -103,9 +109,12 @@ MVP **закрыт**: этапы 0–6 выполнены, см. [MVP_PLAN.md](M
 **В scope:**
 
 - UI только на русском языке
-- Загрузка фото, генерация превью 128×128
-- Распознавание через настроенную LLM (Ollama, ChatGPT, Gemma или Grok): название, описание, параметры, уход, категория
+- Галерея до 20 фото, превью 128×128, фото по умолчанию на плитке каталога
+- Распознавание через `LLM_PROVIDER` (`ollama`, `openai`, `google`, `grok`): название, описание, освещение, размер, уход, интервалы, категория. Поле `name` — подсказка вида
+- Описание вида при распознавании может браться из каталога Perenual (`PERENUAL_API_KEY`)
+- Оценка состояния по фото, без сохранения в БД
 - Интервалы полива/подкормки: LLM предлагает, пользователь может уточнить
+- Эффективный интервал полива с учётом места (`indoor` / `outdoor`) и прогноза на 7 дней
 - Категория — произвольная строка с возможностью правки
 - Даты последнего полива/подкормки (по умолчанию «сегодня»)
 - Каталог с прогресс-барами, сортировкой и фильтром по категории
@@ -132,8 +141,10 @@ Dev-окружение настраивается **одним** файлом `.
 | `LLM_PROVIDER` | `ollama` | Клиент `services/<имя>.client.ts`: `ollama`, `openai`, `google`, `grok` |
 | `LLM_TIMEOUT_MS` | `120000` | Таймаут запроса к модели |
 | `LLM_API_KEY` | — | Ключ облачной модели. Для Ollama не нужен |
-| `LLM_MODEL` | — | Имя модели. В `.env.example` для Ollama: `qwen2.5vl:7b` |
+| `LLM_MODEL` | — | Имя модели. В `.env.example` для Ollama: `qwen3-vl:8b-instruct`. `qwen2.5vl` инструменты не вызывает |
 | `LLM_BASE_URL` | — | Базовый URL. В `.env.example` для Ollama: `http://localhost:11434` |
+| `LLM_LOG_DIR` | `logs/llm` | Журнал чатов с LLM, отдельный файл на каждый чат. Путь от корня репозитория |
+| `PERENUAL_API_KEY` | — | Ключ каталога видов. Без него описание при распознавании пишет модель |
 | `WEATHER_DEFAULT_CITY` | `Москва` | Город по умолчанию для прогноза |
 
 ### Frontend (`apps/web`)
@@ -215,6 +226,9 @@ effectiveDays = clamp(
 
 ## Изображения
 
-- Максимальный размер загружаемого файла: **5 МБ**
-- Превью для каталога: **128×128** px
+- Максимальный размер одного файла: **5 МБ**
+- Не больше **20** изображений на растение
+- Превью: **128×128** px
 - Хранение: **GridFS** в MongoDB
+- На плитке каталога — фото по умолчанию или последнее загруженное. В превью плитки можно листать все фото
+- `PATCH /api/plants/:id` поля ухода меняет, фото — отдельные маршруты (`POST /api/plants/:id/images`, удаление, `PATCH /api/plants/:id/default-image`)

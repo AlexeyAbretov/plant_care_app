@@ -4,7 +4,7 @@
 
 - **Node.js** ≥ 22
 - **Docker** — для MongoDB в dev (`docker compose`); на Windows Docker Desktop должен быть **запущен** до `npm run dev`
-- **Ollama** — локальный провайдер по умолчанию (`LLM_PROVIDER=ollama`), модель: `ollama pull qwen2.5vl:7b`. Альтернативы: `openai`, `google`, `grok` (нужен `LLM_API_KEY`)
+- **Ollama** — локальный провайдер по умолчанию (`LLM_PROVIDER=ollama`), модель: `ollama pull qwen3-vl:8b-instruct` (`qwen2.5vl` инструменты не вызывает). Альтернативы: `openai`, `google`, `grok` (нужен `LLM_API_KEY`)
 - **@llm/linting** — общий ESLint, Prettier, правила Cursor и шаблон frontend (`packages/linting`, см. [README](packages/linting/README.md))
 
 ## Установка
@@ -41,7 +41,7 @@ cp .env.example .env
 | API | `LLM_PROVIDER` | `ollama` (`ollama`, `openai`, `google`, `grok` — файл `services/<имя>.client.ts`) |
 | API | `LLM_TIMEOUT_MS` | `120000` |
 | API | `LLM_API_KEY` | — (для Ollama не нужен) |
-| API | `LLM_MODEL` | `qwen2.5vl:7b` в `.env.example` |
+| API | `LLM_MODEL` | `qwen3-vl:8b-instruct` в `.env.example` |
 | API | `LLM_BASE_URL` | `http://localhost:11434` в `.env.example` |
 | API | `LLM_LOG_DIR` | `logs/llm` — отдельный файл на каждый чат |
 | API | `PERENUAL_API_KEY` | — (описание вида при распознавании) |
@@ -67,13 +67,13 @@ docs/            — CONSTITUTION, MVP_PLAN
 pages/       — CatalogPage, AddPage, EditPlantPage
 components/  — папка на компонент (AppLayout, PlantCard, WeatherWidget, …)
 containers/  — WeatherWidgetContainer
-api/         — ApiClient, PlantsApi
+api/         — ApiClient, PlantsApi, WeatherApi
 hooks/       — usePlantsCatalog, useWeather
 types/       — модель растения, погода
 App.tsx      — маршруты /, /add, /plants/:id/edit; WeatherProvider; `headerExtra` в AppLayout
 ```
 
-## API (этап 2)
+## API
 
 Проверка LLM (провайдер из `LLM_PROVIDER`):
 
@@ -81,23 +81,35 @@ App.tsx      — маршруты /, /add, /plants/:id/edit; WeatherProvider; `h
 curl http://localhost:3001/api/health/llm
 ```
 
-Распознавание растения по фото (нужны запущенные API и настроенный провайдер из `LLM_PROVIDER`; для Ollama — модель `qwen2.5vl:7b` из `.env.example`):
+Распознавание растения по фото (нужны запущенные API и настроенный провайдер из `LLM_PROVIDER`; для Ollama — модель `qwen3-vl:8b-instruct` из `.env.example`, она умеет вызывать инструменты). Поле `name` — необязательная подсказка вида. Если задан `PERENUAL_API_KEY`, модель запрашивает описание в каталоге Perenual:
 
 ```bash
 curl -X POST http://localhost:3001/api/plants/recognize \
-  -F "image=@/path/to/plant.jpg"
+  -F "image=@/path/to/plant.jpg" \
+  -F "name=Monstera deliciosa"
 ```
 
 Оценка состояния растения по фото:
 
 ```bash
-# загруженный файл (форма добавления / новое фото при редактировании)
+# загруженный файл (форма добавления)
 curl -X POST http://localhost:3001/api/plants/assess-condition \
   -F "image=@/path/to/plant.jpg"
 
-# сохранённое растение — оригинал из GridFS
+# сохранённое растение — обложка из GridFS
 curl -X POST http://localhost:3001/api/plants/<plant-id>/assess-condition
+
+# конкретный снимок галереи
+curl -X POST http://localhost:3001/api/plants/<plant-id>/images/<image-id>/assess-condition
 ```
+
+Погода (город по умолчанию — `WEATHER_DEFAULT_CITY`; можно `?city=` или `?lat=` и `?lon=`):
+
+```bash
+curl "http://localhost:3001/api/weather"
+```
+
+Галерея: до 20 фото на растение. Добавление — `POST /api/plants/:id/images` (поле `images`), удаление — `DELETE /api/plants/:id/images/:imageId`, фото по умолчанию — `PATCH /api/plants/:id/default-image` с телом `{ "imageId": "<id>" }` (`null` снимает выбор). Быстрые действия каталога — `PATCH /api/plants/:id/water` и `PATCH /api/plants/:id/fertilize`.
 
 ## Документация
 
